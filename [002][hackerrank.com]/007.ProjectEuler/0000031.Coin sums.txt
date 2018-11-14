@@ -1,0 +1,94 @@
+This problem is a programming version of Problem 31 from projecteuler.net
+
+In England the currency is made up of pound, 
+£
+, and pence, , and there are eight coins in general circulation:
+
+£
+£
+It is possible to make 
+£
+ in the following way:
+
+£
+How many different ways can   be made using any number of coins? As the result can be large print answer mod 
+
+Input Format
+
+The first line contains an integer  , i.e., number of test cases. 
+Next  lines will contain an integer .
+
+Note: N is given as  and not 
+£
+
+Constraints
+
+ 
+
+Output Format
+
+Print the values corresponding to each test case.
+
+Sample Input
+
+3
+10
+15
+20
+Sample Output
+
+11
+22
+41
+Submissions: 1860
+Max Score: 100
+Difficulty: Easy
+Rate This Challenge:
+
+    
+More
+
+======================================================================================================================================================
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static bool isValid(long i, long N) {
+        long sum = 0;
+        long t = i;
+        while(t > 0) {
+            sum += (long) Math.Pow(t%10, N);
+            t /= 10;
+        }
+        
+        return sum == i;
+    }
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        long N = long.Parse(Console.ReadLine());
+        long sum = 0;
+        long upper = N*((long)Math.Pow(10, N));
+        for(long i=2; i<= 600000; i++) {
+            if(isValid(i, N)) {
+                sum += i;
+            }            
+        }
+        
+        Console.WriteLine(sum);               
+    }
+}
+
+
+
+
+
+
+
+
+

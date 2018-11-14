@@ -1,0 +1,98 @@
+Let  be the two-letter string "Fa". For , derive  from  by the string-rewriting rules:
+
+ 
+
+Thus,  = "Fa",  = "FaRbFR",  = "FaRbFRRLFaLbFR", and so on.
+
+These strings can be interpreted as instructions to a computer graphics program, with "F" meaning "draw forward one unit", "L" meaning "turn left  degrees", "R" meaning "turn right  degrees", and "a" and "b" being ignored. The initial position of the computer cursor is , pointing up towards .
+
+Then  is an exotic drawing known as the  of order . For example,  is shown below; counting each "F" as one step, the highlighted spot at  is the position reached after  steps.
+
+
+
+What is the position of the cursor after  "F"-steps in ?
+
+Input Format
+
+First line of each test file contains a single integer  that is the number of queries per test file.  blocks of lines follow, the first of which contains a single integer  and the second contains a single integer . Note, that while  is given in decimal,  is given in hexadecimal.
+
+Constraints
+
+Sum of all  per test file 
+ number of moves in 
+All characters in representation of m are in 
+Output Format
+
+Print exactly two lines per each query. In the first line print the x-coordinate of the cursor and in the second line print the y-coordinate of the cursor. As  from input, these numbers should also be in hexadecimal.
+
+Submissions: 81
+Max Score: 100
+Difficulty: Hard
+Rate This Challenge:
+
+    
+More
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var q = long.Parse(Console.ReadLine());
+        
+        for(var i=0; i<q; i++) {
+            var n = long.Parse(Console.ReadLine());
+            var maxA = n/(1 + Math.Sqrt(2));
+            long count = 0;
+            
+            for(var a=1; a<=maxA; a++) {
+                for(var b=a; b<n/2.0; b++) {
+                    var c2 = a*a + b*b + 1;
+                    var c = (int)Math.Sqrt(c2);
+                    if(c*c != c2 || c < b || a + b + c > 2*n) {
+                        continue;
+                    }
+                    
+                    //Console.WriteLine(a + ":" + b + ":" + c + ":" + n);
+                    count++;
+                }
+            }
+            
+            
+            Console.WriteLine(count);
+        }    
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

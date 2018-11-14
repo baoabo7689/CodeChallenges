@@ -1,0 +1,138 @@
+By listing the first six prime numbers:  and , we can see that the  prime is . 
+What is the  prime number?
+
+Input Format
+
+First line contains  that denotes the number of test cases. This is followed by  lines, each containing an integer, .
+
+Constraints
+
+Output Format
+
+Print the required answer for each test case.
+
+Sample Input 0
+
+2
+3
+6
+Sample Output 0
+
+5
+13
+Explanation 0
+
+The first  prime numbers are
+
+
+we can see that  prime number is  and  prime number is 
+
+
+
+
+======================================================================================================================================================
+https://primes.utm.edu/lists/small/10000.txt
+Sorry, we can't accept your submission. Your submission size should not exceed 50 KB.
+10^4 => p <= 104729
+
+
+https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes
+https://cp-algorithms.com/algebra/prime-sieve-linear.html
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+    static List<int> Primes_10000() {
+        var maxP = 104729;
+        var primes = new List<int>();        
+        var lp = new int[maxP+1];
+        var sqrt = Math.Sqrt(maxP);
+        
+        for(var i=2; i<= maxP; i++) {
+            if (lp[i] == 0) {
+                lp[i] = i;
+                primes.Add(i);
+            }
+            
+            for (int j=0; j<primes.Count && primes[j] <= lp[i]; j++) {
+                var next = i*primes[j];
+                if(next > maxP) {
+                    break;
+                }
+                
+                lp[next] = primes[j];                
+            }            
+        }
+        
+        return primes;
+    }
+    
+    static void Main(String[] args) {
+        var primes = Primes_10000();
+        
+        int t = Convert.ToInt32(Console.ReadLine());
+         for(int a0 = 0; a0 < t; a0++){
+            int n = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine(primes[n-1]);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,236 @@
+Objective 
+Welcome to the last day! Today, we're discussing bitwise operations. Check out the Tutorial tab for learning materials and an instructional video!
+
+Task 
+Given set . Find two integers,  and  (where ), from set  such that the value of  is the maximum possible and also less than a given integer, . In this case,  represents the bitwise AND operator.
+
+Input Format
+
+The first line contains an integer, , the number of test cases. 
+Each of the  subsequent lines defines a test case as  space-separated integers,  and , respectively.
+
+Constraints
+
+Output Format
+
+For each test case, print the maximum possible value of  on a new line.
+
+Sample Input
+
+3
+5 2
+8 5
+2 2
+Sample Output
+
+1
+4
+0
+Explanation
+
+ 
+
+All possible values of  and  are:
+
+The maximum possible value of  that is also  is , so we print  on a new line.
+
+
+======================================================================================================================================================
+A|B >= Max(A,B)
+A&B <= Min(A,B)
+
+
+A&B <= (K-1)
+
+(K-1) = a1a2...aj
+
+
+k-1: chẵn = b0
+	=> k=b1 
+	k&(k-1) = b0 = k - 1< n => k-1
+	k|(k-1) = b1 = k <= n
+	
+k-1: lẻ 
+	k-1 = a1a2...aj01111
+	k = a1a2...aj10000
+	
+	(k-1)&k = a1a2...aj00000 
+	(k-1)|k = a1a2...aj11111 <= n => a1a2...aj01111  = a1a2...aj11111 & a1a2...aj01111 = k-1
+	
+	
+	(k-1)|k = a1a2...aj11111 > n => a1a2...aj01111 = a1a2...aj01111 & (turn some 0 to 1)
+	(turn some 0 to 1) >= (k-1)|k > n => không thể đạt được (k-1)
+	
+	=> k-2 chẵn, k-2 = b0 => k-1 = b1 
+	(k-1)&(k-2) = b0 = k-2 < n  => k-2
+	
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    static int solution(int n, int k) {
+       return ((k-1)|k) <= n ? (k-1) : (k-2);
+    }
+
+    static void Main(string[] args) {
+        int t = Convert.ToInt32(Console.ReadLine());
+
+        for (int tItr = 0; tItr < t; tItr++) {
+            string[] nk = Console.ReadLine().Split(' ');
+
+            int n = Convert.ToInt32(nk[0]);
+
+            int k = Convert.ToInt32(nk[1]);
+            Console.WriteLine(solution(n, k));            
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

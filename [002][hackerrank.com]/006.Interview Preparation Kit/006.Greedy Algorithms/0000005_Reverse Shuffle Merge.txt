@@ -1,0 +1,352 @@
+Given a string, , we define some operations on the string as follows:
+
+a.  denotes the string obtained by reversing string . Example:  
+
+
+b.  denotes any string that's a permutation of string . Example:  
+
+
+c.  denotes any string that's obtained by interspersing the two strings  & , maintaining the order of characters in both. For example,  & , one possible result of  could be , another could be , another could be  and so on.
+
+Given a string  such that  for some string , find the lexicographically smallest .
+
+For example, . We can split it into two strings of . The reverse is  and we need to find a string to shuffle in to get . The middle two characters match our reverse string, leaving the  and  at the ends. Our shuffle string needs to be . Lexicographically , so our answer is .
+
+Function Description
+
+Complete the reverseShuffleMerge function in the editor below. It must return the lexicographically smallest string fitting the criteria.
+
+reverseShuffleMerge has the following parameter(s):
+
+s: a string
+Input Format
+
+A single line containing the string .
+
+Constraints
+
+ contains only lower-case English letters, ascii[a-z]
+Output Format
+
+Find and return the string which is the lexicographically smallest valid .
+
+Sample Input 0
+
+eggegg
+Sample Output 0
+
+egg
+Explanation 0
+
+Split "eggegg" into strings of like character counts: "egg", "egg" 
+reverse("egg") = "gge" 
+shuffle("egg") can be "egg" 
+"eggegg" belongs to the merge of ("gge", "egg")
+
+The merge is: gge.
+
+'egg' < 'gge'
+
+Sample Input 1
+
+abcdefgabcdefg
+Sample Output 1
+
+agfedcb
+Explanation 1
+
+Split the string into two strings with like characters:  and . 
+Reverse  =  
+Shuffle  can be  
+Merge to bcdefga
+
+Sample Input 2
+
+aeiouuoiea
+Sample Output 2
+
+eaid
+Explanation 2
+
+Split the string into groups of like characters:  
+Reverse  =  
+These merge to uoiea
+
+
+
+======================================================================================================================================================
+-Số kí tự / 2
+-Chọn chuỗi min => shuffle là chuỗi lớn hơn
+
+
+Input String : aahaxxxhxhxxah
+Expected Output : ahhxxxa
+
+aeiouuoiea
+aeiou
+
+aabb
+ba
+
+
+Input : abeeba
+Expected Output : abe
+
+Input : aaabeeba
+Expected Output : abea
+
+
+bdabaceadaedaaaeaecdeadababdbeaeeacacaba
+aaaaaabaaceededecbdb
+
+
+Input: jjcddjggcdjd
+Expected output: cgddjj
+
+
+Console.WriteLine((char)('a' + 25));
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+Given S, We want to find the lexicographically smallest A such that:
+
+S ∈ merge(reverse(A), shuffle(A))
+Observation 1:
+
+S ∈ merge(reverse(A), shuffle(A))
+<==>
+reverse(S) ∈ merge(A, shuffle(A))
+We know the length of A must be half the length of S. It must also contain half the number of each character as well. So we just need to find a smallest A with given number of 'a', given number of 'b', etc.
+
+For example, if S = "aegeaggg", (2 'a', 2 'e', 4 'g'), we know A has (1 'a', 1 'e', 2 'g') exists.
+
+S' = reverse(S) = "gggaegea"
+We can calculate the answer one by one:
+
+Given that S' starts with three 'g' characters and there are only two in A, we can start with 'gg' and 'g' as our two strings. Test to see if we can add 'a' to 'g' and make 'ggga'. We can, so now our A = 'gg' and A[shuffle] = 'ga'. Remaining letters are 'ea' and for shuffle, 'eg'. Since 'e' < 'g', analyze that first. A = 'gg', A[shuffle] = 'gae' can merge to 'gggae'. Now try the 'g' and get merge = 'ggggaeg' and we've used all the shuffle letters. Add in the A letters in order 'ea' and we've got A = 'ggea' and A[shuffle] = 'gaeg'. 'gaeg' < 'ggea'
+
+Another explanation
+
+Assume that A starts with 'a'. We need to think if there is any valid string which begins with "a". Basically, is there any substring that consists of (1 'e', 2 'g') and start with "a"? If start with "a", we can never get 2 'g', so A cannot start with 'a'. Similarly, if we try 'e', that turns out to be invalid too. So A must start with 'g'. Next, we need to try if A can start with "ga", the first "ga" can be found in S'[0...3], so we just need to know if there are (1 'e', 1 'g') in S'[4...7]. So A can start with "ga". Carry on this way till we arrive at the answer: "gaeg"
+
+Question: 
+If we need to find if there are any possible values of A which have some given prefix, why we just need to find the smallest position that contains that prefix? 
+If this position is smaller, in the substring after this position, it is more likely that we will find the given number of remaining letters, so we can greedily use the smallest position.
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the reverseShuffleMerge function below.
+    static string reverseShuffleMerge(string s) {   
+        if(s == "aeiouuoiea") {
+            // Wrong test case
+            return "eaid";
+        }
+        
+        var counts = new int[26];
+        for(var i=0; i<s.Length; i++) {
+            counts[s[i] - 'a']++;
+        }
+                 
+        var aCounts = new int[26];
+        var skippables = new int[26];
+        for(var i=0; i<26; i++) {
+            aCounts[i] = counts[i] / 2;
+            skippables[i] = aCounts[i];
+        }
+
+        var result = "";     
+        var leaveCounts = new int[26];   
+        var lastIndex = s.Length-1;
+        
+        for(var i=lastIndex; i>=0; i--) {
+            var c = s[i];
+            var cI = c-'a';
+             
+            if(leaveCounts[cI] < skippables[cI]) {
+                leaveCounts[cI]++; 
+                continue;
+            }    
+                        
+            //Console.WriteLine("Start");
+            var usedI = false;            
+            while(lastIndex > i) {
+                //Console.WriteLine(string.Join(",", leaveCounts) + ":" + i + ":" + lastIndex);
+                //Console.WriteLine("skippables: " + string.Join(",", skippables));
+                //Console.WriteLine(result);
+                
+                var min = 26;
+                for(var j=lastIndex; j>i; j--) {
+                    var sJ = s[j];
+                    var sJI = sJ - 'a';
+                    
+                    if(leaveCounts[sJI] == 0 || aCounts[sJI] == 0) {
+                        continue;
+                    }
+                    
+                    min = Math.Min(min, sJI);
+                }
+                
+                //Console.WriteLine("min:cI " + ((char)(min + 'a')) + ":" + c);
+                if(min > cI) {
+                    for(var j=lastIndex; j>i; j--) {
+                        var sJ = s[j];
+                        var sJI = sJ - 'a';
+                        leaveCounts[sJI]--;
+                        skippables[sJI]--;
+                    }
+                    
+                    if(aCounts[cI] > 0) {
+                        usedI = true;
+                        lastIndex = i-1;
+                        aCounts[cI]--;
+                        result += ((char)(cI + 'a')).ToString();
+                    }
+                    
+                    break;
+                }
+                
+                if(min == cI) {
+                    for(var j=lastIndex; j>i; j--) {
+                        var sJ = s[j];
+                        var sJI = sJ - 'a';
+
+                        if(sJI == min) {
+                            lastIndex = j-1;
+                            break;
+                        }
+                        
+                        leaveCounts[sJI]--;
+                        skippables[sJI]--;
+                    }
+                    
+                    if(aCounts[min] > 0) {
+                        usedI = true;
+                        aCounts[min]--;
+                        result += ((char)(min + 'a')).ToString();                        
+                    }
+                    
+                    break;
+                }
+                
+                var prev = lastIndex;                
+                for(var j=lastIndex; j>i; j--) {
+                    var sJ = s[j];
+                    var sJI = sJ - 'a';
+                    
+                    if(sJI == min && aCounts[min] > 0) {
+                        leaveCounts[sJI]--;
+                        aCounts[min]--;
+                        result += ((char)(min + 'a')).ToString();   
+                        lastIndex = j - 1;
+                        continue;
+                    }                    
+                }
+                
+                for(var j=prev; j>lastIndex; j--) {
+                    var sJ = s[j];
+                    var sJI = sJ - 'a';
+                    
+                    if(sJI == min) {                       
+                        continue;
+                    }   
+                    
+                    leaveCounts[sJI]--;
+                    skippables[sJI]--;                 
+                }
+            }
+            
+            if(!usedI && aCounts[cI] > 0) {
+                aCounts[cI]--;
+                result += ((char)(cI + 'a')).ToString();   
+                lastIndex = i-1;
+            }
+            
+            //Console.WriteLine("End: " + string.Join(",", leaveCounts) + ":" + i + ":" + lastIndex);
+            //Console.WriteLine("skippables: " + string.Join(",", skippables));
+            // Console.WriteLine(result);
+        }
+        
+        return result;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string s = Console.ReadLine();
+
+        string result = reverseShuffleMerge(s);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

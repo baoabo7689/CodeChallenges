@@ -1,0 +1,297 @@
+Madison, is a little girl who is fond of toys. Her friend Mason works in a toy manufacturing factory . Mason has a 2D board of size with rows and columns. The board is divided into cells of size with each cell indicated by it's coordinate . The cell has an integer written on it. To create the toy Mason stacks number of cubes of size on the cell .
+
+Given the description of the board showing the values of and that the price of the toy is equal to the 3d surface area find the price of the toy.
+
+image
+
+Input Format
+
+The first line contains two space-separated integers and the height and the width of the board respectively.
+
+The next lines contains space separated integers. The integer in line denotes .
+
+Constraints
+
+Output Format
+
+Print the required answer, i.e the price of the toy, in one line.
+
+Sample Input 0
+
+1 1
+1
+
+Sample Output 0
+
+6
+
+Explanation 0
+
+image The surface area of cube is 6.
+
+Sample Input 1
+
+3 3
+1 3 4
+2 2 3
+1 2 4
+
+Sample Output 1
+
+60
+
+Explanation 1
+
+The sample input corresponds to the figure described in problem statement.
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+						  | h   / 
+						  |	   /
+						  |   /
+						  |  /		
+						  | /	m
+__________________________|/
+1		n
+
+
+Approach 2:
+
+Instead of calculating surface area contributed by each we will calculate the surface area due to every vertical column at.
+To calculate the surface area contributed by a vertical column of height at , see its adjacent vertical columns at. 
+If is height at its adjacent vertical column, the surface area contributed by is . We will add to the surface are calculated by all vertical columns as the area of top and bottom is fixed
+
+
+
+O(n*m)
+1 cell => tạo 2: Top+Bottom 
+1 cell kiểm tra 4 phía: Left/Right, Front/Behind: nếu không bị che phía nào thì count++
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+    class Cell {
+        public bool HasCell {get; set;}
+        public int Left {get; set;}
+        public int Right {get; set;}
+        public int Top {get; set;}
+        public int Bottom {get; set;}
+        public int Front {get; set;}
+        public int Behind {get; set;}
+    }
+
+    // Complete the surfaceArea function below.
+    static int surfaceArea(int[][] A) {
+        var n = A.Length;
+        var m = A[0].Length;
+        var maxHeight = A.Max(a => a.Max());
+        
+        var toys = new Cell[maxHeight][][];
+        for(var h=0; h<maxHeight; h++) {
+            var hCells = new Cell[n][];
+            
+            for(var i=0; i<n; i++) {
+                var nCells = new Cell[m];
+                
+                for(var j=0; j<m; j++) {
+                    var aIJ = A[i][j]>h;
+                    nCells[j] = new Cell {
+                        HasCell = aIJ,
+                        Left = 1,
+                        Right = n,
+                        Top = h+1,
+                        Bottom = 1,
+                        Front = 1,
+                        Behind = m,
+                    };                       
+                }
+                
+                hCells[i] = nCells;
+            }
+            
+            toys[h] = hCells;
+        }
+        
+       for(var h=0; h<maxHeight; h++) {
+            var hCells = toys[h];
+            
+            for(var i=0; i<n; i++) {
+                var nCells = hCells[i];
+                
+                for(var j=1; j<m; j++) {
+                    var mCell = nCells[j];
+                        
+                    if(!mCell.HasCell) {
+                        continue;
+                    }  
+                    
+                    var prevCell = nCells[j-1];
+                    mCell.Front = prevCell.HasCell ? prevCell.Front : j+1;
+                }  
+                
+                for(var j=m-2; j>=0; j--) {
+                    var mCell = nCells[j];
+                        
+                    if(!mCell.HasCell) {
+                        continue;
+                    }  
+                    
+                    var prevCell = nCells[j+1];
+                    mCell.Behind = prevCell.HasCell ? prevCell.Behind : j+1;
+                }
+            }
+           
+           for(var j=0; j<m; j++) {
+               for(var i=1; i<n; i++) {
+                   var nCell = hCells[i][j];
+                   if(!nCell.HasCell) {
+                       continue;
+                   }
+                   
+                   var prevCell = hCells[i-1][j];
+                    nCell.Left = prevCell.HasCell ? prevCell.Left : i+1;                   
+               }  
+               
+               for(var i=n-2; i>=0; i--) {
+                   var nCell = hCells[i][j];
+                   if(!nCell.HasCell) {
+                       continue;
+                   }
+                   
+                   var prevCell = hCells[i+1][j];
+                    nCell.Right = prevCell.HasCell ? prevCell.Right : i+1;                   
+               }             
+           }           
+        }
+                
+        for(var i=0; i<n; i++) {
+            for(var j=0; j<m; j++) {
+                for(var h=1; h<maxHeight; h++) {
+                    var hCell = toys[h][i][j];
+                    if(!hCell.HasCell) {
+                        continue;
+                    }
+                        
+                    var prevCell = toys[h-1][i][j];
+                    hCell.Bottom = prevCell.HasCell ? prevCell.Bottom : h+1;   
+                }
+                
+                for(var h=maxHeight-2; h>=0; h--) {
+                    var hCell = toys[h][i][j];
+                    if(!hCell.HasCell) {
+                        continue;
+                    }
+                    
+                    var prevCell = toys[h+1][i][j];
+                    hCell.Top = prevCell.HasCell ? prevCell.Top : h+1;                       
+                }
+            }
+        }
+        
+        var count = 0;
+        for(var h=0; h<maxHeight; h++) {
+            for(var i=0; i<n; i++) {
+                for(var j=0; j<m; j++) {
+                    var cell = toys[h][i][j];
+                    if(!cell.HasCell) {
+                        continue;
+                    }
+                    
+                    if(cell.Left == i+1) {
+                        count++;
+                    }
+                    
+                    if(cell.Right==i+1) {
+                        count++;
+                    }
+                    
+                    if(cell.Front==j+1) {
+                        count++;
+                    }
+                    
+                    if(cell.Behind==j+1) {
+                        count++;
+                    }
+                    
+                    if(cell.Top==h+1) {
+                        count++;
+                    }
+                    
+                    if(cell.Bottom==h+1) {
+                        count++;
+                    }                    
+                }
+            }
+        }
+        
+        return count;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string[] HW = Console.ReadLine().Split(' ');
+
+        int H = Convert.ToInt32(HW[0]);
+
+        int W = Convert.ToInt32(HW[1]);
+
+        int[][] A = new int[H][];
+
+        for (int i = 0; i < H; i++) {
+            A[i] = Array.ConvertAll(Console.ReadLine().Split(' '), ATemp => Convert.ToInt32(ATemp));
+        }
+
+        int result = surfaceArea(A);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

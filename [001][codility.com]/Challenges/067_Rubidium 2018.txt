@@ -1,0 +1,154 @@
+
+There are N sheep relaxing in a field. They are positioned at points with integer coordinates. Each sheep has a square sunshade, so as not to overheat. The sunshade of a sheep standing at position (X, Y) spreads out to a distance of D from (X, Y), covering a square whose middle is at (X, Y) and whose sides are of length 2D. More precisely, it covers a square with vertices in points (X − D, Y − D), (X − D, Y + D), (X + D, Y − D) and (X + D, Y + D). Sheep are in the centres of their sunshades. Sunshades edges are parallel to the coordinate axes.
+
+Every sheep spreads out its sunshade to the same width. No two sunshades can overlap, but their borders can touch.
+
+What is the maximum integer width D to which the sheep can spread out their sunshades?
+
+Write a function:
+
+    class Solution { public int solution(int[] X, int[] Y); }
+
+that, given two arrays X and Y of length N denoting the positions of the sheep, returns the maximum value of D to which the sheep can spread out their sunshades. There are at least two sheep in the flock, and no two sheep share a point with the same coordinates.
+
+Examples:
+
+1. Given X=[0, 0, 10, 10] and Y=[0, 10, 0, 10],
+
+the function should return 5.
+
+2. Given X=[1, 1, 8] and Y=[1, 6, 0],
+
+the function should return 2.
+
+Write an efficient algorithm for the following assumptions:
+
+        N is an integer within the range [2..100,000];
+        each element of arrays X, Y is an integer within the range [0..100,000];
+        no two sheep are standing in the same position.
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+
+using System;
+using System.Linq;
+using System.Collections.Generic;
+// you can also use other imports, for example:
+// using System.Collections.Generic;
+
+// you can write to stdout for debugging purposes, e.g.
+// Console.WriteLine("this is a debug message");
+
+class Solution {
+    public int solution(int[] X, int[] Y) {
+        // write your code in C# 6.0 with .NET 4.5 (Mono)
+        var N = X.Length;
+		//Console.WriteLine(N);
+		//Console.WriteLine(string.Join(",", X));
+		//Console.WriteLine(string.Join(",", Y));
+		
+		//Console.WriteLine(X[X.Length - 1]);
+		//Console.WriteLine(Y[Y.Length - 1]);
+		
+        var distinctX = X.Distinct().ToList();
+        distinctX.Sort();
+        
+        var lines = new Dictionary<int, List<int>>();
+        for(var i=0; i<N; i++) {
+            var x = X[i];
+            var y = Y[i];
+            
+            if(lines.ContainsKey(x)) {
+                lines[x].Add(y);
+            } else {
+                lines.Add(x, new List<int> { y });
+            }
+        }
+        
+        var minD = 100000;
+        foreach(var line in lines) {
+            line.Value.Sort();		
+            for(var i=1; i<line.Value.Count; i++) {
+                minD = Math.Min(minD, (line.Value[i] - line.Value[i-1])/2);
+            }
+        }
+        
+        var prevLine = 0;
+        for(var i=1; i<distinctX.Count; i++) {
+            var x2 = distinctX[i];
+            var line2 = lines[x2];
+            
+			for(var prevI=prevLine; prevI<i; prevI++) {
+                var x1 = distinctX[prevI];
+                var dX = x2-x1;
+                var line1 = lines[x1];
+                var length = 2*minD;
+                
+                if(dX >= length) {
+                    prevLine++;
+                    continue;
+                }
+                
+                if(line2[0]-line1[line1.Count-1] >= length || line1[0] - line2[line2.Count-1] >= length) {
+                    continue;
+                }
+            
+			     var i1 = 0;
+                for(var i2 =0; i2 < line2.Count; i2++) {
+                    var y = line2[i2];
+                    
+                    for(; i1<line1.Count && line1[i1] < y; i1++);
+                    
+                    if(i1 == line1.Count) {
+                        var y1 = line1[i1 - 1];
+                        var d = y - y1;
+                        if(d < dX) {
+                            minD = dX/2;
+                            break;
+                        }
+                        
+                        minD = Math.Min(minD, d/2);
+                        continue;
+                    }
+                    
+                    if(i1 == 0) {
+                        var y1 = line1[0];
+                        var d = y1 - y;
+                        if(d < dX) {
+                            minD = dX/2;
+                            break;
+                        }
+                        
+                        minD = Math.Min(minD, d/2);
+                        continue;
+                    } else {                
+    					var d = Math.Min(line1[i1] - y, y - line1[i1-1]);
+    					if(d < dX) {
+    						minD = dX/2;
+    						break;
+    					}
+    					
+    					minD = Math.Min(minD, d/2);					
+    				}
+                }
+            
+			}
+           
+        }
+        
+        return minD;
+    }
+}
+
+
+
+
+
+
+
+

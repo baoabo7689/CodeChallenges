@@ -1,0 +1,159 @@
+Strings are usually ordered in lexicographical order. That means they are ordered by comparing their leftmost different characters. For example,  because . Also  because . If one string is an exact prefix of the other it is lexicographically smaller, e.g., .
+
+Given an array of strings sorted in lexicographical order, print all of its permutations in strict lexicographical order. If two permutations look the same, only print one of them. See the 'note' below for an example.
+
+Complete the function next_permutation which generates the permutations in the described order.
+
+For example, . The six permutations in correct order are:
+
+ab bc cd
+ab cd bc
+bc ab cd
+bc cd ab
+cd ab bc
+cd bc ab
+Note: There may be two or more of the same string as elements of . 
+For example, . Only one instance of a permutation where all elements match should be printed. In other words, if , then print either  or  but not both.
+
+A three element array having three discrete elements has six permutations as shown above. In this case, there are three matching pairs of permutations where  and  are switched. We only print the three visibly unique permutations:
+
+ab ab bc
+ab bc ab
+bc ab ab
+Input Format
+
+The first line of each test file contains a single integer , the length of the string array .
+
+Each of the next  lines contains a string .
+
+Constraints
+
+ contains only lowercase English letters.
+Output Format
+
+Print each permutation as a list of space-separated strings on a single line.
+
+Sample Input 0
+
+2
+ab
+cd
+Sample Output 0
+
+ab cd
+cd ab
+Sample Input 1
+
+3
+a
+bc
+bc
+Sample Output 1
+
+a bc bc
+bc a bc
+bc bc a
+Explanation 1
+
+This is similar to the note above. Only three of the six permutations are printed to avoid redundancy in output.
+
+======================================================================================================================================================
+https://en.wikipedia.org/wiki/Permutation#Generation_in_lexicographic_order
+The following algorithm generates the next permutation lexicographically after a given permutation. It changes the given permutation in-place.
+
+1.Find the largest index k such that a[k] < a[k + 1]. If no such index exists, the permutation is the last permutation.
+2.Find the largest index l greater than k such that a[k] < a[l].
+3.Swap the value of a[k] with that of a[l].
+4.Reverse the sequence from a[k + 1] up to and including the final element a[n].
+
+
+Proof: 
+1. => a[k+1]...a[n] giảm dần
+2. a[k+1]...[al] > a[k] >= a[l+1]...a[n] => giảm dần
+3. a[l] a[k+1]...a[k]a[l+1]...a[n] > a[k] a[k+1]...a[l]a[l+1]...a[n]
+4. a[l] a[n]...[al+1]a[k]...a[k+1] > a[k] a[k+1]...a[l]a[l+1]...a[n]
+a[n]...[al+1]a[k]...a[k+1] tăng dần và nhỏ nhất
+=> 
+a[l] a[n]...[al+1]a[k]...a[k+1] là next 
+
+
+======================================================================================================================================================
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+void swap(char **s, int a, int b)
+{
+    char* temp = s[a];
+    s[a] = s[b];
+    s[b] = temp;
+}
+
+void reverse_sequence(char **s, int start, int end)
+{
+    while (start < end){
+        swap(s, start++, end--);
+    } 
+}
+
+int next_permutation(int n, char **s)
+{
+    int k = -1;
+    int l = -1;
+    for (int i = n - 2; i > -1 ; i--)
+    {
+        if (strcmp(s[i], s[i + 1]) < 0)
+        {
+            k = i;
+            break;
+        }
+    }
+    for (int j = n - 1; j > k && k > -1; j--)
+    {
+        if (strcmp(s[k], s[j]) < 0)
+        {
+            l = j;
+            swap(s, k, l);
+            reverse_sequence(s, k + 1, n - 1);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int main()
+{
+	char **s;
+	int n;
+	scanf("%d", &n);
+	s = calloc(n, sizeof(char*));
+	for (int i = 0; i < n; i++)
+	{
+		s[i] = calloc(11, sizeof(char));
+		scanf("%s", s[i]);
+	}
+	do
+	{
+		for (int i = 0; i < n; i++)
+			printf("%s%c", s[i], i == n - 1 ? '\n' : ' ');
+	} while (next_permutation(n, s));
+	for (int i = 0; i < n; i++)
+		free(s[i]);
+	free(s);
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

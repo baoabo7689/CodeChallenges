@@ -1,0 +1,100 @@
+Objective 
+In this challenge, we go further with normal distributions. We recommend reviewing the previous challenge's Tutorial before attempting this problem.
+
+Task 
+The final grades for a Physics exam taken by a large group of students have a mean of  and a standard deviation of . If we can approximate the distribution of these grades by a normal distribution, what percentage of the students:
+
+Scored higher than  (i.e., have a )?
+Passed the test (i.e., have a )?
+Failed the test (i.e., have a )?
+Find and print the answer to each question on a new line, rounded to a scale of  decimal places.
+
+Input Format
+
+There are  lines of input (shown below):
+
+70 10
+80
+60
+The first line contains  space-separated values denoting the respective mean and standard deviation for the exam. The second line contains the number associated with question . The third line contains the pass/fail threshold number associated with questions  and .
+
+If you do not wish to read this information from stdin, you can hard-code it into your program.
+
+Output Format
+
+There are three lines of output. Your answers must be rounded to a scale of  decimal places (i.e.,  format):
+
+On the first line, print the answer to question  (i.e., the percentage of students having ).
+On the second line, print the answer to question  (i.e., the percentage of students having ).
+On the third line, print the answer to question  (i.e., the percentage of students having ).
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    public static double Erf(double x)
+    {    
+        var a1 =  0.254829592;
+        var a2 = -0.284496736;
+        var a3 =  1.421413741;
+        var a4 = -1.453152027;
+        var a5 =  1.061405429;
+        var p  =  0.3275911;
+
+        var sign = 1;
+        if (x < 0) {
+            sign = -1;
+        }
+
+        x = Math.Abs(x);
+
+        var t = 1.0/(1.0 + p*x);
+        var y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.Exp(-x*x);
+
+        return sign*y;
+    }    
+    
+    static double P(double x) {
+        var mean = 70;
+        var standardDeviation = 10;
+        var result = 0.5*(1 + Erf((x - mean)/(standardDeviation*Math.Sqrt(2))));
+        
+        return result;
+    }
+    
+    static double NormalDistribution(double x) {
+        var mean = 70;
+        var standardDeviation = 10;
+        var e = 2.71828;
+        
+        var p = -(x - mean)*(x - mean) / standardDeviation / standardDeviation / 2;
+        return 1/standardDeviation/Math.Sqrt(2)/Math.Sqrt(Math.PI)*Math.Pow(e, p);    
+    }
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        Console.WriteLine((100 - P(80)*100).ToString("0.##")); 
+        Console.WriteLine((100 - P(60)*100).ToString("0.##")); 
+        Console.WriteLine((P(60)*100).ToString("0.##")); 
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

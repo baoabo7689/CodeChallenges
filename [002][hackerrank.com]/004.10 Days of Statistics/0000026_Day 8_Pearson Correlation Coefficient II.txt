@@ -1,0 +1,35 @@
+The regression line of  on  is , and the regression line of  on  is . What is the value of the Pearson correlation coefficient?
+
+Note: If you haven't seen it already, you may find our Pearson Correlation Coefficient Tutorial helpful in answering this question.
+
+
+
+======================================================================================================================================================
+Y on X: 
+b = -2 
+a = -8/3 
+
+p * pX/pY = b = -3/4
+mY - b*mX = a = -2
+
+
+X on Y:
+X = a + b*Y 
+b = -3/4
+a = -7/4
+p * pY/pX = b = -3/4
+
+
+
+result = p = Sqrt(b1*b2)
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+

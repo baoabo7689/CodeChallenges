@@ -1,0 +1,95 @@
+A palindromic number reads the same both ways. The smallest 6 digit palindrome made from the product of two 3-digit numbers is .
+
+Find the largest palindrome made from the product of two 3-digit numbers which is less than .
+
+Input Format
+
+First line contains that denotes the number of test cases. This is followed by lines, each containing an integer, .
+
+Constraints
+
+Output Format
+
+Print the required answer for each test case in a new line.
+
+Sample Input 0
+
+2
+101110
+800000
+
+Sample Output 0
+
+101101
+793397
+
+Explanation 0
+
+    is product of and .
+    is product of and .
+
+
+
+
+
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+
+    static void Main(String[] args) {
+        int t = Convert.ToInt32(Console.ReadLine());
+        for(int a0 = 0; a0 < t; a0++){
+            int n = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine(MaxPalindrome(n));
+        }
+    }
+    
+    static int MaxPalindrome(int n) {
+        var result = 0;
+        var maxI = Math.Sqrt(n);
+        
+        for(var i=100; i<maxI; i++) {
+            var minJ = Math.Max(i, 101101/i);
+            var maxJ = Math.Min(1000, n*1.0/i);
+            for(var j=minJ; j<= maxJ; j++) {
+                var product = i*j;
+                
+                if(n <= product) {
+                    continue;
+                }
+                
+                if(IsPalindrome(product) && product > result) {
+                    result = product;
+                }
+            }
+        }
+        
+        //IsPalindrome(793397);
+        
+        return result;
+    }
+    
+    static bool IsPalindrome(int n) {
+        var number1 = n/100000;
+        var number2 = n/10000%10;
+        var number3 = n/1000%10;
+        
+        
+        
+        return number1 == n%10 && number2==n%100/10 && number3==n%1000/100;
+    }
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,105 @@
+Objective 
+In this challenge, we go further with binomial distributions. We recommend reviewing the previous challenge's Tutorial before attempting this problem.
+
+Task 
+A manufacturer of metal pistons finds that, on average,  of the pistons they manufacture are rejected because they are incorrectly sized. What is the probability that a batch of  pistons will contain:
+
+No more than  rejects?
+At least  rejects?
+Input Format
+
+A single line containing the following values (denoting the respective percentage of defective pistons and the size of the current batch of pistons):
+
+12 10
+If you do not wish to read this information from stdin, you can hard-code it into your program.
+
+Output Format
+
+Print the answer to each question on its own line:
+
+The first line should contain the probability that a batch of  pistons will contain no more than  rejects.
+The second line should contain the probability that a batch of  pistons will contain at least  rejects.
+Round both of your answers to a scale of  decimal places (i.e.,  format).
+
+
+======================================================================================================================================================
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var pq = Console.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        var p1 = double.Parse(pq[0]);
+        var q1 = double.Parse(pq[1]);
+        var p = p1 / 100;
+        var q = 1 - p;
+        double result = 0;
+        var n = 10;
+        for(var x=0; x<=2; x++) {
+            result += b(x, p, q, n);
+        }
+        
+        Console.WriteLine(result.ToString("0.###"));
+        Console.WriteLine((1 - result + b(2, p, q, n)).ToString("0.###"));
+    }
+    
+    static double b(int x, double p, double q, int n) {
+        var n1 = 1;
+        var x1 = 1;
+        var nx1 = 1;
+        for(var i=1; i<=n; i++) {
+            if(i <= x) {
+              x1 *= i;  
+            }
+            
+            if(i <= n) {
+              n1 *= i;  
+            }
+            
+            if(i <= n-x) {
+              nx1 *= i;  
+            }
+        }
+        
+        return Math.Pow(p, x)*Math.Pow(q, n-x)*n1/x1/nx1;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

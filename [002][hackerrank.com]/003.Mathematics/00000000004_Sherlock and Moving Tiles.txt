@@ -1,0 +1,102 @@
+Sherlock is given  square tiles, initially both of whose sides have length  placed in an  plane; so that the bottom left corner of each square coincides with the the origin and their sides are parallel to the axes.
+
+At , both squares start moving along line  (along the positive  and ) with velocities  and .
+
+For each query of form , Sherlock has to report the time at which the overlapping area of tiles is equal to .
+
+img
+
+Note: Assume all distances in meter, time in seconds and velocities in meter per second unless otherwise specified.
+
+Input Format 
+First line contains integers . Next line contains , the number of queries. Each of the next  lines consists of one integer  in one line.
+
+Constraints 
+ 
+ 
+ 
+
+Output Format 
+For each query, print the required answer in one line. Your answer will be considered correct if it is at most  away from the true answer. See the explanation for more details.
+
+Sample Input
+
+10 1 2
+2
+50
+100
+Sample Output
+
+4.1421
+0.0000
+Explanation
+
+For the first case, note that the answer is around 4.1421356237..., so any of the following will be accepted:
+
+4.1421356237
+4.14214
+4.14215000
+4.1421
+4.1422
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+
+    /*
+     * Complete the movingTiles function below.
+     */
+    static double[] movingTiles(int l, int s1, int s2, Double[] queries) {
+        /*
+         * Write your code here.
+         d = l - t*delta/Math.Sqrt(2)
+         */
+        var result = new double[queries.Length];
+        Double delta = Math.Sqrt(2)/Math.Abs(s1 - s2);
+        
+        for(var i=0; i<queries.Length; i++) {
+            Double d = (l - Math.Sqrt(queries[i]))*delta;
+            result[i] = d;
+        }
+        
+        return result;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string[] lS1S2 = Console.ReadLine().Trim().Split(' ');
+
+        int l = Convert.ToInt32(lS1S2[0].Trim());
+
+        int s1 = Convert.ToInt32(lS1S2[1].Trim());
+
+        int s2 = Convert.ToInt32(lS1S2[2].Trim());
+
+        int queriesCount = Convert.ToInt32(Console.ReadLine().Trim());
+
+        Double[] queries = new Double[queriesCount];
+
+        for (int queriesItr = 0; queriesItr < queriesCount; queriesItr++) {
+            Double queriesItem = Double.Parse(Console.ReadLine().Trim());
+            queries[queriesItr] = queriesItem;
+        }
+
+        double[] result = movingTiles(l, s1, s2, queries);
+
+        textWriter.WriteLine(string.Join("\n", result));
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}

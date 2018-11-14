@@ -1,0 +1,305 @@
+You are given an array  of  elements. A list of integers,  is given as an input, find the maximum value of  for all  , where  represents xor of two elements.
+
+Note that there are multiple test cases in one input file.
+
+For example:
+
+
+ 
+ 
+ 
+ 
+
+Function Description
+
+Complete the maxXor function in the editor below. It must return an array of integers, each representing the maximum xor value for each element  against all elements of .
+
+maxXor has the following parameter(s):
+
+arr: an array of integers
+queries: an array of integers to query
+Input Format
+
+The first line contains an integer , the size of the array .
+
+The second line contains  space-separated integers,  from .
+
+The third line contain , the size of the array .
+
+Each of the next  lines contains an integer  where .
+
+Constraints
+
+
+
+Output Format
+
+The output should contain  lines with each line representing output for the corresponding input of the testcase.
+
+Sample Input 0
+
+3
+0 1 2
+3
+3
+7
+2
+Sample Output 0
+
+3 
+7 
+3 
+Explanation 0
+
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+Sample Input 1
+
+5
+5 1 7 4 3
+2
+2
+0
+Sample Output 1
+
+7 
+7 
+Explanation 1
+
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+Sample Input 2
+
+4
+1 3 5 7
+2
+17
+6
+Sample Output 2
+
+22
+7
+Explanation 2
+
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+
+
+ 
+
+ 
+
+
+
+======================================================================================================================================================
+
+a = 1 a[1]...a[n]
+b = 1 b[1]...b[m]
+
+m < n: a = 1 a[1]...a[n-m] 1...a[n]
+a^b = 1 a[1]...a[n-m] (1...a[n]^1 b[1]...b[m])
+max(a^b) = max(1...a[n]^1 b[1]...b[m])
+
+
+n <= m: 
+
+
+
+root-0/1-0/1-......
+
+
+
+
+
+======================================================================================================================================================
+'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.replace(/\s*$/, '')
+        .split('\n')
+        .map(str => str.replace(/\s*$/, ''));
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+function createNode() {
+    return {
+        left: null,
+        right: null,
+        canEnd: 0
+    }
+}
+
+function processA(a, tree) {
+    if(a == 0) {
+        tree.canEnd = true;
+        return;
+    }
+    
+    var t = a;
+    var node = tree;
+    
+    while(t != 0) {
+        var r = t%2;
+        if(r) {
+            if(node.right == null) {
+                node.right = createNode();
+            }
+            
+            node = node.right;  
+        } else {
+            if(node.left == null) {
+                node.left = createNode();
+            }    
+            
+            node = node.left;  
+        }     
+        
+        t /= 2;  
+        if(t == 0) {
+            node.canEnd = true;
+        }
+    }  
+}
+
+function processArr(arr) {
+    var root = createNode();        
+        var n = arr.Length;
+        for(var i=0; i<n; i++) {
+            var a = arr[i];
+            processA(a, root);
+        }
+        
+        return root;
+}
+
+function processQ(q, tree) {
+    var t = q;
+    var result = 0;
+    var mod = 1;
+    
+    //Console.WriteLine("Q:" + q);
+    var node = tree;
+    
+    while(t != 0) {
+        var r = t%2;
+        if(node.left == null && node.right == null) {
+            result += (r==1 ? mod : 0);
+        } else if(r == 0) {
+            if(node.right == null) {
+                node = node.left;                
+            } else {
+                result += nod;
+                node = node.right;
+            }
+        } else {
+            if(node.left == null) {
+                node = node.right;                
+            } else {
+                result += nod;
+                node = node.left;
+            }
+        }
+        
+        t /= 2;  
+        mod *= 2;
+    } 
+    
+    return result;
+}
+
+// Complete the maxXor function below.
+function maxXor(arr, queries) {
+    // solve here
+    var tree = processArr(arr);
+    var result = [];
+    for(var i=0; i<queries.length; i++) {
+        var q = queries[i];
+        result[i] = processQ(q, tree);        
+    }
+    
+    return result;
+}
+
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
+
+    const n = parseInt(readLine(), 10);
+
+    const arr = readLine().split(' ').map(arrTemp => parseInt(arrTemp, 10));
+
+    const m = parseInt(readLine(), 10);
+
+    let queries = [];
+
+    for (let i = 0; i < m; i++) {
+        const queriesItem = parseInt(readLine(), 10);
+        queries.push(queriesItem);
+    }
+
+    const result = maxXor(arr, queries);
+
+    ws.write(result.join('\n') + '\n');
+
+    ws.end();
+}
+
+	
+	
+	
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,116 @@
+This problem is a programming version of Problem 15 from projecteuler.net
+
+Starting in the top left corner of a  grid, and only being able to move to the right and down, there are exactly  routes to the bottom right corner.
+
+
+How many such routes are there through a  grid? As number of ways can be very large, print it modulo .
+
+Input Format
+
+The first line contains an integer  , i.e., number of test cases. 
+Next  lines will contain integers  and .
+
+Constraints
+
+Output Format
+
+Print the values corresponding to each test case.
+
+Sample Input
+
+2
+2 2
+3 2
+Sample Output
+
+6
+10
+Explanation
+
+For  as shown in statement above.
+
+
+
+======================================================================================================================================================
+ways[i][j] =  ways[i-1][j] + ways[i][j-1];
+
+w[n][m] = w[n-1]([m]-> [0])
+= w[n-2] (([m]->[0]) + ([m-1]->[0]) + .. + [0])
+= w[n-2] ([m] + 2[m-1] + 3[m-2] +... + (m+1)[m-m])
+= ...
+
+
+f[n-k][m-k] = f[n-k+1] ([m-k] + [m-k+1] + ... + [m])
+
+
+
+
+
+
+i see alot of good explanations but in my opinion the most useful and simple answer is 
+for any nxm matrix using the down or right rule there are
+((n−1)+(m−1)
+(m−1)) = (n+m)!/n!m!
+paths.
+
+
+https://brilliant.org/wiki/rectangular-grid-walk-no-restriction/
+để tới [n, m] => qua phải n lần, xuống m lần không quan tâm thứ tự lên/xuống
+=> có (n+m) steps, chọn n steps đi xuống => m step còn lại đi phải 
+= (n+m)!/n!/m!
+
+
+
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        int t= Convert.ToInt32(Console.ReadLine());
+        for(int a0 = 0; a0 < t; a0++){
+            var nm = Console.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var n = int.Parse(nm[0]);
+            var m =  int.Parse(nm[1]);
+            var ways = new int[n+1][];
+            for(var i=0; i<=n; i++) {
+                var temp = new int[m+1];   
+                temp[0] = 1;
+                ways[i] = temp;
+            }
+
+            for(var j=0; j<=m; j++) {
+                ways[0][j] = 1;
+            }
+
+            var mod = Math.Pow(10,9) + 7;
+            for(var i=1; i<=n; i++) {             
+                for(var j=1; j<=m; j++) {
+                    ways[i][j] =  (int)((ways[i-1][j] +  ways[i][j-1])%mod);
+                }
+            }
+            
+            Console.WriteLine(ways[n][m]);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

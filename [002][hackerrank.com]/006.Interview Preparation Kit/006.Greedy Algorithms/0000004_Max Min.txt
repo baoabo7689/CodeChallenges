@@ -1,0 +1,171 @@
+You will be given a list of integers, , and a single integer . You must create an array of length  from elements of  such that its unfairness is minimized. Call that array . Unfairness of an array is calculated as
+
+Where: 
+- max denotes the largest integer in  
+- min denotes the smallest integer in 
+
+As an example, consider the array  with a  of . Pick any two elements, test . 
+ 
+Testing for all pairs, the solution  provides the minimum unfairness.
+
+Note: Integers in  may not be unique.
+
+Function Description
+
+Complete the maxMin function in the editor below. It must return an integer that denotes the minimum possible value of unfairness.
+
+maxMin has the following parameter(s):
+
+k: an integer, the number of elements in the array to create
+arr: an array of integers .
+Input Format
+
+The first line contains an integer , the number of elements in array . 
+The second line contains an integer . 
+Each of the next  lines contains an integer  where .
+
+Constraints
+
+ 
+ 
+
+Output Format
+
+An integer that denotes the minimum possible value of unfairness.
+
+Sample Input 0
+
+7
+3
+10
+100
+300
+200
+1000
+20
+30
+Sample Output 0
+
+20
+Explanation 0
+
+Here ; selecting the  integers , unfairness equals
+
+max(10,20,30) - min(10,20,30) = 30 - 10 = 20
+Sample Input 1
+
+10
+4
+1
+2
+3
+4
+10
+20
+30
+40
+100
+200
+Sample Output 1
+
+3
+Explanation 1
+
+Here ; selecting the  integers , unfairness equals
+
+max(1,2,3,4) - min(1,2,3,4) = 4 - 1 = 3
+Sample Input 2
+
+5
+2
+1
+2
+1
+2
+1
+Sample Output 2
+
+0
+Explanation 2
+
+Here .  or  give the minimum unfairness of .
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the maxMin function below.
+    static int maxMin(int k, int[] arr) {
+        var lst = arr.ToList();
+        lst.Sort();
+        
+        Console.WriteLine(string.Join(",", lst));
+        
+        var result = 2000000000;
+        for(var i=k-1;i<arr.Length; i++) {
+            result = Math.Min(result, lst[i] - lst[i-k+1]);
+        }
+        
+        return (int)result;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int n = Convert.ToInt32(Console.ReadLine());
+
+        int k = Convert.ToInt32(Console.ReadLine());
+
+        int[] arr = new int [n];
+
+        for (int i = 0; i < n; i++) {
+            int arrItem = Convert.ToInt32(Console.ReadLine());
+            arr[i] = arrItem;
+        }
+
+        int result = maxMin(k, arr);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

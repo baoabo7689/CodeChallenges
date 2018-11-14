@@ -1,0 +1,148 @@
+Let  be defined as the sum of proper divisors of  (numbers less than  which divide evenly into ). 
+If  and , where , then  and  are an amicable pair and each of  and  are called amicable numbers.
+
+For example, the proper divisors of  are  therefore . The proper divisors of  are  so .
+
+Evaluate the sum of all the amicable numbers under .
+
+Input Format
+
+The first line contains an integer , i.e., number of test cases. 
+Next  lines will contain an integer .
+
+Constraints
+
+Output Format
+
+Print the values corresponding to each test case.
+
+Sample Input
+
+1
+300
+Sample Output
+
+504
+Explanation
+
+Under  we only have  and , sum is 
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+    static int[] cache = {220,284,1184,1210,2620,2924,5020,5564,6232,6368,10744, 
+                           10856,12285,14595,17296,18416,63020,66928,66992,67095,
+                           69615,71145,76084,79750,87633,88730};
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        int t= Convert.ToInt32(Console.ReadLine());  
+          
+        for(int a0 = 0; a0 < t; a0++) {
+            int n= Convert.ToInt32(Console.ReadLine());           
+            
+            Console.WriteLine(cache.Where(c => c<n).Sum());
+        }
+    }
+}
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+    static int[] cache = {220,284,1184,1210,2620,2924,5020,5564,6232,6368,10744, 
+                           10856,12285,14595,17296,18416,63020,66928,66992,67095,
+                           69615,71145,76084,79750,87633,88730};
+    
+    static List<int> Cache() {
+        var max = (int) Math.Pow(10, 5);
+        var sums = new int[max+1];
+        for(var i=1; i<=max; i++) {
+            sums[i] = Sum(i);
+        }
+        
+        var result = new List<int>();
+        
+        for(var i=1; i<=max; i++) {
+            if(i == sums[sums[i]]) {
+                result.Add(i);
+            }
+        }
+        
+        return result;
+    }
+    
+    static int Sum(int n) {
+        var result = 0;
+        
+       for(var i=1; i<n; i++) {
+            if(n%i ==0) {
+                result += i;
+            }
+        }
+        
+        return result;
+    }
+    
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        int t= Convert.ToInt32(Console.ReadLine());  
+        Cache();
+        
+        for(int a0 = 0; a0 < t; a0++) {
+            int n= Convert.ToInt32(Console.ReadLine());           
+            
+            Console.WriteLine(cache.Where(c => c<n).Sum());
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

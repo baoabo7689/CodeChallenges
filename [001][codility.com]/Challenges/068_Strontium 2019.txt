@@ -1,0 +1,239 @@
+
+
+An array of N words is given. Each word consists of small letters ('a' − 'z'). Our goal is to concatenate the words in such a way as to obtain a single word with the longest possible substring composed of one particular letter. Find the length of such a substring.
+
+Write a function:
+
+    function solution(words);
+
+that, given an array words containing N strings, returns the length of the longest substring of a word created as described above.
+
+Examples:
+
+1. Given N=3 and words=["aabb", "aaaa", "bbab"], your function should return 6. One of the best concatenations is words[1] + words[0] + words[2] = "aaaaaabbbbab". The longest substring is composed of letter 'a' and its length is 6.
+
+2. Given N=3 and words=["xxbxx", "xbx", "x"], your function should return 4. One of the best concatenations is words[0] + words[2] + words[1] = "xxbxxxxbx". The longest substring is composed of letter 'x' and its length is 4.
+
+3. Given N=4 and words=["dd", "bb", "cc", "dd"], your function should return 4. One of the best concatenations is words[0] + words[3] + words[1] + words[2] = "ddddbbcc". The longest substring is composed of letter 'd' and its length is 4.
+
+Write an efficient algorithm for the following assumptions:
+
+        N is an integer within the range [1..100,000];
+        all the words are non−empty and consist only of lowercase letters (a−z);
+        S denotes the sum of the lengths of words; S is an integer within the range [1..100,000].
+
+Copyright 2009–2019 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+
+======================================================================================================================================================
+nếu maxS và maxP nằm 2 word khác nhau => max = maxS + maxP  
+	Proof: nếu chọn 2 word: P1-S1, P2-S2 
+		Sum = P1 + S2 <= P + S
+		Sum = P2 + S1 <= P + S		
+nếu maxS và maxP chung 1 word 
+	P-S, Pn-S1 và P2-Sn  
+	max(S + Px và P + Sx)
+	Proof: nếu chọn 2 word: P1-S1, P2-S2 
+		Sum = P1 + S2, P2 + S1 
+		Không mất tính tổng quát giả sử max = P1 + S2 
+		Nếu thế P1-S1 = P-S 
+		Sum = P + S2 or P1 + S >= P1 + S2 
+		thế P2-S2 = Pn-Sn 
+		Sum = Pn + S or P + Sn = max 
+	
+
+	
+https://app.codility.com/cert/view/cert7NHVG9-WHJT498UGXHE34BC/
+
+
+======================================================================================================================================================
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+function isOneCharWord(word) {
+    var c = word[0];
+    for(var i=1; i<word.length; i++) {
+        if(word[i] != c) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+function getStartEnd(word, c) {
+    var s = 0;
+    var e = 0;
+    for(var i=0; i<word.length && word[i] == c; i++, s++);
+    for(var i=word.length-1; i>=0 && word[i] == c; i--, e++);
+    
+    return {start:s, end: e};
+}
+function getMaxLength(charInfoI) {
+    var length = charInfoI.duplicate;
+    
+    if(charInfoI.startEnd.length == 0) {
+        return length;
+    }
+    
+    if(charInfoI.startEnd.length == 1) {
+        return Math.max(length +  charInfoI.startEnd[0].start, length +  charInfoI.startEnd[0].end);
+    }
+    
+    var maxS = {ind: 0, value: charInfoI.startEnd[0].start};
+    var maxE = {ind: 0, value: charInfoI.startEnd[0].end};
+    
+    for(var i=0; i<charInfoI.startEnd.length; i++) {
+        var se = charInfoI.startEnd[i];
+        
+        if(se.start > maxS.value) {
+            maxS = {ind: i, value: se.start};
+        }
+        
+        if(se.end > maxE.value) {
+            maxE = {ind: i, value: se.end};
+        }
+    }
+    
+    //console.log(charInfoI.startEnd);
+    //console.log(maxS.value + "-" + maxE.value);
+    //console.log(maxS.ind + "-" + maxE.ind);
+    
+    if(maxS.ind != maxE.ind) {
+        return length + maxS.value + maxE.value;
+    }
+    
+    var s1 = {ind: 0, value: -1};
+    var e1 = {ind: 0, value: -1};
+    for(var i=0; i<charInfoI.startEnd.length; i++) {
+        var se = charInfoI.startEnd[i];
+        
+        if(se.start > s1.value && maxS.ind != i) {
+            s1 = {ind: i, value: se.start};
+        }
+       
+        if(se.end > e1.value && maxE.ind != i) {
+            e1 = {ind: i, value: se.end};
+        }
+    }
+    
+    
+    //console.log(e1.value + "-" + s1.value + "-" + length);
+    
+    return Math.max(maxS.value + e1.value + length, maxE.value + s1.value + length);
+}
+
+function getInsideMaxLengthOfWord(word) {
+    var c = word[0];
+    var count = 0;
+    var max = 0;
+    for(var i=0; i<word.length; i++) {
+        if(word[i] == c) {
+            count++;
+            continue;
+        }
+        
+        max = Math.max(max, count);
+        c = word[i];
+        count = 1;
+    }
+    
+    
+    return Math.max(max, count);
+}
+
+function getInsideMaxLengthOfWords(words) {
+    var length = 0;
+    
+    for(var i=0; i<words.length; i++) {
+        var word = words[i];
+        length = Math.max(length, getInsideMaxLengthOfWord(word));
+    }
+    
+    return length;
+}
+
+function solution(words) {
+	console.log(words);
+    // write your code in JavaScript (Node.js 8.9.4)
+    var charInfo = [];
+    var aI =  'a'.charCodeAt(0); 
+    var charCount = 'z'.charCodeAt(0) - aI + 1; 
+    for(var i=0; i<charCount; i++) {
+        charInfo[i] = {
+            duplicate: 0,
+            startEnd: [],
+            maxLength: 0
+        };
+    }
+    
+    for(var i=0; i<words.length; i++) {
+        var word = words[i];
+        if(isOneCharWord(word)) {
+            var ind = word[0].charCodeAt(0) - aI;
+            charInfo[ind].duplicate += word.length;
+            continue;
+        }
+        
+        var c = word[0];
+        ind = c.charCodeAt(0) - aI;
+        charInfo[ind].startEnd.push(getStartEnd(word, c));
+        //console.log("C1: " + c);
+        
+        if(word[0] == word[word.length -1]) {
+            continue;
+        }
+        
+        c = word[word.length - 1];
+        ind = c.charCodeAt(0) - aI;
+        //console.log("C2: " + c);
+        //console.log(aI);
+        charInfo[ind].startEnd.push(getStartEnd(word, c));
+    }
+    
+    //console.log("Char: ");
+    var maxLength = getInsideMaxLengthOfWords(words);
+    for(var i=0; i<charCount; i++) {
+        var charInfoI = charInfo[i];
+        //console.log(charInfoI.startEnd);
+        //console.log("Char: " + i);
+        var lengthI = getMaxLength(charInfoI);
+        if(maxLength < lengthI) {
+            maxLength = lengthI;
+        }
+    }
+    
+    // console.log(charInfo);
+    return maxLength;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

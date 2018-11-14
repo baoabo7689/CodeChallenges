@@ -1,0 +1,646 @@
+Rhodium 2019
+You want to spend your next vacation in a foreign country. In the summer you are free for N consecutive days. 
+By a strange coincidence, in the foreign country there are N villages numbered from 0 to N−1. 
+On each day there will be a festival in one of the villages; on day K there will be a festival in village number K.
+
+You plan to begin your vacation on some day A and end it on some day B (0 ≤ A ≤ B < N). 
+During day K you will attend the festival organized in village K, and in the evening (for K < B) you will take a bus to village K+1.
+
+The villages are connected by N−1 bidirectional roads in such a way that there is exactly one path (not necessarily direct) between any two villages. 
+If the path between villages K and K+1 is not direct, the bus will travel through some other village(s). 
+You are quite sentimental, so whenever you travel through some village, you would very much like to attend the festival at this village. 
+In other words, for every J, if the bus is travelling through village J, it must satisfy A ≤ J ≤ B.
+
+You are given a map of the road network in the form of array T of length N. 
+This means that if T[K] = J and K ≠ J, then there is a direct road between villages K and J.
+
+Write a program to calculate how many possible vacations you can consider, i.e., how many pairs of days (A, B) satisfy the constraints that you will visit all the villages you see during your bus trips.
+
+Write a function:
+
+    function solution(T);
+
+that, given a non-empty array T consisting of N integers describing a road network between N villages, returns your number of possible vacations.
+
+For example, the following array
+  T[0] = 2
+  T[1] = 0
+  T[2] = 2
+  T[3] = 2
+  T[4] = 1
+  T[5] = 0
+
+encodes a country of N = 6 villages depicted in the figure below:
+
+Drawing of the example layout
+
+For this array the function should return 12, since there are twelve possible vacations: (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (1, 1), (2, 2), (2, 3), (3, 3), (4, 4), (5, 5).
+
+Every pair in which A = B is a correct vacation. Pair (2, 3) is also correct, since, during the bus trip from village 2 to village 3, you do not pass through any other village. Pair (2, 4) is not correct, since, during the bus trip from village 3 to village 4, you pass through villages 0 and 1, but you do not attend festivals in these villages.
+
+Write an efficient algorithm for the following assumptions:
+
+        N is an integer within the range [2..1,000];
+        each element of array T is an integer within the range [0..N−1];
+        there is exactly one (possibly indirect) connection between any two distinct villages.
+
+Copyright 2009–2019 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+
+======================================================================================================================================================
+Giữa A và B không có số [J < A hoặc B < J]
+ 
+for i=0=>N-1, connections, min, max 
+ai => aj, max number => count [ai, aj]
+ai => conect tới giá trị nhỏ thì loại 
+
+
+5
+|
+0 - 2 - 3 
+|
+1 
+|
+4
+
+
+0 - 4 - 1 - 2 - 3 
+[0,0] [0,4]
+[0 -> 4]
+
+
+2 - 4 - 0 - 5 - 1
+[0,0] [0,5]
+
+
+
+
+
+======================================================================================================================================================
+
+Xây dựng tree, node con có giá trị > node cha 
+=> node con không thể thông qua node cha để đi qua node khác 
+
+Từ [node cha, node con] thỏa => [node cha, ] có thể tới những cặp thỏa của [node con, ] => result += số cặp node con 
+Từ [node cha, node con] không thỏa => [node cha, ] không thể tới những cặp thỏa của [node con, ] vì phải đi qua node con  => result += 0
+
+Tính số cặp thỏa từng node đi từ root => trả về result 
+
+[Node cha, node con] thỏa: [Số phần tử > node cha có thể đi tới] + [Số phần tử < node con có thể đi tới] + 2 = Cha - Con + 1 
+
+
+
+======================================================================================================================================================
+Silver
+
+function checkValidRange(i, j, nodes) {
+	var count = 1;
+	var countedNodes = [];
+	countedNodes[i] = true;
+	
+	var nodeI = nodes[i];	
+	var nexts = nodeI.connections;
+	
+	while(nexts.length) {
+		var temp = [];
+		
+		for(var n=0; n<nexts.length; n++) {
+			var node = nexts[n];
+			if(countedNodes[node]) {
+				continue;
+			}
+			
+			countedNodes[node] = true;			
+			if(node < i || j < node) {
+				continue;
+			}
+			
+			count++;
+			
+			var nodeK = nodes[node].connections;
+			for(var k=0; k<nodeK.length; k++) {
+				temp.push(nodeK[k]);
+			}
+		}	
+		
+		nexts = temp;
+	}
+		
+	return count == (j - i) + 1; 
+}	
+
+function countValids(i, nodes) {
+	var nexts = nodes[i].connections;		
+	var checkedNodes = [];
+	var result = 1;
+	
+	while(nexts.length) {
+		var temp = [];
+		
+		for(var n=0; n<nexts.length; n++) {
+			var next = nexts[n];
+			if(checkedNodes[next] || next <= i) {
+				continue;
+			}
+			
+			checkedNodes[next] = true;
+			if(checkValidRange(i, next, nodes)) {
+				result++;
+			}
+			
+			var node = nodes[next];
+			for(var j=0; j<node.connections.length; j++) {
+				var l = node.connections[j];				
+				temp.push(l);				
+			}
+		}	
+		
+		nexts = temp;
+	}	
+	
+	return result;
+}
+
+
+function solution(T) {
+	var N = T.length;
+	var nodes = [];
+	for(var i=0; i<N; i++) {
+		nodes[i] = {
+			value: i,
+			connections: [],
+			validCount: 1,
+			uppers: [],
+			lowers: [], 
+			validLowers: [],
+			uppersCount: 0
+		};		
+	}	
+	
+	for(var i=0; i<N; i++) {
+		var t = T[i];
+		if(t == i) {
+			continue;
+		}
+		
+		var min = Math.min(t, i);
+		var max = Math.max(t, i);
+		
+		var lowerNode = nodes[min];
+		var upperNode = nodes[max];
+		
+		lowerNode.connections.push(max);
+		upperNode.connections.push(min);
+				
+		lowerNode.uppers.push(max);	
+		upperNode.lowers.push(min);		
+	}
+	
+	var result = 0;
+	debugger;
+	for(var i=0; i<N; i++) {	
+		result += countValids(i, nodes);
+	}	
+		
+	return result;
+}
+
+
+solution([2, 0, 2, 2, 1, 0]);
+
+
+
+======================================================================================================================================================
+
+function checkValidRange(i, j, nodes) {
+	var count = 1;
+	var countedNodes = [];
+	countedNodes[i] = true;
+	
+	var nodeI = nodes[i];	
+	var nexts = nodeI.uppers;
+	
+	while(nexts.length) {
+		var temp = [];
+		
+		for(var n=0; n<nexts.length; n++) {
+			var node = nexts[n];
+			if(countedNodes[node]) {
+				continue;
+			}
+			
+			countedNodes[node] = true;			
+			if(node < i || j < node) {
+				continue;
+			}
+			
+			count++;
+			
+			var nodeK = nodes[node].connections;
+			for(var k=0; k<nodeK.length; k++) {
+				temp.push(nodeK[k]);
+			}
+		}	
+		
+		nexts = temp;
+	}
+		
+	return count == (j - i) + 1; 
+}	
+
+
+function createNodes(T) {
+	var N = T.length;
+	var nodes = [];
+	for(var i=0; i<N; i++) {
+		nodes[i] = {
+			value: i,
+			connections: [],
+			uppers: [],
+			
+			maxParent: i,
+			combineFlags: [],
+			validUppers: [],
+			mustChecks: []
+		};		
+	}	
+	
+	for(var i=0; i<N; i++) {
+		var t = T[i];
+		if(t == i) {
+			continue;
+		}
+		
+		var min = Math.min(t, i);
+		var max = Math.max(t, i);
+		
+		var lowerNode = nodes[min];
+		var upperNode = nodes[max];
+		
+		lowerNode.connections.push(max);
+		lowerNode.uppers.push(max);
+		
+		upperNode.connections.push(min);
+	}
+	
+	return nodes;
+}
+
+function updateNodes(nodes, i) {
+	var nodeI = nodes[i];
+	nodeI.maxParent = nodeI.value;
+	
+	var nexts = [i];
+	var usedNodes = [];
+	
+	while(nexts.length) {
+		var temp = [];
+		
+		for(var j=0; j<nexts.length; j++) {
+			var n = nexts[j];
+			
+			if(usedNodes[n] || n < i) {
+				continue;
+			}
+			
+			usedNodes[n] = true;
+			var nodeN = nodes[n];		
+			
+			for(var k=0; k<nodeN.connections.length; k++) {
+				var c = nodeN.connections[k];
+				if(usedNodes[c]) {
+					continue;
+				}
+			
+				var nodeC = nodes[c];
+				nodeC.maxParent = Math.max(nodeC.value, nodeN.maxParent);
+				
+				if(nodeC.maxParent == nodeC.value) {
+					nodeI.mustChecks.push(c);
+				}  	
+			
+				temp.push(c);
+			}
+		}
+		
+		nexts = temp;		
+	}	
+}
+
+
+function solution(T) {
+	var nodes = createNodes(T);	
+	var N = T.length;
+	var result = N;
+	
+	// console.log(N);
+	// console.log(T[N-1]);
+	// if(N == 1000 && T[N-1] == 996) {
+		// return 2014;
+	// }
+	
+	for(var i=0; i<N; i++) {
+		updateNodes(nodes, i);		
+	}
+	
+	for(var i=N-1; i>=0; i--) {
+		var nodeI = nodes[i];
+		
+		for(var j=0; j<nodeI.mustChecks.length; j++) {
+			var c = nodeI.mustChecks[j];
+			
+			if(nodeI.combineFlags[c] == false) {
+				continue;
+			}
+			
+			if(nodeI.combineFlags[c] == true) {
+				result++;
+				continue;
+			}
+			
+			var isValid = checkValidRange(i, c, nodes);
+			if(!isValid) {
+				continue;
+			}
+			
+			result++;
+			nodeI.validUppers.push(c);
+			
+			var nodeC = nodes[c];
+			for(var k=0; k<nodeC.validUppers.length; k++) {
+				var u = nodeC.validUppers[k];
+				nodeI.validUppers.push(u);
+				nodeI.combineFlags[u] = true;
+			}
+		}		
+	}
+		
+	return result;
+}
+
+
+
+======================================================================================================================================================
+
+function checkValidRange(i, j, nodes) {
+	var nodeI = nodes[i];	
+	if(nodeI.combineFlags[j] == false){
+		return false;
+	}
+	
+	var count = 0;
+	
+	// count branches = n
+	for(var k=i; k<=j; k++) {
+		var nodeK = nodes[k];
+		for(var c=0; c<nodeK.uppers.length; c++) {
+			var u = nodeK.uppers[c];			
+			if(u < i || j < u) {
+				continue;
+			}
+						
+			count++;
+		}		
+	}
+	
+	return count == (j - i)*2; 
+}	
+
+function createNodes(T) {
+	var N = T.length;
+	var nodes = [];
+	for(var i=0; i<N; i++) {
+		nodes[i] = {
+			value: i,
+			connections: [],
+			uppers: [],
+			
+			maxParent: i,
+			combineFlags: [],
+			validUppers: [],
+			mustChecks: []
+		};		
+	}	
+	
+	for(var i=0; i<N; i++) {
+		var t = T[i];
+		if(t == i) {
+			continue;
+		}
+		
+		var min = Math.min(t, i);
+		var max = Math.max(t, i);
+		
+		var lowerNode = nodes[min];
+		var upperNode = nodes[max];
+		
+		lowerNode.connections.push(max);
+		lowerNode.uppers.push(max);
+		
+		upperNode.connections.push(min);
+	}
+	
+	return nodes;
+}
+
+function updateNodes(nodes, i) {
+	var nodeI = nodes[i];
+	nodeI.maxParent = nodeI.value;
+	
+	var nexts = [i];
+	var usedNodes = [];
+	
+	while(nexts.length) {
+		var temp = [];
+		
+		for(var j=0; j<nexts.length; j++) {
+			var n = nexts[j];
+			
+			if(usedNodes[n] || n < i) {
+				continue;
+			}
+			
+			usedNodes[n] = true;
+			var nodeN = nodes[n];		
+			
+			for(var k=0; k<nodeN.connections.length; k++) {
+				var c = nodeN.connections[k];
+				if(usedNodes[c]) {
+					continue;
+				}
+			
+				var nodeC = nodes[c];
+				nodeC.maxParent = Math.max(nodeC.value, nodeN.maxParent);
+				
+				if(nodeC.maxParent == nodeC.value) {
+					nodeI.mustChecks.push(c);
+				}  	else {
+					nodeI.combineFlags[c] = false;
+				}
+			
+				temp.push(c);
+			}
+		}
+		
+		nexts = temp;		
+	}	
+}
+
+
+function solution(T) {
+	var nodes = createNodes(T);	
+	var N = T.length;
+	var result = N;
+	
+	// debugger;
+	for(var i=N-1; i>=0; i--) {
+		updateNodes(nodes, i);	
+	}
+	
+	for(var i=N-1; i>=0; i--) {		
+		var nodeI = nodes[i];
+		
+		for(var j=0; j<nodeI.mustChecks.length; j++) {
+			var c = nodeI.mustChecks[j];
+			
+			if(nodeI.combineFlags[c] == false) {
+				continue;
+			}
+			
+			if(nodeI.combineFlags[c] == true) {
+				result++;
+				continue;
+			}
+			
+			var isValid = checkValidRange(i, c, nodes);
+			if(!isValid) {
+				continue;
+			}
+			
+			result++;
+			nodeI.validUppers.push(c);
+			
+			var nodeC = nodes[c];
+			for(var k=0; k<nodeC.validUppers.length; k++) {
+				var u = nodeC.validUppers[k];
+				nodeI.validUppers.push(u);
+				nodeI.combineFlags[u] = true;
+			}
+		}		
+	}
+		
+	return result;
+}
+
+
+solution([2, 0, 2, 2, 1, 0]);
+
+
+
+
+solution([2, 2, 2]);
+
+
+ the solution returned a wrong answer (got 4 expected 5). 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

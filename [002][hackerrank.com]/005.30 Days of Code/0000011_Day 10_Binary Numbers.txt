@@ -1,0 +1,126 @@
+Objective 
+Today, we're working with binary numbers. Check out the Tutorial tab for learning materials and an instructional video!
+
+Task 
+Given a base- integer, , convert it to binary (base-). Then find and print the base- integer denoting the maximum number of consecutive 's in 's binary representation.
+
+Input Format
+
+A single integer, .
+
+Constraints
+
+Output Format
+
+Print a single base- integer denoting the maximum number of consecutive 's in the binary representation of .
+
+Sample Input 1
+
+5
+Sample Output 1
+
+1
+Sample Input 2
+
+13
+Sample Output 2
+
+2
+Explanation
+
+Sample Case 1: 
+The binary representation of  is , so the maximum number of consecutive 's is .
+
+Sample Case 2: 
+The binary representation of  is , so the maximum number of consecutive 's is .
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+    static void Main(string[] args) {
+        int n = Convert.ToInt32(Console.ReadLine());
+        var result = 0;
+        var n2 = n;
+        while(n2 != 0) {
+            var count = 0;
+            while(n2 % 2 == 1) {
+                count++;
+                n2 = (n2-1)/2;
+            }
+            
+            result = Math.Max(result, count);
+            while(n2 != 0 && n2 % 2 == 0) {
+                count++;
+                n2 /= 2;
+            }            
+        }
+        
+        Console.Write(result);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

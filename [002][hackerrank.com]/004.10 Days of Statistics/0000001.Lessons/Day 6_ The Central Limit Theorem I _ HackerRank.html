@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<!-- saved from url=(0078)https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1/tutorial -->
+<html lang="en-us" style="--font-family-text:OpenSans, Arial, Helvetica, sans-serif; --font-family-input:SourceCodePro, monaco, Courier, monospace;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  
+  
+        <title> Day 6: The Central Limit Theorem I | HackerRank </title>
+        <meta name="description" id="meta-description" content="Basic problems on the Central Limit Theorem."><meta property="og:title" id="meta-og-title" content="Day 6: The Central Limit Theorem I | HackerRank"><meta property="og:image" id="meta-og-image" content="https://hrcdn.net/og/default.jpg"><meta property="og:description" id="meta-og-description" content="Basic problems on the Central Limit Theorem."><meta property="og:url" id="meta-og-url" content="https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1/tutorial"><meta property="og:site_name" id="meta-og-site" content="HackerRank"><meta property="og:type" id="meta-og-type" content="website"><meta property="article:author" content="https://www.facebook.com/hackerrank"><meta name="twitter:card" id="meta-twitter-card" content="summary"><meta name="twitter:site" id="meta-twitter-site" content="@hackerrank"><meta name="twitter:url" id="meta-twitter-url" content="https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1/tutorial"><meta name="twitter:title" id="meta-twitter-title" content="Day 6: The Central Limit Theorem I | HackerRank"><meta property="fb:app_id" id="meta-fb-id" content="347499128655783"><meta content="authenticity_token" name="csrf-param" id="csrf-param"><meta content="yWVnBFuTeqYipNs1s5XvtnPQ0bw3vo1BWUbGeWMp+IQ2o9xW0SwGl5x9jdxlnTQR/2h4qn8UKSt+jyuUdZpLSw==" name="csrf-token" id="csrf-token">
+        
+        
+      
+  <script type="text/javascript" async="" src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/mixpanel-2-latest.min.js.download"></script><script type="text/javascript" async="" src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/ga.js.download"></script><script>/*!
+ * JavaScript Cookie v2.1.3
+ * https://github.com/js-cookie/js-cookie
+ *
+ * Copyright 2006, 2015 Klaus Hartl & Fagner Brack
+ * Released under the MIT license
+ */
+;(function (factory) {
+	var registeredInModuleLoader = false;
+	if (typeof define === 'function' && define.amd) {
+		define(factory);
+		registeredInModuleLoader = true;
+	}
+	if (typeof exports === 'object') {
+		module.exports = factory();
+		registeredInModuleLoader = true;
+	}
+	if (!registeredInModuleLoader) {
+		var OldCookies = window.Cookies;
+		var api = window.Cookies = factory();
+		api.noConflict = function () {
+			window.Cookies = OldCookies;
+			return api;
+		};
+	}
+}(function () {
+	function extend () {
+		var i = 0;
+		var result = {};
+		for (; i < arguments.length; i++) {
+			var attributes = arguments[ i ];
+			for (var key in attributes) {
+				result[key] = attributes[key];
+			}
+		}
+		return result;
+	}
+
+	function init (converter) {
+		function api (key, value, attributes) {
+			var result;
+			if (typeof document === 'undefined') {
+				return;
+			}
+
+			// Write
+
+			if (arguments.length > 1) {
+				attributes = extend({
+					path: '/'
+				}, api.defaults, attributes);
+
+				if (typeof attributes.expires === 'number') {
+					var expires = new Date();
+					expires.setMilliseconds(expires.getMilliseconds() + attributes.expires * 864e+5);
+					attributes.expires = expires;
+				}
+
+				try {
+					result = JSON.stringify(value);
+					if (/^[\{\[]/.test(result)) {
+						value = result;
+					}
+				} catch (e) {}
+
+				if (!converter.write) {
+					value = encodeURIComponent(String(value))
+						.replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent);
+				} else {
+					value = converter.write(value, key);
+				}
+
+				key = encodeURIComponent(String(key));
+				key = key.replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent);
+				key = key.replace(/[\(\)]/g, escape);
+
+				return (document.cookie = [
+					key, '=', value,
+					attributes.expires ? '; expires=' + attributes.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
+					attributes.path ? '; path=' + attributes.path : '',
+					attributes.domain ? '; domain=' + attributes.domain : '',
+					attributes.secure ? '; secure' : ''
+				].join(''));
+			}
+
+			// Read
+
+			if (!key) {
+				result = {};
+			}
+
+			// To prevent the for loop in the first place assign an empty array
+			// in case there are no cookies at all. Also prevents odd result when
+			// calling "get()"
+			var cookies = document.cookie ? document.cookie.split('; ') : [];
+			var rdecode = /(%[0-9A-Z]{2})+/g;
+			var i = 0;
+
+			for (; i < cookies.length; i++) {
+				var parts = cookies[i].split('=');
+				var cookie = parts.slice(1).join('=');
+
+				if (cookie.charAt(0) === '"') {
+					cookie = cookie.slice(1, -1);
+				}
+
+				try {
+					var name = parts[0].replace(rdecode, decodeURIComponent);
+					cookie = converter.read ?
+						converter.read(cookie, name) : converter(cookie, name) ||
+						cookie.replace(rdecode, decodeURIComponent);
+
+					if (this.json) {
+						try {
+							cookie = JSON.parse(cookie);
+						} catch (e) {}
+					}
+
+					if (key === name) {
+						result = cookie;
+						break;
+					}
+
+					if (!key) {
+						result[name] = cookie;
+					}
+				} catch (e) {}
+			}
+
+			return result;
+		}
+
+		api.set = api;
+		api.get = function (key) {
+			return api.call(api, key);
+		};
+		api.getJSON = function () {
+			return api.apply({
+				json: true
+			}, [].slice.call(arguments));
+		};
+		api.defaults = {};
+
+		api.remove = function (key, attributes) {
+			api(key, '', extend(attributes, {
+				expires: -1
+			}));
+		};
+
+		api.withConverter = init;
+
+		return api;
+	}
+
+	return init(function () {});
+}));
+</script>
+  <style>
+  .cdn-error-view {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: white;
+    z-index: 9999;
+    font-family: "Whitney SSm A", "Whitney SSm B", "Avenir", "Segoe UI", "Ubuntu", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  .cdn-error-view .error-box-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 20px;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .cdn-error-view .error-icon {
+    text-align: center;
+  }
+  .cdn-error-view .error-title {
+    font-size: 48px;
+    margin-top: 30px;
+    margin-bottom: 0;
+    font-weight: bold;
+  }
+  .cdn-error-view .error-message {
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+  .cdn-error-view .btn-wrap {
+    margin-top: 20px;
+  }
+  .cdn-error-view .btn-reload {
+    width: 300px;
+    padding: 10px;
+    border-radius: 3px;
+    border-color: #088837;
+    border-bottom-color: #007827;
+    border-width: 1px;
+    border-style: solid;
+    color : #FFF;
+    background-color: #2ec866;
+    background-image: -webkit-gradient(linear, top left, bottom left, color-stop(0, #2ec866), color-stop(1, #29b35b));
+    background-image: -webkit-linear-gradient(top, #2ec866, #29b35b);
+    background-image: linear-gradient(top, #2ec866, #29b35b);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 -1px 4px rgba(32, 138, 70, 0.3);
+    outline: none;
+  }
+</style>
+
+
+<script>
+  var cdnLoaded = false;
+
+  var checkForWorkingCDN = (function() {
+    //this two value should come from configuration
+    var cdns = ["hrcdn.net","d3keuzeb2crhkn.cloudfront.net"];
+    var cdnUrl = Cookies.get('cdn_url') || cdns[0];
+    var filePath = "https://hrcdn.net/hackerrank/assets/cdnping-e4dfec54a83d6e6bc9baf3ce741ae25e.js";
+
+    //extract pathname from url
+    var urlRegex = /^[^#]*?:\/\/.*?(\/.*)$/ ;
+    var match = filePath.match(urlRegex);
+    if(match) filePath = match[1];
+
+    //add current cdn on first of array
+    cdns.splice(cdns.indexOf(cdnUrl), 1);
+    cdns.unshift(cdnUrl);
+
+    var cdnIndx = 0;
+
+    function tryCurrentCDN() {
+      if (cdnUrl) document.write('<script src="https://' + cdnUrl + filePath + '?' + Date.now() + '"><\/script>');
+      document.write('<script>checkForWorkingCDN();<\/script>');
+    }
+
+    //try the current cdn
+    tryCurrentCDN();
+
+    return function() {
+      if (cdnUrl && cdnLoaded) {
+        Cookies.set('cdn_url', cdnUrl, {expires: 3});
+        Cookies.set('cdn_set', 'true', {expires: 3});
+        if (cdnIndx !== 0) {
+          document.location.reload();
+        }
+
+        //if cdnUrl not loaded check the next cdn;
+      } else if (cdnUrl) {
+        //track all the failed cdn
+        var failedCdns = Cookies.get('failed_cdn_hosts');
+        if (failedCdns) {
+          failedCdns = JSON.parse(failedCdns);
+        } else {
+          failedCdns = [];
+        }
+
+        failedCdns.push(cdnUrl);
+        var fifteenMinuteFromNow = new Date();
+        fifteenMinuteFromNow.setMinutes(15);
+        Cookies.set('failed_cdn_hosts', JSON.stringify(failedCdns), {expires: fifteenMinuteFromNow});
+        Cookies.set("cdn_url_switched", "true", {expires: fifteenMinuteFromNow});
+
+        //try next cdn
+        cdnIndx += 1;
+        cdnUrl = cdns[cdnIndx];
+        tryCurrentCDN();
+
+        //if no cdn left to check and none of loaded return err
+      } else {
+        Cookies.remove('cdn_url');
+        return 'cdnerror';
+      }
+    }
+  }());
+</script><script src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/cdnping-e4dfec54a83d6e6bc9baf3ce741ae25e.js.download"></script><script>checkForWorkingCDN();</script>
+
+<script>
+  //track cdn related matrices
+  (function() {
+    var allCdns = ["hrcdn.net","d3keuzeb2crhkn.cloudfront.net"];
+
+    var metrics = [];
+    var defaultCdn = Cookies.get('default_cdn_url');
+
+    //method to track the events
+    function appTrack(key, attrs) {
+      attrs = attrs || {};
+      attrs.uid = Cookies.get('hackerrank_mixpanel_token')
+      metrics.push({
+        'key': key,
+        'meta_data': attrs
+      });
+    }
+
+    function sendMetrices() {
+      if (!XMLHttpRequest) return;
+      var xhr = new XMLHttpRequest();
+      var metrics_endpoint = 'https://metrics.hackerrank.com/app_metrics'; // Todo : this need to move on configuration
+
+      if (!xhr) return;
+
+      xhr.open("POST", metrics_endpoint, true);
+
+      //set xhr headers and options
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.withCredentials = true;
+
+      xhr.send(JSON.stringify({
+        data: metrics,
+        default_cdn_url: defaultCdn,
+        document_referrer: document.referrer
+      }));
+    }
+
+    var cdnUrl = Cookies.get('cdn_url');
+    var failedCdns = Cookies.get('failed_cdn_hosts');
+
+    var cdnMetrices = {};
+
+    //track used cdn host
+    if (cdnUrl) {
+      cdnMetrices['used-cdn'] = cdnUrl;
+      cdnMetrices['cdn-index'] = allCdns.indexOf(cdnUrl) + 1;
+      cdnMetrices['all-failed'] = false;
+    //track if all cdn failed (If cdnUrl is not set it means all cdn url failed)
+    } else {
+      cdnMetrices['used-cdn'] = '';
+      cdnMetrices['cdn-index'] = 999;
+      cdnMetrices['all-failed'] = true;
+    }
+
+    appTrack('cdn-metrices', cdnMetrices);
+
+    //track failed cdn
+    if (failedCdns) {
+      failedCdns = JSON.parse(failedCdns);
+      Cookies.remove('failed_cdn_hosts');
+      failedCdns.forEach(function(cdn) {
+        appTrack('failed-cdn-host', {
+          cdn: cdn
+        });
+      });
+    }
+
+    //send metrics
+    sendMetrices();
+
+  }());
+</script>
+
+
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="https://hrcdn.net/hackerrank/assets/favicon-95dc36c7e91ed5f1841649303c027edb.png">
+
+  <!-- Prefetch dns on production -->
+  
+    <link rel="dns-prefetch" href="https://hrcdn.net/">
+    <link rel="dns-prefetch" href="https://d3keuzeb2crhkn.cloudfront.net/">
+    <link rel="dns-prefetch" href="https://notifications.hackerrank.com/">
+    <link rel="dns-prefetch" href="https://api.mixpanel.com/">
+    <link rel="dns-prefetch" href="https://metrics.hackerrank.com/">
+    <link rel="preconnect" href="https://sentry.io/">
+    <link rel="dns-prefetch" href="https://sentry.io/">
+  
+
+  
+
+
+  
+    <link href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_old_trimmed-c49b50b1ea7c9c0323a3.css" media="all" rel="stylesheet"><link rel="stylesheet" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_old_trimmed-c49b50b1ea7c9c0323a3.css">
+  
+
+  <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_app-004b5c835418ffa33481.css">
+  
+    <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_community_hackerrank_r_work-d2cb0cbb57da369166dd.css">
+  
+    <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_community-1103cfd7430e814021e7.css">
+  
+    <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_community-6448c162f761c6e884df.css">
+  
+    <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge_hackerrank_r_leaderboard_hackerrank_r_leaderboardv2-fe33b60cdf9a08a34d2.css">
+  
+    <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge_hackerrank_r_onboarding-ba118bc433f1e0b0370f.css">
+  
+    <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge-3a96bddf0114b7509206.css">
+  
+    <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_challenge_hackerrank_r_code_snippets_hackerrank_r_onboarding-064e3f0db25082677955.css">
+  
+    <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_challenge-54cdbb352d45e66ad4cb.css">
+  
+    <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge_hackerrank_r_leaderboard_hackerrank_r_leaderboardv2-fe33b60cdf9a08a34d2.css">
+  
+    <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge_hackerrank_r_onboarding-ba118bc433f1e0b0370f.css">
+  
+    <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge-3a96bddf0114b7509206.css">
+  
+    <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_challenge_hackerrank_r_code_snippets_hackerrank_r_onboarding-064e3f0db25082677955.css">
+  
+    <link rel="stylesheet" type="text/css" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_challenge-54cdbb352d45e66ad4cb.css">
+  
+
+  <!-- Prefetch / preload assets on production -->
+  
+
+    <!-- Prefetch old assets -->
+    
+      <link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank-29975682f302f0fbbdae252d97e4788d.js">
+    
+      <link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/base-4e953f9582ddc0e62ee5b02dbe2520ca.js">
+    
+      <link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_libraries-ee40391d20d8d00f36e1a0af1ee56beb.js">
+    
+    <!-- Prefetch old assets end-->
+
+    <!-- preload scripts required on the same page -->
+    <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_vendor-5bc167c024.js.download">
+    <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_app-004b5c835418ffa33481.js.download">
+    <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/runtime-4fcf040b3cf90f6455a7.js.download">
+
+    
+      <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_community_hackerrank_r_work-d2cb0cbb57da369166dd.js.download">
+    
+      <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_community-1103cfd7430e814021e7.js.download">
+    
+      <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_community-6448c162f761c6e884df.js.download">
+    
+      <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_challenge_hackerrank_r_code_snippets_hackerrank_r_onboarding-064e3f0db25082677955.js.download">
+    
+      <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge_hackerrank_r_leaderboard_hackerrank_r_leaderboardv2-fe33b60cdf9a08.download">
+    
+      <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge_hackerrank_r_onboarding-ba118bc433f1e0b0370f.js.download">
+    
+      <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge-3a96bddf0114b7509206.js.download">
+    
+      <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_challenge-54cdbb352d45e66ad4cb.js.download">
+    
+      <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_challenge_hackerrank_r_code_snippets_hackerrank_r_onboarding-064e3f0db25082677955.js.download">
+    
+      <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge_hackerrank_r_leaderboard_hackerrank_r_leaderboardv2-fe33b60cdf9a08.download">
+    
+      <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge_hackerrank_r_onboarding-ba118bc433f1e0b0370f.js.download">
+    
+      <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge-3a96bddf0114b7509206.js.download">
+    
+      <link rel="preload" as="script" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_challenge-54cdbb352d45e66ad4cb.js.download">
+    
+    <!-- preload scripts end -->
+
+    <!-- Prefetch old css files -->
+    <link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank-core-34a38d5e53237acdb04bd3cfa307ab90.css">
+    <link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_libraries-21fce5f00a5704ab97ea6e29f618ca7f.css">
+
+    
+      <link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/dashboard-e26d916d8859b521a068330828d9578e.css">
+    
+    <!-- Prefetch old css files end -->
+  
+  
+
+  <!-- Load promise polyfill for the non-believers -->
+  <script>
+    window.Promise || document.write('<script src="https://hrcdn.net/hackerrank/assets/promise-polyfill/promise.min-9b7934fab083223fac8be5ee5ae0b68d.js" type="text\/javascript"><\/script>');
+  </script>
+
+<script charset="utf-8" src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_community_hackerrank_r_work-d2cb0cbb57da369166dd.js.download"></script><script charset="utf-8" src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_community-1103cfd7430e814021e7.js.download"></script><script charset="utf-8" src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_community-6448c162f761c6e884df.js.download"></script><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_challenge_list-12bb08b578ad7eaa2791.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_challenge_list~hackerrank_r_challenge_list_v2~hackerrank_r_interview~hackerrank~14aa502a-50a219c2b488c7a1f86a.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_challenge_list~hackerrank_r_challenge_list_v2-872d05cd86651791be2c.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_challenge_list~hackerrank_r_challenge_list_v2-872d05cd86651791be2c.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_challenge_list-12bb08b578ad7eaa2791.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_challenge_list_v2-28fee2709d829d2e171f.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_challenge_list_v2-28fee2709d829d2e171f.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_forum-e893abb65203d9ebf7ca.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_code_snippets~hackerrank_r_forum~lsp_client-79f0f3a53b46ca261d83.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_code_snippets~hackerrank_r_forum-6f536c9fd9fe39e87206.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_code_snippets~hackerrank_r_forum-0986a56df648fb66b083.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_code_snippets~hackerrank_r_forum-0986a56df648fb66b083.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_code_snippets~hackerrank_r_forum-6f536c9fd9fe39e87206.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_forum-e893abb65203d9ebf7ca.css"><link rel="prefetch" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge_hackerrank_r_leaderboard_hackerrank_r_leaderboardv2-fe33b60cdf9a08a34d2.css"><link rel="prefetch" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge_hackerrank_r_onboarding-ba118bc433f1e0b0370f.css"><link rel="prefetch" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge-3a96bddf0114b7509206.css"><link rel="prefetch" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_challenge_hackerrank_r_code_snippets_hackerrank_r_onboarding-064e3f0db25082677955.css"><link rel="prefetch" href="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_challenge-54cdbb352d45e66ad4cb.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_leaderboardv2-5d34b2a9783f942c2778.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_leaderboard~hackerrank_r_leaderboardv2-9202efb40a50f9d2b4bf.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_leaderboard~hackerrank_r_leaderboardv2-9202efb40a50f9d2b4bf.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_leaderboardv2-5d34b2a9783f942c2778.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_contest-f57750c828bfcc7f1a9c.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_contest-f57750c828bfcc7f1a9c.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_dashboard-8774da54b47ab6ab8de7.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_dashboard~hackerrank_r_work-52cf8409ac0a40c533f5.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_dashboard-8774da54b47ab6ab8de7.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_rank-36b28494046df5faab2d.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_rank-36b28494046df5faab2d.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_leaderboard-8b576bc5d2ae0cc55b40.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_leaderboard-8b576bc5d2ae0cc55b40.css">
+        <style>
+          html.scroll-hidden,html.scroll-hidden body{
+              overflow: hidden;
+              height:100vh;
+          }
+          html.scroll-hidden.pad-adjustment body{
+              padding-right : 17px;
+          }
+          html.scroll-hidden.pad-adjustment .fixed-elm{
+              padding-right : 17px;
+          }
+        </style>
+    <script charset="utf-8" src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_old_trimmed-c49b50b1ea7c9c0323a3.js.download"></script><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_company_header-beba8756b8689446c972.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_company_header-beba8756b8689446c972.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_jobs-b7e6a43def4f0d31afae.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_jobs~hackerrank_r_testinvite~hackerrank_r_testsettings-affb163167eed3042aa0.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_jobs-ea9de208ae01f988c69a.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_jobs-ea9de208ae01f988c69a.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_jobs-b7e6a43def4f0d31afae.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_profile-9b892abf4b0b3c65144e.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_profile-9b892abf4b0b3c65144e.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_calendar-8ce307bc8f4d1d0c2ba8.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_calendar-bfd144c52decb39e92af.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_calendar-8ce307bc8f4d1d0c2ba8.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_code_snippets-996f4c14d0f6bcc4c194.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_code_snippets-996f4c14d0f6bcc4c194.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_onboarding-f759ba4c3d3ee930e8d9.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_onboarding-f759ba4c3d3ee930e8d9.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_scoring-6ae497e6d749fd4a0625.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_scoring-6ae497e6d749fd4a0625.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_interview-662750aa627d516be496.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_interview~hackerrank_r_work-459f2aed8146e35e2862.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_interview~hackerrank_r_testinsights-1955c016ea87556139ff.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_interview-d0a322f9153701e072bf.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_interview~hackerrank_r_work-459f2aed8146e35e2862.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_interview-d0a322f9153701e072bf.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_interview-662750aa627d516be496.css"><script charset="utf-8" src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge_hackerrank_r_leaderboard_hackerrank_r_leaderboardv2-fe33b60cdf9a08.download"></script><script charset="utf-8" src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge_hackerrank_r_onboarding-ba118bc433f1e0b0370f.js.download"></script><script charset="utf-8" src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/vendors_hackerrank_r_challenge-3a96bddf0114b7509206.js.download"></script><script charset="utf-8" src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_challenge_hackerrank_r_code_snippets_hackerrank_r_onboarding-064e3f0db25082677955.js.download"></script><script charset="utf-8" src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_challenge-54cdbb352d45e66ad4cb.js.download"></script><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_codeshell_lib-f202de816526e536411a.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_codeshell_lib~hackerrank_r_teams-989af7c6a1b9bc72bbf9.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_codeshell_lib-575d563e37ae32aea08c.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/codeshell_editor_theme_m-18f29fbe576be6520427.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/codeshell_editor_theme_m-18f29fbe576be6520427.css"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/hackerrank_r_krackjack-ee9e55cc1ce2865f32d9.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_krackjack-8efa7a888c0368352cf6.js"><link rel="prefetch" href="https://hrcdn.net/hackerrank/assets/vendors~hackerrank_r_krackjack-8efa7a888c0368352cf6.css"></head>
+<body id="hr_v2">
+  <div class="cdn-error-view" style="display:none;">
+  <div class="error-box-wrap">
+    <div class="error-icon">
+      <svg x="0px" y="0px" width="80px" height="80px" viewBox="0 0 367.011 367.01" style="enable-background:new 0 0 367.011 367.01;" xml:space="preserve">
+        <g>
+         <g>
+          <path d="M365.221,329.641L190.943,27.788c-1.542-2.674-4.395-4.318-7.479-4.318c-3.084,0-5.938,1.645-7.48,4.318L1.157,330.584    c-1.543,2.674-1.543,5.965,0,8.639c1.542,2.674,4.395,4.318,7.48,4.318h349.65c0.028,0,0.057,0,0.086,0    c4.77,0,8.638-3.863,8.638-8.639C367.011,332.92,366.342,331.1,365.221,329.641z M23.599,326.266L183.464,49.381l159.864,276.885    H23.599z"></path>
+          <path d="M174.826,136.801v123.893c0,4.773,3.867,8.638,8.638,8.638c4.77,0,8.637-3.863,8.637-8.638V136.801    c0-4.766-3.867-8.637-8.637-8.637C178.693,128.165,174.826,132.036,174.826,136.801z"></path>
+          <path d="M183.464,279.393c-5.922,0-10.725,4.8-10.725,10.722s4.803,10.729,10.725,10.729c5.921,0,10.725-4.809,10.725-10.729    C194.189,284.193,189.386,279.393,183.464,279.393z"></path>
+         </g>
+        </g>
+      </svg>
+    </div>
+    <h2 class="error-title">Something went wrong!</h2>
+    <p class="error-message">Some error occured while loading page for you. Please try again.</p>
+    <div class="btn-wrap">
+      <a href="https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1/tutorial#" onclick="window.location.reload(true);"><button class="btn-reload">Reload</button></a>
+    </div>
+  </div>
+</div>
+<script>
+  if(typeof cdnLoaded !== 'undefined' && cdnLoaded === false){
+    document.querySelector('.cdn-error-view').style.display = 'block';
+  }
+</script>
+
+  <div id="fb-root"></div>
+  
+
+  <!-- Just a placeholder div to start loading open sans and source code loader -->
+  <div class="font-open-sans-loader"></div>
+  <div class="font-source-code-loader"></div>
+  <!-- Just a placeholder div to start loading open sans and source code loader end -->
+
+  <div id="content" onclick="void(0);"><div class="body-wrap  community-page challenges-page custompage-page show-cookie-banner"><div class="toast-message loading"><span class="toast-container containment"><i class="ui-icon-loading"></i><span class="toast-text">Loading...</span></span></div><div class="theme-m new-design logged-user"><div class="page-header-wrapper theme-m-section"><nav class="community-header"><div class="container"><div class="header-nav-links theme-m-section"><ul class="nav-links"><li class="nav-link-item logo-wrap"><a class="nav_link backbone logo_mark js_logo_mark logo-link" data-analytics="NavBarLogo" data-attr1="/dashboard" href="https://www.hackerrank.com/dashboard"><img id="feed-intro" class="logo-img-small" src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/h_mark_sm-9c05999c62674028552f4e813728e591.svg" alt=""></a></li><li class="nav-link-item"><a class="nav-link dashboard active" data-analytics="NavBarDomains" href="https://www.hackerrank.com/dashboard"><span>Practice</span></a></li><li class="nav-link-item"><a class="nav-link contests" data-analytics="NavBarContests" href="https://www.hackerrank.com/contests"><span>Compete</span></a></li><li class="nav-link-item"><a class="nav-link" data-analytics="NavBarJobs" href="https://www.hackerrank.com/jobs"><span>Jobs</span><i class="icon-circle js-jobs-notification navigation-highlight-icon hidden"></i></a></li><li class="nav-link-item"><a class="nav-link" data-analytics="NavBarLeaderboard" id="leaderboard-nav-link" href="https://www.hackerrank.com/leaderboard"><span>Leaderboard</span></a></li></ul></div><div class="nav-buttons theme-m-section"><ul class="pull-left psR"><li class="hide-in-private-contest search-input-container input-icon main-hr-search" id="search-span"><div class="search-form new-search"><div><div class="search-query asyn-autocomplete autocomplete"><div class="ac-input-wrap cf"><input autocomplete="off" class="ac-input " value="" placeholder="Search"></div></div><i class="ui-icon-search"></i></div></div></li></ul><ul class="pull-left nav-wrap mmL"><li class="hide-in-private-contest button-item"><div class="dropdown dropdown message-dropdown notify-dropdown theme-m-content"><a class="cursor dropdown-handle nav_link hr_nav_messages_link js-dropdown-toggle js-link" data-analytics="NavBarMessageIcon"><i class="dropdown-icon ui-icon-message"></i></a><div class="dropdown-menu large"><header class="psT psB text-center menu-header"><strong class="header-title">Messages</strong></header><div id="notify_messages" class="dropdown-body"><div class="hr_nav_messages_list"><div class="no-propagation text-center txt-navy empty-msg">You have no unread messages.</div></div></div><footer class="final text-center show-all"><a class="btn show-all-link" href="https://www.hackerrank.com/inbox" data-analytics="NavBarMessageShowAll">Show All</a></footer></div></div></li><li class="button-item"><div class="dropdown dropdown notification-dropdown notify-dropdown theme-m-content"><a class="cursor dropdown-handle nav_link hr_nav_notifications_link js-dropdown-toggle js-link" data-toggle="dropdown" data-analytics="NavBarNotificationsIcon"><i class="dropdown-icon ui-icon-notification"></i></a><div class="dropdown-menu large" id="notify_broadcasts"><header class="psA menu-header"><strong class="header-title">Notifications</strong><a class="hr_archive_all archive pull-right js-link" data-analytics="NavBarNotificationsArchiveAll"><i class="icon-folder-open"></i>Archive All</a></header><div class="clearfix dropdown-body"><div class="hr_nav_notifications_list"><ul><li class="notify_item dropdown-item cursor" data-id="67491255" data-category="contest-announcements" data-url="/challenges/s10-the-central-limit-theorem-1"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Crush the Central Limit Theorem. Day 6 of 10 Days of Statistics</div><small class="meta"><time class="time-text" datetime="2018-09-24T02:01:58.000Z" title="2018-09-24 02:01">6 hours ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="67491254" data-category="contest-announcements" data-url="/challenges/30-review-loop"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Operators, Strings, and Loops, Oh My! Day 6 of 30 Days of Code.</div><small class="meta"><time class="time-text" datetime="2018-09-24T02:01:58.000Z" title="2018-09-24 02:01">6 hours ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="67456933" data-category="contest-announcements" data-url="/challenges/s10-poisson-distribution-1"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Ace Poisson &amp; Normal Distributions. Day 5 of 10 Days of Statistics</div><small class="meta"><time class="time-text" datetime="2018-09-23T02:02:55.000Z" title="2018-09-23 02:02">1 day ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="67456932" data-category="contest-announcements" data-url="/challenges/30-loops"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Are you in the Loop? Day 5 of 30 Days of Code.</div><small class="meta"><time class="time-text" datetime="2018-09-23T02:02:55.000Z" title="2018-09-23 02:02">1 day ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="67421108" data-category="contest-announcements" data-url="/challenges/s10-binomial-distribution-1"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Master Distributions. Day 4 of 10 Days of Statistics</div><small class="meta"><time class="time-text" datetime="2018-09-22T02:02:47.000Z" title="2018-09-22 02:02">2 days ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="67421107" data-category="contest-announcements" data-url="/challenges/30-class-vs-instance"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Classes vs Instance. Day 4 of 30 Days of Code.</div><small class="meta"><time class="time-text" datetime="2018-09-22T02:02:47.000Z" title="2018-09-22 02:02">2 days ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="67384085" data-category="contest-announcements" data-url="/challenges/s10-mcq-4"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Prevail with Probability. Day 3 of 10 Days of Statistics</div><small class="meta"><time class="time-text" datetime="2018-09-21T02:03:03.000Z" title="2018-09-21 02:03">3 days ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="67384084" data-category="contest-announcements" data-url="/challenges/30-conditional-statements"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Conquer Conditionals. Day 3 of 30 Days of Code.</div><small class="meta"><time class="time-text" datetime="2018-09-21T02:03:03.000Z" title="2018-09-21 02:03">3 days ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="67345072" data-category="contest-announcements" data-url="/challenges/s10-mcq-1"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Get Puzzled with Probability. Day 2 of 10 Days of Statistics</div><small class="meta"><time class="time-text" datetime="2018-09-20T02:02:59.000Z" title="2018-09-20 02:02">4 days ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="67345071" data-category="contest-announcements" data-url="/challenges/30-operators"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Become an Operator Overlord. Day 2 of 30 Days of Code.</div><small class="meta"><time class="time-text" datetime="2018-09-20T02:02:59.000Z" title="2018-09-20 02:02">4 days ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="67309604" data-category="contest-announcements" data-url="/challenges/s10-quartiles"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Measure The Spread. Day 1 of 10 Days of Statistics</div><small class="meta"><time class="time-text" datetime="2018-09-19T02:02:45.000Z" title="2018-09-19 02:02">5 days ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="67309603" data-category="contest-announcements" data-url="/challenges/30-data-types"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Double Down on Data Types. Day 1 of 30 Days of Code.</div><small class="meta"><time class="time-text" datetime="2018-09-19T02:02:45.000Z" title="2018-09-19 02:02">5 days ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="67309235" data-category="contest-announcements" data-url="/challenges/30-hello-world"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Ready... set... start 30 Days of Code!</div><small class="meta"><time class="time-text" datetime="2018-09-19T02:00:14.000Z" title="2018-09-19 02:00">5 days ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="67299075" data-category="contest-announcements" data-url="/challenges/s10-basic-statistics"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Start Day 0 of 10 Days of Statistics</div><small class="meta"><time class="time-text" datetime="2018-09-18T15:53:55.000Z" title="2018-09-18 15:53">6 days ago</time></small></div></div></li><li class="notify_item dropdown-item cursor" data-id="66849949" data-category="contest-announcements" data-url="/domains/tutorials/30-days-of-code"><div class="notification-icon"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/notifymarker-72a631c740640b69e5d277569c59b97e.png"></div><div class="notification-subject pmT"><div class="psA"><div>Improve your coding skills. Join our 30 Days of Code challenge!</div><small class="meta"><time class="time-text" datetime="2018-09-07T03:24:23.000Z" title="2018-09-07 03:24">2 weeks ago</time></small></div></div></li></ul></div></div><footer class="final show-all"><a class="btn show-all-link" href="https://www.hackerrank.com/notifications" data-analytics="NavBarNotificationsShowAll">Show All</a></footer></div></div></li><li class="button-item"><div class="dropdown dropdown dropdown-auth profile-menu cursor theme-m-content"><a class="backbone nav_link js-dropdown-toggle js-link toggle-wrap" data-analytics="NavBarProfileDropDown"><img src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/150x150.png" alt="" class="avatar"><span class="mmR username text-ellipsis">baoabo7689</span><i class="ui-icon-chevron-down down-icon"></i></a><div class="dropdown-menu drop-list pull-right"><ul><li class="hide-in-private-contest profile-nav-item"><a class="navigation_hackos hackos-count" data-analytics="NavBarProfileDropDownHackos" href="https://www.hackerrank.com/baoabo7689/hackos">Hackos: <span class="navigation_hackos-count">3371</span></a></li><li class="hide-in-private-contest profile-nav-item"><a rel="tooltip" data-placement="left" data-analytics="NavBarProfileDropDownProfile" href="https://www.hackerrank.com/baoabo7689">Profile<div class="ui-progress-bar progress-bar theme-default"><div class="progress-filler" style="width:40%"></div></div></a></li><li class="hide-in-private-contest profile-nav-item"><a href="https://www.hackerrank.com/settings/profile" data-analytics="NavBarProfileDropDownSettings">Settings</a></li><li class="hide-in-private-contest profile-nav-item"><a href="https://www.hackerrank.com/challenges/bookmarks" data-analytics="NavBarDropDownBookmarks">Bookmarks</a></li><li class="hide-in-private-contest profile-nav-item"><a href="https://www.hackerrank.com/network" data-analytics="NavBarProfileDropDownNetwork">Network</a></li><li class="hide-in-private-contest profile-nav-item"><a href="https://www.hackerrank.com/submissions" data-analytics="NavBarProfileDropDownSubmissions">Submissions</a></li><li class="hide-in-private-contest profile-nav-item"><a href="https://www.hackerrank.com/administration" data-analytics="NavBarProfileDropDownAdministration">Administration</a></li><li class="profile-nav-item"><a class="logout-button js-link" data-analytics="NavBarProfileDropDownLogout">Logout</a></li></ul></div></div></li></ul></div></div></nav></div><header class="community-header-breadcrumb"><div class="container"><div class="d-flex justify-content-between align-items-center content-header-wrapper"><div class="community-header-breadcrumb-items"><ol itemtype="http://schema.org/BreadcrumbList" class="community-breadcrumb text-content"><li itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="breadcrumb-item"><a itemprop="item" class="breadcrumb-link" data-analytics="Breadcrumb" data-attr1="Practice" data-attr2="global" data-attr7="1" href="https://www.hackerrank.com/dashboard"><span itemprop="name" class="breadcrumb-item-text">Practice</span></a><meta itemprop="position" content="1"></li><li itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="breadcrumb-item"><span class="ui-icon-chevron-right mmL mmR chevron-icon"></span><a itemprop="item" class="breadcrumb-link" data-analytics="Breadcrumb" data-attr1="Tutorials" data-attr2="global" data-attr7="1" href="https://www.hackerrank.com/domains/tutorials"><span itemprop="name" class="breadcrumb-item-text">Tutorials</span></a><meta itemprop="position" content="1"></li><li itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="breadcrumb-item"><span class="ui-icon-chevron-right mmL mmR chevron-icon"></span><a itemprop="item" class="breadcrumb-link" data-analytics="Breadcrumb" data-attr1="10 Days of Statistics" data-attr2="global" data-attr7="1" href="https://www.hackerrank.com/domains/tutorials/10-days-of-statistics"><span itemprop="name" class="breadcrumb-item-text">10 Days of Statistics</span></a><meta itemprop="position" content="1"></li><li itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="breadcrumb-item"><span class="ui-icon-chevron-right mmL mmR chevron-icon"></span><a itemprop="item" class="breadcrumb-link" data-analytics="Breadcrumb" data-attr1="Day 6: The Central Limit Theorem I" data-attr2="global" data-attr7="1" href="https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1"><span itemprop="name" class="breadcrumb-item-text">Day 6: The Central Limit Theorem I</span></a><meta itemprop="position" content="1"></li><li itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="breadcrumb-item"><span class="ui-icon-chevron-right mmL mmR chevron-icon"></span><span itemprop="name" class="breadcrumb-item-text">Tutorial</span><meta itemprop="position" content="1"></li></ol><div class="page-label-wrapper text-headline"><h1 class="page-label"><div class="challenge-page-label-wrapper align-items-center"><h1 class="ui-icon-label page-label">Day 6: The Central Limit Theorem I<i class="icon-bookmark ui-icon-star txt-grey"></i></h1></div></h1></div></div><div class="community-header-aside"><div class="challange-header-aside"><div class="track-badge-progress"><div class="badge-progress"><div class="remaining"><div class="point-left-wrap"><span class="point-left">1 more challenge</span> to get your gold badge!</div><div class="track-progress-bar"><div class="ui-progress-bar progress-bar theme-default"><div class="progress-filler" style="width: 80%;"></div></div></div><div class="score-info"><span class="current-points">Points: <span class="value">19/20</span></span><a class="scoring-link" data-analytics="BadgeLearnMoreLink" data-attr1="10-days-of-statistics" target="_blank" href="https://www.hackerrank.com/scoring"><i class="scoring-icon ui-icon-warning-hexagon"></i></a></div></div><div class="ui-badge level-silver"><div class="ui-badge-wrap"><svg viewBox="0 0 91.66667 100" class="hexagon"><g><defs><lineargradient id="badge-silver-gradient" x1="52.5" y1="2.5" x2="52.5" y2="102.5" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#cee3eb"></stop><stop offset="1" stop-color="#aec8c7"></stop></lineargradient></defs><path fill="url(#badge-silver-gradient)" d="M98.28277,47.36h0c-.18459-9.382-.87983-17.797-2.0917-19.8595-1.02214-1.742-6.1721-5.43476-12.6195-9.45853L66.3804,8.23311C59.94162,4.89541,54.4699,2.5,52.49778,2.5c-2.42987,0-10.17687,3.63131-18.49789,8.18049-6.30411,3.44623-12.9328,7.41557-17.83631,10.74623-3.85037,2.61278-6.63864,4.828-7.35893,6.07393-.73574,1.27216-1.28014,4.91124-1.63613,9.67794l-.00014-.00008c-.45195,6.03951-.599,13.88935-.43933,21.10033.20233,9.11082.89243,17.18541,2.07561,19.22049C11.66541,82.42328,46.78277,102.5,52.49778,102.5c2.374,0,9.82245-3.47115,17.92388-7.87722,6.4-3.48081,13.19866-7.5418,18.23618-10.9459l-.00046-.00026c3.93694-2.6605,6.80064-4.91944,7.53385-6.17728.72907-1.2482,1.27024-4.80557,1.62881-9.48065l-.00014-.00008C98.269,62.13222,98.42408,54.47227,98.28277,47.36Z" transform="translate(-6.66667 -2.5)"></path></g><image class="badge-icon" xlink:href="https://hrcdn.net/hackerrank/assets/badges/10-days-of-statistics-5d01b92683dc32491c13c06d4292e925.svg" x="50%" y="22" height="20" width="27" transform="translate(-13.5, 0)"></image><g><text class="badge-title" x="50%" y="56" font-size="10">Days of</text><text class="badge-title" x="50%" y="67" font-size="10">Statistics</text></g><g class="star-section" transform="translate(-17, 0)"><svg x="50%" y="71" height="10"><svg class="badge-star" viewBox="0 0 6.54904 6.25825" width="7" x="0"><path class="star" d="M55.51425,77.01983l-1.89417-.275-.84833-1.7175a.299.299,0,0,0-.27167-.16917.3245.3245,0,0,0-.2725.16917l-.305.61833-.5425,1.09916-.51417.075-1.38.2a.30333.30333,0,0,0-.18583.10083.33411.33411,0,0,0-.045.06833.35631.35631,0,0,0-.02417.07667.34087.34087,0,0,0-.005.04083.3038.3038,0,0,0,.02417.13417.33341.33341,0,0,0,.06667.0975l1.37167,1.33667-.2875,1.67167-.03667.21417c-.00167.01-.00167.02-.0025.02917l-.00167.0175a.26453.26453,0,0,0,.00167.04417.30489.30489,0,0,0,.44417.22917l1.69417-.89,1.69416.89a.30352.30352,0,0,0,.44084-.32L54.31175,78.874l1.37083-1.33667a.30339.30339,0,0,0-.16833-.5175" transform="translate(-49.22548 -74.85817)"></path></svg><svg class="badge-star" viewBox="0 0 6.54904 6.25825" width="7" x="9"><path class="star" d="M55.51425,77.01983l-1.89417-.275-.84833-1.7175a.299.299,0,0,0-.27167-.16917.3245.3245,0,0,0-.2725.16917l-.305.61833-.5425,1.09916-.51417.075-1.38.2a.30333.30333,0,0,0-.18583.10083.33411.33411,0,0,0-.045.06833.35631.35631,0,0,0-.02417.07667.34087.34087,0,0,0-.005.04083.3038.3038,0,0,0,.02417.13417.33341.33341,0,0,0,.06667.0975l1.37167,1.33667-.2875,1.67167-.03667.21417c-.00167.01-.00167.02-.0025.02917l-.00167.0175a.26453.26453,0,0,0,.00167.04417.30489.30489,0,0,0,.44417.22917l1.69417-.89,1.69416.89a.30352.30352,0,0,0,.44084-.32L54.31175,78.874l1.37083-1.33667a.30339.30339,0,0,0-.16833-.5175" transform="translate(-49.22548 -74.85817)"></path></svg><svg class="badge-star" viewBox="0 0 6.54904 6.25825" width="7" x="18"><path class="star" d="M55.51425,77.01983l-1.89417-.275-.84833-1.7175a.299.299,0,0,0-.27167-.16917.3245.3245,0,0,0-.2725.16917l-.305.61833-.5425,1.09916-.51417.075-1.38.2a.30333.30333,0,0,0-.18583.10083.33411.33411,0,0,0-.045.06833.35631.35631,0,0,0-.02417.07667.34087.34087,0,0,0-.005.04083.3038.3038,0,0,0,.02417.13417.33341.33341,0,0,0,.06667.0975l1.37167,1.33667-.2875,1.67167-.03667.21417c-.00167.01-.00167.02-.0025.02917l-.00167.0175a.26453.26453,0,0,0,.00167.04417.30489.30489,0,0,0,.44417.22917l1.69417-.89,1.69416.89a.30352.30352,0,0,0,.44084-.32L54.31175,78.874l1.37083-1.33667a.30339.30339,0,0,0-.16833-.5175" transform="translate(-49.22548 -74.85817)"></path></svg><svg class="badge-star" viewBox="0 0 6.54904 6.25825" width="7" x="27"><path class="star" d="M55.51425,77.01983l-1.89417-.275-.84833-1.7175a.299.299,0,0,0-.27167-.16917.3245.3245,0,0,0-.2725.16917l-.305.61833-.5425,1.09916-.51417.075-1.38.2a.30333.30333,0,0,0-.18583.10083.33411.33411,0,0,0-.045.06833.35631.35631,0,0,0-.02417.07667.34087.34087,0,0,0-.005.04083.3038.3038,0,0,0,.02417.13417.33341.33341,0,0,0,.06667.0975l1.37167,1.33667-.2875,1.67167-.03667.21417c-.00167.01-.00167.02-.0025.02917l-.00167.0175a.26453.26453,0,0,0,.00167.04417.30489.30489,0,0,0,.44417.22917l1.69417-.89,1.69416.89a.30352.30352,0,0,0,.44084-.32L54.31175,78.874l1.37083-1.33667a.30339.30339,0,0,0-.16833-.5175" transform="translate(-49.22548 -74.85817)"></path></svg></svg></g></svg></div></div></div></div></div></div></div></div></header><div class="container"></div><div class="community-content"><div class="challenge-view theme-m"><div class="challenge-page-header container"><div class="ui-tabs-wrap"><div class="render-list clearfix"><ul class="tab-header"><li id="Problem" class="tab-item"><a class="tab-item-color" data-analytics="ChallengeViewTab" data-attr1="/challenges/s10-the-central-limit-theorem-1/problem" data-attr2="Problem" href="https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1/problem"><span class="ui-icon-label">Problem</span></a></li><li id="Submissions" class="tab-item"><a class="tab-item-color" data-analytics="ChallengeViewTab" data-attr1="/challenges/s10-the-central-limit-theorem-1/submissions" data-attr2="Submissions" href="https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1/submissions"><span class="ui-icon-label">Submissions</span></a></li><li id="Leaderboard" class="tab-item"><a class="tab-item-color" data-analytics="ChallengeViewTab" data-attr1="/challenges/s10-the-central-limit-theorem-1/leaderboard" data-attr2="Leaderboard" href="https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1/leaderboard"><span class="ui-icon-label">Leaderboard</span></a></li><li id="Discussions" class="tab-item"><a class="tab-item-color" data-analytics="ChallengeViewTab" data-attr1="/challenges/s10-the-central-limit-theorem-1/forum" data-attr2="Discussions" href="https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1/forum"><span class="ui-icon-label">Discussions</span></a></li><li id="Editorial" class="tab-item"><a class="tab-item-color" data-analytics="ChallengeViewTab" data-attr1="/challenges/s10-the-central-limit-theorem-1/editorial" data-attr2="Editorial" href="https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1/editorial"><span class="ui-icon-label">Editorial</span><i class="ui-icon-lock"></i></a></li><li id="Tutorial" class="tab-item active"><a class="tab-item-color" data-analytics="ChallengeViewTab" data-attr1="/challenges/s10-the-central-limit-theorem-1/tutorial" data-attr2="Tutorial" href="https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1/tutorial"><span class="ui-icon-label">Tutorial</span></a></li></ul></div></div></div><div class="container hackdown-container panes-container"><div class="tab-list-content tab-content left-pane"><div class="hackdown-content"><div><style id="MathJax_SVG_styles">.MathJax_SVG_Display {text-align: center; margin: 1em 0em; position: relative; display: block!important; text-indent: 0; max-width: none; max-height: none; min-width: 0; min-height: 0; width: 100%}
+.MathJax_SVG .MJX-monospace {font-family: monospace}
+.MathJax_SVG .MJX-sans-serif {font-family: sans-serif}
+.MathJax_SVG {display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 100%; font-size-adjust: none; text-indent: 0; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0; min-height: 0; border: 0; padding: 0; margin: 0}
+.MathJax_SVG * {transition: none; -webkit-transition: none; -moz-transition: none; -ms-transition: none; -o-transition: none}
+.mjx-svg-href {fill: blue; stroke: blue}
+.MathJax_SVG_LineBox {display: table!important}
+.MathJax_SVG_LineBox span {display: table-cell!important; width: 10000em!important; min-width: 0; max-width: none; padding: 0; border: 0; margin: 0}
+</style><svg style="display: none;"><defs id="MathJax_SVG_glyphs"></defs></svg><h3><a href="https://en.wikipedia.org/wiki/Central_limit_theorem">Central Limit Theorem</a></h3>
+
+<p>The <em>central limit theorem</em> (CLT) states that, for a large enough sample (<span style="font-size: 100%; display: inline-block;" class="MathJax_SVG" id="MathJax-Element-1-Frame"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.395ex" height="1.676ex" style="vertical-align: -0.338ex;" viewBox="0 -576.1 600.5 721.6" role="img" focusable="false"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><path stroke-width="1" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g></svg></span>), the distribution of the sample mean will approach normal distribution. This holds for a sample of independent random variables from any distribution with a finite standard deviation.
+<br><br></p>
+
+<p>Let <span style="font-size: 100%; display: inline-block;" class="MathJax_SVG" id="MathJax-Element-2-Frame"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="21.649ex" height="2.843ex" style="vertical-align: -0.838ex;" viewBox="0 -863.1 9321.2 1223.9" role="img" focusable="false"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><path stroke-width="1" d="M434 -231Q434 -244 428 -250H410Q281 -250 230 -184Q225 -177 222 -172T217 -161T213 -148T211 -133T210 -111T209 -84T209 -47T209 0Q209 21 209 53Q208 142 204 153Q203 154 203 155Q189 191 153 211T82 231Q71 231 68 234T65 250T68 266T82 269Q116 269 152 289T203 345Q208 356 208 377T209 529V579Q209 634 215 656T244 698Q270 724 324 740Q361 748 377 749Q379 749 390 749T408 750H428Q434 744 434 732Q434 719 431 716Q429 713 415 713Q362 710 332 689T296 647Q291 634 291 499V417Q291 370 288 353T271 314Q240 271 184 255L170 250L184 245Q202 239 220 230T262 196T290 137Q291 131 291 1Q291 -134 296 -147Q306 -174 339 -192T415 -213Q429 -213 431 -216Q434 -219 434 -231Z"></path><g transform="translate(500,0)"><path stroke-width="1" d="M42 0H40Q26 0 26 11Q26 15 29 27Q33 41 36 43T55 46Q141 49 190 98Q200 108 306 224T411 342Q302 620 297 625Q288 636 234 637H206Q200 643 200 645T202 664Q206 677 212 683H226Q260 681 347 681Q380 681 408 681T453 682T473 682Q490 682 490 671Q490 670 488 658Q484 643 481 640T465 637Q434 634 411 620L488 426L541 485Q646 598 646 610Q646 628 622 635Q617 635 609 637Q594 637 594 648Q594 650 596 664Q600 677 606 683H618Q619 683 643 683T697 681T738 680Q828 680 837 683H845Q852 676 852 672Q850 647 840 637H824Q790 636 763 628T722 611T698 593L687 584Q687 585 592 480L505 384Q505 383 536 304T601 142T638 56Q648 47 699 46Q734 46 734 37Q734 35 732 23Q728 7 725 4T711 1Q708 1 678 1T589 2Q528 2 496 2T461 1Q444 1 444 10Q444 11 446 25Q448 35 450 39T455 44T464 46T480 47T506 54Q523 62 523 64Q522 64 476 181L429 299Q241 95 236 84Q232 76 232 72Q232 53 261 47Q262 47 267 47T273 46Q276 46 277 46T280 45T283 42T284 35Q284 26 282 19Q279 6 276 4T261 1Q258 1 243 1T201 2T142 2Q64 2 42 0Z"></path><g transform="translate(828,-150)"><path stroke-width="1" transform="scale(0.707)" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g></g><g transform="translate(1782,0)"><path stroke-width="1" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path></g><g transform="translate(2228,0)"><path stroke-width="1" d="M42 0H40Q26 0 26 11Q26 15 29 27Q33 41 36 43T55 46Q141 49 190 98Q200 108 306 224T411 342Q302 620 297 625Q288 636 234 637H206Q200 643 200 645T202 664Q206 677 212 683H226Q260 681 347 681Q380 681 408 681T453 682T473 682Q490 682 490 671Q490 670 488 658Q484 643 481 640T465 637Q434 634 411 620L488 426L541 485Q646 598 646 610Q646 628 622 635Q617 635 609 637Q594 637 594 648Q594 650 596 664Q600 677 606 683H618Q619 683 643 683T697 681T738 680Q828 680 837 683H845Q852 676 852 672Q850 647 840 637H824Q790 636 763 628T722 611T698 593L687 584Q687 585 592 480L505 384Q505 383 536 304T601 142T638 56Q648 47 699 46Q734 46 734 37Q734 35 732 23Q728 7 725 4T711 1Q708 1 678 1T589 2Q528 2 496 2T461 1Q444 1 444 10Q444 11 446 25Q448 35 450 39T455 44T464 46T480 47T506 54Q523 62 523 64Q522 64 476 181L429 299Q241 95 236 84Q232 76 232 72Q232 53 261 47Q262 47 267 47T273 46Q276 46 277 46T280 45T283 42T284 35Q284 26 282 19Q279 6 276 4T261 1Q258 1 243 1T201 2T142 2Q64 2 42 0Z"></path><g transform="translate(828,-150)"><path stroke-width="1" transform="scale(0.707)" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g></g><g transform="translate(3510,0)"><path stroke-width="1" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path></g><g transform="translate(3955,0)"><path stroke-width="1" d="M42 0H40Q26 0 26 11Q26 15 29 27Q33 41 36 43T55 46Q141 49 190 98Q200 108 306 224T411 342Q302 620 297 625Q288 636 234 637H206Q200 643 200 645T202 664Q206 677 212 683H226Q260 681 347 681Q380 681 408 681T453 682T473 682Q490 682 490 671Q490 670 488 658Q484 643 481 640T465 637Q434 634 411 620L488 426L541 485Q646 598 646 610Q646 628 622 635Q617 635 609 637Q594 637 594 648Q594 650 596 664Q600 677 606 683H618Q619 683 643 683T697 681T738 680Q828 680 837 683H845Q852 676 852 672Q850 647 840 637H824Q790 636 763 628T722 611T698 593L687 584Q687 585 592 480L505 384Q505 383 536 304T601 142T638 56Q648 47 699 46Q734 46 734 37Q734 35 732 23Q728 7 725 4T711 1Q708 1 678 1T589 2Q528 2 496 2T461 1Q444 1 444 10Q444 11 446 25Q448 35 450 39T455 44T464 46T480 47T506 54Q523 62 523 64Q522 64 476 181L429 299Q241 95 236 84Q232 76 232 72Q232 53 261 47Q262 47 267 47T273 46Q276 46 277 46T280 45T283 42T284 35Q284 26 282 19Q279 6 276 4T261 1Q258 1 243 1T201 2T142 2Q64 2 42 0Z"></path><g transform="translate(828,-150)"><path stroke-width="1" transform="scale(0.707)" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z"></path></g></g><g transform="translate(5238,0)"><path stroke-width="1" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path></g><g transform="translate(5683,0)"><path stroke-width="1" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60ZM525 60Q525 84 542 102T585 120Q609 120 627 104T646 61Q646 36 629 18T586 0T543 17T525 60ZM972 60Q972 84 989 102T1032 120Q1056 120 1074 104T1093 61Q1093 36 1076 18T1033 0T990 17T972 60Z"></path></g><g transform="translate(7022,0)"><path stroke-width="1" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path></g><g transform="translate(7467,0)"><path stroke-width="1" d="M42 0H40Q26 0 26 11Q26 15 29 27Q33 41 36 43T55 46Q141 49 190 98Q200 108 306 224T411 342Q302 620 297 625Q288 636 234 637H206Q200 643 200 645T202 664Q206 677 212 683H226Q260 681 347 681Q380 681 408 681T453 682T473 682Q490 682 490 671Q490 670 488 658Q484 643 481 640T465 637Q434 634 411 620L488 426L541 485Q646 598 646 610Q646 628 622 635Q617 635 609 637Q594 637 594 648Q594 650 596 664Q600 677 606 683H618Q619 683 643 683T697 681T738 680Q828 680 837 683H845Q852 676 852 672Q850 647 840 637H824Q790 636 763 628T722 611T698 593L687 584Q687 585 592 480L505 384Q505 383 536 304T601 142T638 56Q648 47 699 46Q734 46 734 37Q734 35 732 23Q728 7 725 4T711 1Q708 1 678 1T589 2Q528 2 496 2T461 1Q444 1 444 10Q444 11 446 25Q448 35 450 39T455 44T464 46T480 47T506 54Q523 62 523 64Q522 64 476 181L429 299Q241 95 236 84Q232 76 232 72Q232 53 261 47Q262 47 267 47T273 46Q276 46 277 46T280 45T283 42T284 35Q284 26 282 19Q279 6 276 4T261 1Q258 1 243 1T201 2T142 2Q64 2 42 0Z"></path><g transform="translate(828,-150)"><path stroke-width="1" transform="scale(0.707)" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g></g><g transform="translate(8820,0)"><path stroke-width="1" d="M65 731Q65 745 68 747T88 750Q171 750 216 725T279 670Q288 649 289 635T291 501Q292 362 293 357Q306 312 345 291T417 269Q428 269 431 266T434 250T431 234T417 231Q380 231 345 210T298 157Q293 143 292 121T291 -28V-79Q291 -134 285 -156T256 -198Q202 -250 89 -250Q71 -250 68 -247T65 -230Q65 -224 65 -223T66 -218T69 -214T77 -213Q91 -213 108 -210T146 -200T183 -177T207 -139Q208 -134 209 3L210 139Q223 196 280 230Q315 247 330 250Q305 257 280 270Q225 304 212 352L210 362L209 498Q208 635 207 640Q195 680 154 696T77 713Q68 713 67 716T65 731Z"></path></g></g></svg></span> be a random data set of size <span style="font-size: 100%; display: inline-block;" class="MathJax_SVG" id="MathJax-Element-3-Frame"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.395ex" height="1.676ex" style="vertical-align: -0.338ex;" viewBox="0 -576.1 600.5 721.6" role="img" focusable="false"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><path stroke-width="1" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g></svg></span>, that is, a sequence of independent and identically distributed random variables drawn from distributions of expected values given by <span style="font-size: 100%; display: inline-block;" class="MathJax_SVG" id="MathJax-Element-4-Frame"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.402ex" height="2.176ex" style="vertical-align: -0.838ex;" viewBox="0 -576.1 603.5 936.9" role="img" focusable="false"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><path stroke-width="1" d="M58 -216Q44 -216 34 -208T23 -186Q23 -176 96 116T173 414Q186 442 219 442Q231 441 239 435T249 423T251 413Q251 401 220 279T187 142Q185 131 185 107V99Q185 26 252 26Q261 26 270 27T287 31T302 38T315 45T327 55T338 65T348 77T356 88T365 100L372 110L408 253Q444 395 448 404Q461 431 491 431Q504 431 512 424T523 412T525 402L449 84Q448 79 448 68Q448 43 455 35T476 26Q485 27 496 35Q517 55 537 131Q543 151 547 152Q549 153 557 153H561Q580 153 580 144Q580 138 575 117T555 63T523 13Q510 0 491 -8Q483 -10 467 -10Q446 -10 429 -4T402 11T385 29T376 44T374 51L368 45Q362 39 350 30T324 12T288 -4T246 -11Q199 -11 153 12L129 -85Q108 -167 104 -180T92 -202Q76 -216 58 -216Z"></path></g></svg></span> and finite variances given by <span style="font-size: 100%; display: inline-block;" class="MathJax_SVG" id="MathJax-Element-5-Frame"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="2.385ex" height="2.509ex" style="vertical-align: -0.338ex;" viewBox="0 -934.9 1026.8 1080.4" role="img" focusable="false"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><path stroke-width="1" d="M184 -11Q116 -11 74 34T31 147Q31 247 104 333T274 430Q275 431 414 431H552Q553 430 555 429T559 427T562 425T565 422T567 420T569 416T570 412T571 407T572 401Q572 357 507 357Q500 357 490 357T476 358H416L421 348Q439 310 439 263Q439 153 359 71T184 -11ZM361 278Q361 358 276 358Q152 358 115 184Q114 180 114 178Q106 141 106 117Q106 67 131 47T188 26Q242 26 287 73Q316 103 334 153T356 233T361 278Z"></path><g transform="translate(572,362)"><path stroke-width="1" transform="scale(0.707)" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g></g></svg></span>. The sample average is:
+</p><div class="MathJax_SVG_Display" style="text-align: center;"><span style="font-size: 100%; display: inline-block;" class="MathJax_SVG" id="MathJax-Element-6-Frame"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="13.255ex" height="5.676ex" style="vertical-align: -1.838ex;" viewBox="0 -1652.5 5707 2443.8" role="img" focusable="false"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><path stroke-width="1" d="M131 289Q131 321 147 354T203 415T300 442Q362 442 390 415T419 355Q419 323 402 308T364 292Q351 292 340 300T328 326Q328 342 337 354T354 372T367 378Q368 378 368 379Q368 382 361 388T336 399T297 405Q249 405 227 379T204 326Q204 301 223 291T278 274T330 259Q396 230 396 163Q396 135 385 107T352 51T289 7T195 -10Q118 -10 86 19T53 87Q53 126 74 143T118 160Q133 160 146 151T160 120Q160 94 142 76T111 58Q109 57 108 57T107 55Q108 52 115 47T146 34T201 27Q237 27 263 38T301 66T318 97T323 122Q323 150 302 164T254 181T195 196T148 231Q131 256 131 289Z"></path><g transform="translate(469,-150)"><path stroke-width="1" transform="scale(0.707)" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g transform="translate(1271,0)"><path stroke-width="1" d="M78 370Q78 394 95 412T138 430Q162 430 180 414T199 371Q199 346 182 328T139 310T96 327T78 370ZM78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z"></path><path stroke-width="1" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z" transform="translate(278,0)"></path></g><g transform="translate(2328,0)"><g transform="translate(397,0)"><rect stroke="none" width="2860" height="60" x="0" y="220"></rect><g transform="translate(60,814)"><path stroke-width="1" d="M61 748Q64 750 489 750H913L954 640Q965 609 976 579T993 533T999 516H979L959 517Q936 579 886 621T777 682Q724 700 655 705T436 710H319Q183 710 183 709Q186 706 348 484T511 259Q517 250 513 244L490 216Q466 188 420 134T330 27L149 -187Q149 -188 362 -188Q388 -188 436 -188T506 -189Q679 -189 778 -162T936 -43Q946 -27 959 6H999L913 -249L489 -250Q65 -250 62 -248Q56 -246 56 -239Q56 -234 118 -161Q186 -81 245 -11L428 206Q428 207 242 462L57 717L56 728Q56 744 61 748Z"></path><g transform="translate(1056,-287)"><path stroke-width="1" transform="scale(0.707)" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g><g transform="translate(1567,0)"><path stroke-width="1" d="M42 0H40Q26 0 26 11Q26 15 29 27Q33 41 36 43T55 46Q141 49 190 98Q200 108 306 224T411 342Q302 620 297 625Q288 636 234 637H206Q200 643 200 645T202 664Q206 677 212 683H226Q260 681 347 681Q380 681 408 681T453 682T473 682Q490 682 490 671Q490 670 488 658Q484 643 481 640T465 637Q434 634 411 620L488 426L541 485Q646 598 646 610Q646 628 622 635Q617 635 609 637Q594 637 594 648Q594 650 596 664Q600 677 606 683H618Q619 683 643 683T697 681T738 680Q828 680 837 683H845Q852 676 852 672Q850 647 840 637H824Q790 636 763 628T722 611T698 593L687 584Q687 585 592 480L505 384Q505 383 536 304T601 142T638 56Q648 47 699 46Q734 46 734 37Q734 35 732 23Q728 7 725 4T711 1Q708 1 678 1T589 2Q528 2 496 2T461 1Q444 1 444 10Q444 11 446 25Q448 35 450 39T455 44T464 46T480 47T506 54Q523 62 523 64Q522 64 476 181L429 299Q241 95 236 84Q232 76 232 72Q232 53 261 47Q262 47 267 47T273 46Q276 46 277 46T280 45T283 42T284 35Q284 26 282 19Q279 6 276 4T261 1Q258 1 243 1T201 2T142 2Q64 2 42 0Z"></path><g transform="translate(828,-150)"><path stroke-width="1" transform="scale(0.707)" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g></g></g><g transform="translate(985,-704)"><path stroke-width="1" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path></g></g></g></g></svg></span></div>
+<br><br><p></p>
+
+<p>For large <span style="font-size: 100%; display: inline-block;" class="MathJax_SVG" id="MathJax-Element-7-Frame"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.395ex" height="1.676ex" style="vertical-align: -0.338ex;" viewBox="0 -576.1 600.5 721.6" role="img" focusable="false"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><path stroke-width="1" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g></svg></span>, the distribution of sample sums <span style="font-size: 100%; display: inline-block;" class="MathJax_SVG" id="MathJax-Element-8-Frame"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="2.643ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 1138.1 1080.4" role="img" focusable="false"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><path stroke-width="1" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path><g transform="translate(613,-150)"><path stroke-width="1" transform="scale(0.707)" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g></g></svg></span> is close to normal distribution <span style="font-size: 100%; display: inline-block;" class="MathJax_SVG" id="MathJax-Element-9-Frame"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="9.281ex" height="3.009ex" style="vertical-align: -0.838ex;" viewBox="-26.5 -934.9 3996.1 1295.7" role="img" focusable="false"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><path stroke-width="1" d="M343 705Q358 705 358 698Q360 696 370 658T411 524T484 319Q536 174 590 82L595 73L615 152Q646 274 683 407Q729 571 752 637T799 727Q852 780 937 788Q939 788 947 788T958 789H962Q979 789 979 765Q979 722 951 692Q942 683 924 683Q888 681 859 672T818 654T803 639Q784 608 708 322T631 15Q631 14 630 15Q630 17 629 15Q628 14 628 12Q621 -4 601 -17T560 -31Q550 -31 546 -28T530 -7Q484 67 458 123T398 272Q352 392 314 514L306 535V534Q306 533 296 488T272 379T234 239T185 100T127 -7T61 -50Q34 -50 4 -34T-27 8Q-27 33 -12 61T18 90Q21 90 36 77T87 57H92Q109 57 123 78T162 173Q206 299 232 417T265 599T276 667Q284 681 304 693T343 705Z"></path><g transform="translate(979,0)"><path stroke-width="1" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g transform="translate(1369,0)"><path stroke-width="1" d="M58 -216Q44 -216 34 -208T23 -186Q23 -176 96 116T173 414Q186 442 219 442Q231 441 239 435T249 423T251 413Q251 401 220 279T187 142Q185 131 185 107V99Q185 26 252 26Q261 26 270 27T287 31T302 38T315 45T327 55T338 65T348 77T356 88T365 100L372 110L408 253Q444 395 448 404Q461 431 491 431Q504 431 512 424T523 412T525 402L449 84Q448 79 448 68Q448 43 455 35T476 26Q485 27 496 35Q517 55 537 131Q543 151 547 152Q549 153 557 153H561Q580 153 580 144Q580 138 575 117T555 63T523 13Q510 0 491 -8Q483 -10 467 -10Q446 -10 429 -4T402 11T385 29T376 44T374 51L368 45Q362 39 350 30T324 12T288 -4T246 -11Q199 -11 153 12L129 -85Q108 -167 104 -180T92 -202Q76 -216 58 -216Z"></path><g transform="translate(603,362)"><path stroke-width="1" transform="scale(0.707)" d="M79 43Q73 43 52 49T30 61Q30 68 85 293T146 528Q161 560 198 560Q218 560 240 545T262 501Q262 496 260 486Q259 479 173 263T84 45T79 43Z"></path></g></g><g transform="translate(2267,0)"><path stroke-width="1" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path></g><g transform="translate(2712,0)"><path stroke-width="1" d="M184 -11Q116 -11 74 34T31 147Q31 247 104 333T274 430Q275 431 414 431H552Q553 430 555 429T559 427T562 425T565 422T567 420T569 416T570 412T571 407T572 401Q572 357 507 357Q500 357 490 357T476 358H416L421 348Q439 310 439 263Q439 153 359 71T184 -11ZM361 278Q361 358 276 358Q152 358 115 184Q114 180 114 178Q106 141 106 117Q106 67 131 47T188 26Q242 26 287 73Q316 103 334 153T356 233T361 278Z"></path><g transform="translate(572,362)"><path stroke-width="1" transform="scale(0.707)" d="M79 43Q73 43 52 49T30 61Q30 68 85 293T146 528Q161 560 198 560Q218 560 240 545T262 501Q262 496 260 486Q259 479 173 263T84 45T79 43Z"></path></g></g><g transform="translate(3580,0)"><path stroke-width="1" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g></svg></span> where:
+<br><br></p>
+
+<ul>
+<li><span style="font-size: 100%; display: inline-block;" class="MathJax_SVG" id="MathJax-Element-10-Frame"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="10.822ex" height="2.843ex" style="vertical-align: -0.838ex;" viewBox="0 -863.1 4659.3 1223.9" role="img" focusable="false"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><path stroke-width="1" d="M58 -216Q44 -216 34 -208T23 -186Q23 -176 96 116T173 414Q186 442 219 442Q231 441 239 435T249 423T251 413Q251 401 220 279T187 142Q185 131 185 107V99Q185 26 252 26Q261 26 270 27T287 31T302 38T315 45T327 55T338 65T348 77T356 88T365 100L372 110L408 253Q444 395 448 404Q461 431 491 431Q504 431 512 424T523 412T525 402L449 84Q448 79 448 68Q448 43 455 35T476 26Q485 27 496 35Q517 55 537 131Q543 151 547 152Q549 153 557 153H561Q580 153 580 144Q580 138 575 117T555 63T523 13Q510 0 491 -8Q483 -10 467 -10Q446 -10 429 -4T402 11T385 29T376 44T374 51L368 45Q362 39 350 30T324 12T288 -4T246 -11Q199 -11 153 12L129 -85Q108 -167 104 -180T92 -202Q76 -216 58 -216Z"></path><g transform="translate(603,362)"><path stroke-width="1" transform="scale(0.707)" d="M79 43Q73 43 52 49T30 61Q30 68 85 293T146 528Q161 560 198 560Q218 560 240 545T262 501Q262 496 260 486Q259 479 173 263T84 45T79 43Z"></path></g><g transform="translate(1176,0)"><path stroke-width="1" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g transform="translate(2232,0)"><path stroke-width="1" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g transform="translate(3055,0)"><path stroke-width="1" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g transform="translate(4055,0)"><path stroke-width="1" d="M58 -216Q44 -216 34 -208T23 -186Q23 -176 96 116T173 414Q186 442 219 442Q231 441 239 435T249 423T251 413Q251 401 220 279T187 142Q185 131 185 107V99Q185 26 252 26Q261 26 270 27T287 31T302 38T315 45T327 55T338 65T348 77T356 88T365 100L372 110L408 253Q444 395 448 404Q461 431 491 431Q504 431 512 424T523 412T525 402L449 84Q448 79 448 68Q448 43 455 35T476 26Q485 27 496 35Q517 55 537 131Q543 151 547 152Q549 153 557 153H561Q580 153 580 144Q580 138 575 117T555 63T523 13Q510 0 491 -8Q483 -10 467 -10Q446 -10 429 -4T402 11T385 29T376 44T374 51L368 45Q362 39 350 30T324 12T288 -4T246 -11Q199 -11 153 12L129 -85Q108 -167 104 -180T92 -202Q76 -216 58 -216Z"></path></g></g></svg></span></li>
+<li><span style="font-size: 100%; display: inline-block;" class="MathJax_SVG" id="MathJax-Element-11-Frame"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="12.614ex" height="2.843ex" style="vertical-align: -0.838ex;" viewBox="0 -863.1 5431.2 1223.9" role="img" focusable="false"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><path stroke-width="1" d="M184 -11Q116 -11 74 34T31 147Q31 247 104 333T274 430Q275 431 414 431H552Q553 430 555 429T559 427T562 425T565 422T567 420T569 416T570 412T571 407T572 401Q572 357 507 357Q500 357 490 357T476 358H416L421 348Q439 310 439 263Q439 153 359 71T184 -11ZM361 278Q361 358 276 358Q152 358 115 184Q114 180 114 178Q106 141 106 117Q106 67 131 47T188 26Q242 26 287 73Q316 103 334 153T356 233T361 278Z"></path><g transform="translate(572,362)"><path stroke-width="1" transform="scale(0.707)" d="M79 43Q73 43 52 49T30 61Q30 68 85 293T146 528Q161 560 198 560Q218 560 240 545T262 501Q262 496 260 486Q259 479 173 263T84 45T79 43Z"></path></g><g transform="translate(1145,0)"><path stroke-width="1" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g transform="translate(2201,0)"><path stroke-width="1" d="M95 178Q89 178 81 186T72 200T103 230T169 280T207 309Q209 311 212 311H213Q219 311 227 294T281 177Q300 134 312 108L397 -77Q398 -77 501 136T707 565T814 786Q820 800 834 800Q841 800 846 794T853 782V776L620 293L385 -193Q381 -200 366 -200Q357 -200 354 -197Q352 -195 256 15L160 225L144 214Q129 202 113 190T95 178Z" transform="translate(0,-78)"></path><rect stroke="none" width="600" height="60" x="833" y="663"></rect><g transform="translate(833,0)"><path stroke-width="1" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g></g><g transform="translate(3857,0)"><path stroke-width="1" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g transform="translate(4858,0)"><path stroke-width="1" d="M184 -11Q116 -11 74 34T31 147Q31 247 104 333T274 430Q275 431 414 431H552Q553 430 555 429T559 427T562 425T565 422T567 420T569 416T570 412T571 407T572 401Q572 357 507 357Q500 357 490 357T476 358H416L421 348Q439 310 439 263Q439 153 359 71T184 -11ZM361 278Q361 358 276 358Q152 358 115 184Q114 180 114 178Q106 141 106 117Q106 67 131 47T188 26Q242 26 287 73Q316 103 334 153T356 233T361 278Z"></path></g></g></svg></span></li>
+</ul>
+
+<p><br><br></p></div></div></div><aside class="hackdown-sidebar right-pane challenge-sidebar"><div><h2 class="text-sec-headline-s">tutorial<!-- --> details</h2><hr class="hr-line-light"></div><div></div><div class="challenge-sidebar-help"><h2 class="text-sec-headline-s">Need Help?</h2><hr class="hr-line-light"><div class="mlB"><div class="link-wrapper"><a data-analytics="ChallengeSidebarUI" data-attr1="discussions" data-attr2="s10-the-central-limit-theorem-1" data-attr3="master" href="https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1/forum"><i class="ui-icon-discussion ui-icon-grey sidebar-icon"></i><span class="ui-icon-label">View discussions</span></a></div><div class="link-wrapper"><a data-analytics="ChallengeSidebarUI" data-attr1="editorial" data-attr2="s10-the-central-limit-theorem-1" data-attr3="master" href="https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1/editorial"><i class="ui-icon-editorial ui-icon-grey sidebar-icon"></i><span class="ui-icon-label">View editorial</span></a></div><div class="link-wrapper"><a data-analytics="ChallengeSidebarUI" data-attr1="topscorers" data-attr2="s10-the-central-limit-theorem-1" data-attr3="master" href="https://www.hackerrank.com/challenges/s10-the-central-limit-theorem-1/leaderboard"><i class="ui-icon-trophy ui-icon-grey sidebar-icon"></i><span class="ui-icon-label">View top submissions</span></a></div></div></div></aside></div></div></div><footer class="community-footer"><ul class="footer-links"><li class="link-item"><a target="_blank" class="footer-link calendar" data-analytics="FooterLinkCalendar" href="https://www.hackerrank.com/calendar">Contest Calendar</a></li><li class="link-item"><a target="_blank" class="footer-link blog" data-analytics="FooterLinkBlog" href="https://blog.hackerrank.com/">Blog</a></li><li class="link-item"><a target="_blank" class="footer-link scoring" data-analytics="FooterLinkScoring" href="https://www.hackerrank.com/scoring">Scoring</a></li><li class="link-item"><a target="_blank" class="footer-link environment" data-analytics="FooterLinkEnvironment" href="https://www.hackerrank.com/environment">Environment</a></li><li class="link-item"><a target="_blank" class="footer-link faq" data-analytics="FooterLinkFAQ" href="https://www.hackerrank.com/faq">FAQ</a></li><li class="link-item"><a target="_blank" class="footer-link" data-analytics="FooterLinkAboutUs" href="https://www.hackerrank.com/aboutus">About Us</a></li><li class="link-item"><a target="_blank" class="footer-link" data-analytics="FooterLinkSupport" href="https://help.hackerrank.com/hc/en-us">Support</a></li><li class="link-item"><a target="_blank" class="footer-link" data-analytics="FooterLinkCareers" href="https://www.hackerrank.com/careers">Careers</a></li><li class="link-item"><a target="_blank" class="footer-link" data-analytics="FooterLinkTermsOfService" href="https://www.hackerrank.com/terms-of-service">Terms Of Service</a></li><li class="link-item"><a target="_blank" class="footer-link" data-analytics="FooterLinkPrivacyPolicy" href="https://www.hackerrank.com/privacy">Privacy Policy</a></li><li class="link-item"><a target="_blank" class="footer-link featureRequestButton" data-analytics="FooterLinkFeatureRequest" href="https://www.hackerrank.com/support/feature">Request a Feature</a></li></ul></footer></div></div></div><!--Required to handle event bubbling of click in ios safari -->
+
+  <script>
+    //HR namespace
+    var HR = {};
+    HR.development = false;
+    HR.assetPath = 'https://hrcdn.net/hackerrank/assets/';
+    HR.pageLoadTime = Date.now();
+    HR.productNamespace = 'hackerrank';
+    HR.production = true;
+    HR.devServer = false;
+    HR.isIsomorphic = true;
+    HR.loadedWithOldCss = false;
+    HR.pusher = '{"key":"a280047e3b323ccb1b65","cluster":"mt1"}';
+  </script>
+
+  <!-- Vendor scripts -->
+  
+    <script src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_vendor-5bc167c024.js.download"></script>
+  
+
+  
+  <script src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/runtime-4fcf040b3cf90f6455a7.js.download"></script>
+  <script src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/hackerrank_r_app-004b5c835418ffa33481.js.download"></script>
+  
+<script>
+  var getUser = (function() {
+    var userData;
+    $(window).on('initializeNewUser', function(e, user) {
+      userData = user;
+    });
+    try{
+      if (typeof userData === 'undefined') {
+        userData = JSON.parse(decodeURI($('#initialUserData').html()));
+        $('#initialUserData').remove();
+      }
+    } catch(e){
+      userData = {};
+      console.log('No initial User data found');
+    }
+    return function() {
+      return userData;
+    }
+  })();
+</script>
+
+<!-- setting up sentry -->
+
+  <script src="./Day 6_ The Central Limit Theorem I _ HackerRank_files/raven.min.js.download" async="" crossorigin="anonymous" id="raven"></script>
+  <script>
+    (function(window, queue, loaded, script, user) {
+
+        var setupRaven = function(user) {
+          var userContext = {};
+          if (user && !!user.id) {
+            userContext.handle = user.id;
+          }
+          var extraContext = {
+            cdnUrl: Cookies.get("cdn_url")
+          }
+          if (Cookies) {
+            if (HR.productNamespace === 'hackerrank') {
+              extraContext.mixpanel_token = Cookies.get('hackerrank_mixpanel_token')
+            } else if (HR.productNamespace === 'hackerrankx') {
+              extraContext.mixpanel_token = Cookies.get('hackerrankx_mixpanel_token')
+            }
+          }
+          if(typeof Raven !== 'undefined') {
+            Raven.setUserContext(userContext);
+            Raven.setExtraContext(extraContext);
+          }
+        }
+        $(window).on('initializeNewUser', function(e, user) {
+          setupRaven(user);
+        });
+
+        window.onerror = function e(message, file, lineNo, columnNo, error) {
+            if (loaded) return;
+            queue.push([message, file, lineNo, columnNo, error]);
+        };
+
+        window.onunhandledrejection = function e(error) {
+            if (loaded) return;
+            queue.push([
+                error.reason,
+            ]);
+        };
+
+        script.onreadystatechange = script.onload = function() {
+            if (loaded) return;
+            loaded = true;
+
+            Raven.config('https://6b2d52b23d5a4dd4bc44330335327c04@sentry.io/234162', {
+                release: "6b9e4b27db9fedcc7dde6b48effb6ef55766f800",
+                ignoreUrls: [/cdn\.userty\.com/]
+            }).install();
+
+            setupRaven(user);
+
+            window.onunhandledrejection = function e(error) {
+                Raven.captureException(error.reason, {
+                    extra: {
+                        type: error.type,
+                    },
+                });
+            };
+
+            queue.forEach(function(error) {
+                Raven.captureException(error[4] || error[0], {
+                    extra: {
+                        file: error[1],
+                        line: error[2],
+                        col: error[3],
+                    },
+                });
+            });
+        };
+    }(window, [], false, document.getElementById('raven'), getUser()));
+ </script>
+
+
+
+
+<!-- google analytics tracking -->
+<script>
+  var _gaq = _gaq || [];
+  
+  _gaq.push(['candidate_company._setAccount', 'UA-45092266-1']);
+  _gaq.push(['candidate_company._trackPageview']);
+  _gaq.push(['candidate_company._gat._anonymizeIp']);
+  _gaq.push(['_setCampSourceKey', 'utm_source']);
+  _gaq.push(['_setCampMediumKey', 'utm_medium']);
+  _gaq.push(['_setCampContentKey', 'utm_keyword']);
+  _gaq.push(['_setCampTermKey', 'utm_keyword']);
+  _gaq.push(['_setCampNameKey', 'utm_campaign']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+  
+</script>
+<!-- Pending candidate site custom GA code -->
+<!-- google analytics tracking end-->
+
+<!-- mixpanel tracking -->
+<script type="text/javascript">
+  
+    (function(e,a){if(!a.__SV){var b=window;try{var c,l,i,j=b.location,g=j.hash;c=function(a,b){return(l=a.match(RegExp(b+"=([^&]*)")))?l[1]:null};g&&c(g,"state")&&(i=JSON.parse(decodeURIComponent(c(g,"state"))),"mpeditor"===i.action&&(b.sessionStorage.setItem("_mpcehash",g),history.replaceState(i.desiredHash||"",e.title,j.pathname+j.search)))}catch(m){}var k,h;window.mixpanel=a;a._i=[];a.init=function(b,c,f){function e(b,a){var c=a.split(".");2==c.length&&(b=b[c[0]],a=c[1]);b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,
+0)))}}var d=a;"undefined"!==typeof f?d=a[f]=[]:f="mixpanel";d.people=d.people||[];d.toString=function(b){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);b||(a+=" (stub)");return a};d.people.toString=function(){return d.toString(1)+".people (stub)"};k="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config reset people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+for(h=0;h<k.length;h++)e(d,k[h]);a._i.push([b,c,f])};a.__SV=1.2;b=e.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";c=e.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c)}})(document,window.mixpanel||[]);
+    mixpanel.init("bcb75af88bccc92724ac5fd79271e1ff");
+
+    
+      
+        mixpanel.init("86cf4681911d3ff600208fdc823c5ff5", {}, "jobs_test");
+      
+      mixpanel.identify(Cookies.get("hackerrank_mixpanel_token"));
+    
+  
+</script>
+<!-- mixpanel tracking end-->
+
+<!-- auryc tracking start -->
+<script type="text/javascript">
+  
+</script>
+<!-- auryc tracking end -->
+
+<!-- Marketo to be added later -->
+
+
+
+<!-- Bizible -->
+
+<!-- HR metrics init -->
+<script type="text/javascript">
+
+  (function() {
+    hr_metrics.init({
+      product: 'hackerrank',
+      use_cookie: true,
+      uid_cookie_key: 'hackerrank_mixpanel_token',
+      uid_token_cookie_key: 'metrics_user_identifier',
+      session_cookie_key: 'session_id',
+      metrics_endpoint:  'https://metrics.hackerrank.com/metrics' 
+    });
+  })();
+
+  (function(h) {
+    window.hr_metrics = h;
+    if (!h.loaded) {
+      var a = ['track', 'batch_track', 'app_track', 'externalService', 'init', 'batch_track_record', 'track_dwell_time', 'set_navigation_data'];
+      for (var i = 0; i < a.length; i++) {
+        if (!h[a[i]]) {h[a[i]] = function() {};}
+      }
+    }
+  })(window.hr_metrics || {});
+
+
+
+</script>
+
+<!-- hrutm_params -->
+
+<!-- HR metrics extension pack -->
+<script type="text/javascript">
+
+  
+    if (('performance' in window) && ('timing' in window.performance)) {
+      $(window).on("load", function() {
+        setTimeout(function(){
+          var timing = window.performance.timing;
+          var obj = {
+            referring_url: window.location.pathname,
+            fullLoadTime: timing.loadEventEnd - timing.navigationStart,
+            // Total time from req start to load
+            loadTime: timing.loadEventEnd - timing.fetchStart,
+            // Time spent constructing the DOM tree
+            domReadyTime: timing.domComplete - timing.domInteractive,
+            // Time consumed preparing the new page
+            readyStart: timing.fetchStart - timing.navigationStart,
+            // Time spent during redirection
+            redirectTime: timing.redirectEnd - timing.redirectStart,
+            // AppCache
+            appcacheTime: timing.domainLookupStart - timing.fetchStart,
+            // Time spent unloading documents
+            unloadEventTime: timing.unloadEventEnd - timing.unloadEventStart,
+            // DNS query time
+            lookupDomainTime: timing.domainLookupEnd - timing.domainLookupStart,
+            // TCP connection time
+            connectTime: timing.connectEnd - timing.connectStart,
+            // Time spent during the request
+            requestTime: timing.responseEnd - timing.requestStart,
+            // Request to completion of the DOM loading
+            initDomTreeTime: timing.domInteractive - timing.responseEnd,
+            // Load event time
+            loadEventTime: timing.loadEventEnd - timing.loadEventStart,
+            // Origin of the request
+            react: true,
+            //isIsomorphic flag
+            isIsomorphic: window.HR.isIsomorphic,
+            //old css loaded flag
+            loadedWithOldCss: window.HR.loadedWithOldCss,
+          }
+
+          if (('navigation' in window.performance) && ('getEntries' in window.performance)) {
+            obj.navigationType = window.performance.navigation.type;
+            obj.navigationRedirectCount = window.performance.navigation.redirectCount;
+            if (obj.fullLoadTime > 8000) {
+              try {
+                var entries = window.performance.getEntries();
+                if(entries[0].toJSON){
+                  obj.networkRequests = entries.map(function(e) {return e.toJSON();});
+                }
+              } catch (e) {
+                //do nothing
+              }
+            }
+          }
+
+          hr_metrics.app_track('page-load-metrics', obj);
+        }, 1000);
+      });
+    }
+  
+
+  $(window).on("load", function() {
+      var _pathname = document.location.pathname;
+      var cdn_url_switched = Cookies.get("cdn_url_switched");
+      if (cdn_url_switched !== '') {
+        Cookies.remove('cdn_url_switched');
+      }
+      hr_metrics.batch_track('PageLoad', _pathname + document.location.search, {
+          attribute1: _pathname,
+          attribute6: cdn_url_switched,
+          cdn_url: Cookies.get("cdn_url")
+      });
+
+      if (hr_metrics.track_dwell_time) {
+          hr_metrics.track_dwell_time(_pathname);
+          hr_metrics.set_navigation_data();
+      }
+
+      $(window).on('beforeunload', function(){
+
+          var _pathname = document.location.pathname;
+          hr_metrics.batch_track('PageClose', _pathname + document.location.search, {
+              attribute2: _pathname
+          });
+
+          hr_metrics.track_dwell_time(_pathname, true);
+
+          hr_metrics.batch_track_record(true);
+      });
+
+  });
+
+</script>
+
+<!-- Facebook SDK -->
+<!-- Twitter SDK -->
+
+<!-- track button clicks -->
+<script>
+    $(document).on('click', 'a, button, input, select, i, div, span, h5', null, function(e) {
+        var src = e.currentTarget, $src = $(e.currentTarget);
+        if ($src.attr('data-analytics')) {
+            action = 'Click'; data = $src.attr('data-analytics');
+        } else {
+            return;
+        }
+
+        
+          hr_metrics.batch_track(action, data, (function() {
+              var params={};
+              for (var _i=1; _i<=12; ++_i){
+                  var _attr = 'data-attr'+_i;
+                  if ($src.attr(_attr)){
+                    params['attribute'+_i] = $src.attr(_attr);
+                  }
+              }
+              var attributes = src.attributes, attr_length = src.attributes.length;
+              for (var i = 0; i < attr_length; i++){
+                var attribute = attributes[i];
+                if (attribute.name.indexOf('data-attr-') === 0){
+                  param_name = attribute.name.substr('data-attr-'.length);
+                  if (param_name.length > 0) {
+                    params[param_name] = attribute.value;
+                  }
+                }
+              }
+              return params;
+          })());
+        
+
+        
+          // google analytics
+          _gaq.push(['_trackEvent', 'Events' , action, data])
+        
+    });
+
+    $(document).on('AnalyticsEvent', function(e) {
+        action = e.event_type || false;
+        data = e.event_name || false;
+
+        if (!action || !data) {
+          return;
+        }
+
+        params = {}
+        params['attribute1'] = e.event_value || ""
+        params['attribute7'] = e.integer_event_value
+
+        if (window.HR && window.HR.current_page) {
+          params['attribute2'] = window.HR.current_page;
+        }
+
+        if (window.HR && window.HR.current_contest) {
+          params['attribute3'] = window.HR.current_contest.get('name');
+        }
+
+        
+            hr_metrics.batch_track(action, data, params);
+        
+
+        
+          // google analytics
+          _gaq.push(['_trackEvent', 'Events' , action, data]);
+        
+    });
+
+  </script>
+<!-- track button clicks end-->
+
+<!-- Linkedin Insights -->
+
+
+
+
+</body></html>

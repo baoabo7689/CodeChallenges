@@ -1,0 +1,118 @@
+Jim is doing his discrete maths homework which requires him to repeatedly calculate nCr(n choose r) for different values of n. Knowing that this is time consuming, he goes to his sister June for help. June, being a computer science student knows how to convert this into a computer program and generate the answers quickly. She tells him, by storing the lower values of nCr(n choose r), one can calculate the higher values using a very simple formula.
+
+If you are June, how will you calculate nCr values for different values of n?
+
+Since values will be large you have to calculate them modulo .
+
+Input Format 
+The first line contains the number of test cases T. 
+T lines follow each containing an integer n.
+
+Output Format 
+For each n output the list of nC0 to nCn each separated by a single space in a new line. If the number is large, print only the last 9 digits. i.e. modulo 109
+
+Constraints 
+1<=T<=200 
+1<=n< 1000
+
+Sample Input
+
+3
+2
+4
+5
+Sample Output
+
+1 2 1
+1 4 6 4 1
+1 5 10 10 5 1
+Explanation 
+For 2 we can check 2C0 2C1 and 2C2 are 1, 2 and 1 respectively. The other inputs' answer follow similar pattern.
+
+======================================================================================================================================================
+C[n][r] = n!/(r!(n-r)!)
+-C[n-1][r] = n!/(r!(n-r)!) - (n-1)!/(r!(n-r-1)!)
+= (n-1)!/(r!(n-r)!) (n - n + r)
+= (n-1)!/((r-1)!(n-r)!)
+= C[n-1][r-1]
+
+C[n][r] = C[n-1][r] + C[n-1][r-1]
+
+C[0][0] = 1;
+C[0][1] = 1;
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+
+    // Complete the solve function below.
+    static int solve(int x1, int y1, int x2, int y2) {
+        var a = Math.Abs(y1 - y2);
+        var b = Math.Abs(x1 - x2);
+        if(b == 0) {
+            return a-1;
+        }
+        
+        if(a == 0) {
+            return b-1;
+        }
+        
+        var a1 = a<b ? a:b;
+        var b1 = a<b ? b:a;
+        while(b1 % a1 != 0) {
+            var r = b1 % a1;
+            b1 = a1;
+            a1 = r;
+        }
+        
+        return a1 - 1;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int t = Convert.ToInt32(Console.ReadLine());
+
+        for (int tItr = 0; tItr < t; tItr++) {
+            string[] x1Y1X2Y2 = Console.ReadLine().Split(' ');
+
+            int x1 = Convert.ToInt32(x1Y1X2Y2[0]);
+
+            int y1 = Convert.ToInt32(x1Y1X2Y2[1]);
+
+            int x2 = Convert.ToInt32(x1Y1X2Y2[2]);
+
+            int y2 = Convert.ToInt32(x1Y1X2Y2[3]);
+
+            var result = solve(x1, y1, x2, y2);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

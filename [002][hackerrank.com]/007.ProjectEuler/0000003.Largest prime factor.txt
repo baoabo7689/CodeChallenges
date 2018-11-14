@@ -1,0 +1,92 @@
+This problem is a programming version of Problem 3 from projecteuler.net
+
+The prime factors of are and .
+
+What is the largest prime factor of a given number ?
+
+Input Format
+
+First line contains , the number of test cases. This is followed by lines each containing an integer .
+
+Constraints
+
+Output Format
+
+For each test case, display the largest prime factor of .
+
+Sample Input 0
+
+2
+10
+17
+
+Sample Output 0
+
+5
+17
+
+Explanation 0
+
+    Prime factors of are , largest is .
+    Prime factor of is itself, hence largest is .
+
+
+
+
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+
+    static void Main(String[] args) {
+        int t = Convert.ToInt32(Console.ReadLine());
+        for(int a0 = 0; a0 < t; a0++){
+            long n = Convert.ToInt64(Console.ReadLine());
+            
+            long factor = 1; 
+            var sqrt = Math.Sqrt(n);
+            for(var i = 2; i<=sqrt; i++) {
+                if(n%i != 0) {
+                    continue;
+                }
+                
+                factor = i;
+
+                while(n%i == 0) {
+                    n /= i;                            
+                }
+            }          
+            
+            if(n != 1) {
+                factor = n;
+            }
+            
+            Console.WriteLine(factor);            
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,67 @@
+Objective 
+In this challenge, we practice solving problems based on the Central Limit Theorem. We recommend reviewing the Central Limit Theorem Tutorial before attempting this challenge.
+
+Task 
+You have a sample of  values from a population with mean  and with standard deviation . Compute the interval that covers the middle  of the distribution of the sample mean; in other words, compute  and  such that . Use the value of . Note that  is the z-score.
+
+Input Format
+
+There are five lines of input (shown below):
+
+100
+500
+80
+.95
+1.96
+The first line contains the sample size. The second and third lines contain the respective mean () and standard deviation (). The fourth line contains the distribution percentage we want to cover (as a decimal), and the fifth line contains the value of .
+
+If you do not wish to read this information from stdin, you can hard-code it into your program.
+
+Output Format
+
+Print the following two lines of output, rounded to a scale of  decimal places (i.e.,  format):
+
+On the first line, print the value of .
+On the second line, print the value of .
+
+======================================================================================================================================================
+L = mean - sd/sqrt(N)*z 
+U = mean + sd/sqrt(N)*z 
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static double Calc(double sd, double z)
+    {
+        double n = 100;
+        double stdErr = sd/Math.Sqrt(n);
+        double marginError = stdErr*z;
+        return marginError;
+    }
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var mean = 500;
+        var sd = 80;
+        var z = 1.96;
+        
+        double L = mean-Calc(sd, z);
+        double U = mean+Calc(sd, z);
+        
+        Console.WriteLine(L.ToString("0.##"));
+        Console.WriteLine(U.ToString("0.##"));
+    }
+}
+
+
+
+
+
+
+
+
+
+
+

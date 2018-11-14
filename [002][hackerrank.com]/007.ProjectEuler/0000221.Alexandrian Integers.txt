@@ -1,0 +1,124 @@
+We shall call a positive integer  an "Alexandrian integer", if there exist integers , ,  such that:
+
+ and 
+
+For example,  is an Alexandrian integer (, , ). In fact,  is the  Alexandrian integer, the first  Alexandrian integers being: , , , ,  and .
+
+Find the  Alexandrian integer.
+
+Input Format
+
+First line of each test file contains a single integer  that is the number of queries per test file.  lines follow, each with an integer .
+
+Constraints
+
+Output Format
+
+Print exactly  lines with an answer to the corresponding test on each.
+
+Sample Input 0
+
+6
+1
+2
+3
+4
+5
+6
+Sample Output 0
+
+6
+42
+120
+156
+420
+630
+
+======================================================================================================================================================
+
+
+1/A = 1/p + 1/q + 1/r 
+
+A = pqr
+pq + pr + qr = 1
+
+r = -(pq - 1)/(p+q)
+=> pq = 1 (mod [p+q])
+
+
+s = p + q 
+=> q = s - p 
+r = (1 - p(s-p)) / s 
+= (1 + p^2)/s - p 
+
+A = p (s - p) ((1+p^2)/s - p)
+
+p => s => A
+
+p increase 
+A = pqr => qr min 
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var q = long.Parse(Console.ReadLine());
+        
+        for(var i=0; i<q; i++) {
+            var n = long.Parse(Console.ReadLine());
+            var maxA = n/(1 + Math.Sqrt(2));
+            long count = 0;
+            
+            for(var a=1; a<=maxA; a++) {
+                for(var b=a; b<n/2.0; b++) {
+                    var c2 = a*a + b*b + 1;
+                    var c = (int)Math.Sqrt(c2);
+                    if(c*c != c2 || c < b || a + b + c > 2*n) {
+                        continue;
+                    }
+                    
+                    //Console.WriteLine(a + ":" + b + ":" + c + ":" + n);
+                    count++;
+                }
+            }
+            
+            
+            Console.WriteLine(count);
+        }    
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

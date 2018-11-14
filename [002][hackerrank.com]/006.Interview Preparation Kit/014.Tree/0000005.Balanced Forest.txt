@@ -1,0 +1,380 @@
+Greg has a tree of nodes containing integer data. He wants to insert a node with some non-zero integer value somewhere into the tree. His goal is to be able to cut two edges and have the values of each of the three new trees sum to the same amount. This is called a balanced forest. Being frugal, the data value he inserts should be minimal. Determine the minimal amount that a new node can have to allow creation of a balanced forest. If it's not possible to create a balanced forest, return -1.
+
+For example, you are given node values  and . It is the following tree:
+
+image
+
+The blue node is root, the first number in a node is node number and the second is its value. Cuts can be made between nodes  and  and nodes  and  to have three trees with sums ,  and . Adding a new node  of  to the third tree completes the solution.
+
+Function Description
+
+Complete the balancedForest function in the editor below. It must return an integer representing the minimum value of that can be added to allow creation of a balanced forest, or  if it is not possible.
+
+balancedForest has the following parameter(s):
+
+c: an array of integers, the data values for each node
+edges: an array of 2 element arrays, the node pairs per edge
+Input Format
+
+The first line contains a single integer, , the number of queries.
+
+Each of the following  sets of lines is as follows:
+
+The first line contains an integer, , the number of nodes in the tree.
+The second line contains  space-separated integers describing the respective values of , where each denotes the value at node .
+Each of the following  lines contains two space-separated integers,  and , describing edge  connecting nodes  and .
+Constraints
+
+Each query forms a valid undirected tree.
+Subtasks
+
+For  of the maximum score:
+
+For  of the maximum score:
+
+Output Format
+
+For each query, return the minimum value of the integer . If no such value exists, return  instead.
+
+Sample Input
+
+2
+5
+1 2 2 1 1
+1 2
+1 3
+3 5
+1 4
+3
+1 3 5
+1 3
+1 2
+Sample Output
+
+2
+-1
+Explanation
+
+We perform the following two queries:
+
+The tree initially looks like this:
+image 
+Greg can add a new node  with  and create a new edge connecting nodes  and . Then he cuts the edge connecting nodes  and  and the edge connecting nodes  and . We now have a three-tree balanced forest where each tree has a sum of .
+
+image
+
+In the second query, it's impossible to add a node in such a way that we can split the tree into a three-tree balanced forest so we return .
+
+
+
+======================================================================================================================================================
+
+
+100-99-98 
+|
+100-99-98
+balancedForest([100, 100, 99, 99, 98, 98], [[1,2], [1,3], [1,5], [2,4],[2,6]]);
+297
+
+
+24999687487500
+16217607772
+4
+0
+-1
+
+
+
+Sorry, we can't accept your submission. The custom input size should not exceed 50Kb.
+Sorry, we can't accept your submission. The custom input size should not exceed 50Kb.
+4
+
++/- 9007199254740991
+max sum = 5*10^4*10^9 = 5*10^13 
+=> khống tràn số
+
+======================================================================================================================================================
+
+balancedForest([1, 2, 2, 1, 1], [[1,2],[1,3],[3,5],[1,4]]);
+
+
+'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.replace(/\s*$/, '')
+        .split('\n')
+        .map(str => str.replace(/\s*$/, ''));
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+
+
+
+// Complete the balancedForest function below.
+function balancedForest_1(c, edges) {
+    var nodes = createTree(c, edges);
+    var root = nodes[1];
+    var totalSum = root.sum;
+    var min = undefined;
+    if(totalSum%2 == 0 && existsHalf(root, totalSum/2)) {
+       min = totalSum/2;
+    }
+    
+    var n = c.length;
+    for(var i=1; i<=n; i++) {
+        var nodeI = nodes[i];
+        
+        for(var j=i+1; j<=n; j++) {
+            var nodeJ = nodes[j];             
+            var s1 = nodeI.sum;
+            var s2 = nodeJ.sum;
+            
+            if(isParent(nodeI.ind, nodeJ.ind, nodes)) {
+                s1 = nodeJ.sum;
+                s2 = nodeI.sum - nodeJ.sum;
+            } else if(isParent(nodeJ.ind, nodeI.ind, nodes)) {
+                s1 = nodeI.sum;
+                s2 = nodeJ.sum - nodeI.sum;
+            }
+            
+            var s3 = totalSum - s1 - s2;
+            if(s1 == s2) {
+                if(s3 < s1) {
+                    min = min == undefined ? s1-s3 : Math.min(min, s1-s3);
+                }
+            } else if(s1 == s3) {
+                if(s2 < s1) {
+                    min = min == undefined ? s1-s2 : Math.min(min, s1-s2);
+                }                
+            } else if(s2 == s3) {
+                if(s1 < s2) {
+                    min = min == undefined ? s2-s1 : Math.min(min, s2-s1);
+                }                    
+            }
+        }      
+    }
+    
+    //debugger;
+    return min || -1;
+}
+
+function createTree(c, edges) {
+    var nodes = [];
+    for(var i=0; i<c.length; i++) {
+        var cI = c[i];
+        nodes[i+1] = {
+            val: cI,
+            parentNode: 0,
+            childs: [],
+            ind: (i+1),
+            sum: cI,
+            
+            relations: []
+        };
+    }
+    
+    for(var i=0; i<edges.length;i++) {		
+        var e = edges[i];
+        var e1 = e[0];
+        var e2 = e[1];
+        var nE1 = nodes[e1];
+        var nE2 = nodes[e2];
+        nE1.relations.push(nE2);
+        nE2.relations.push(nE1); 
+    }
+    
+    var root = nodes[1];
+    var usedNodes = [];
+    buildTree(root, usedNodes, nodes);
+	
+    return nodes;
+}
+
+function buildTree(root, usedNodes, nodes) {
+    for(var i=0; i<root.relations.length; i++) {
+        var r = root.relations[i];
+        if(usedNodes[r.ind]) {
+            continue;
+        }
+        
+        root.childs.push(r);
+        r.parentNode = root.ind;
+    }
+    
+    usedNodes[root.ind] = true;
+    for(var i=0; i<root.childs.length; i++) {
+        var r = root.childs[i];  
+        buildTree(r, usedNodes, nodes);
+        root.sum += r.sum;  
+    }
+}
+
+function existsHalf(root, halfSum) {
+    if(root.sum == halfSum) {
+        return true;
+    }
+    
+    for(var i=0; i<root.childs.length; i++) {
+        var r = root.childs[i];  
+        if(existsHalf(r, halfSum)) {
+            return true;
+        }
+    } 
+    
+    return false;
+}
+
+function isParent(i, j, nodes) {
+    var t = j;
+    while(nodes[t].parentNode != 0) {
+        if(nodes[t].parentNode == i) {
+            return true;
+        }
+        
+        t = nodes[t].parentNode;
+    }
+    
+    return false;
+}
+
+// Complete the balancedForest function below.
+
+function tryCut2(root, node1, node2, nodes) {
+    if(node2.ind == node1.ind) {
+        return undefined;
+    }
+    
+    var min;
+    var s1 = node1.sum;
+    var s2 = node2.sum;
+    if(isParent(node2.ind, node1.ind, nodes)) {
+        s2 = node2.sum - node1.sum;
+    }
+    
+    var s3 = root.sum - s1 - s2;
+    if(s1 == s2) {
+        if(s3 < s1) {
+            min = s1-s3;
+        }
+    } else if(s1 == s3) {
+        if(s2 < s1) {
+            min = s1-s2;
+        }                
+    } else if(s2 == s3) {
+        if(s1 < s2) {
+            min = s2-s1;
+        }                    
+    }
+    
+    for(var i=0; i<node2.childs.length; i++) {
+        var r = node2.childs[i];  
+        var min2 = tryCut2(root, node1, r, nodes);
+        min = min==undefined ? min2 : min2==undefined ? min : Math.min(min, min2);
+    }
+    
+    return min;
+}
+
+function tryCut(root, node, nodes) {
+    var min = tryCut2(root, node, root, nodes);
+    
+    for(var i=0; i<node.childs.length; i++) {
+        var r = node.childs[i];  
+        var min2 = tryCut(root, r, nodes);
+        min = min==undefined ? min2 : min2==undefined ? min : Math.min(min, min2);
+    }
+    
+    return min;
+}
+
+// Complete the balancedForest function below.
+function balancedForest(c, edges) {
+    var nodes = createTree(c, edges);
+    var root = nodes[1];
+    var totalSum = root.sum;
+    var min = undefined;
+    if(totalSum%2 == 0 && existsHalf(root, totalSum/2)) {
+       min = totalSum/2;
+    }
+    
+    var t2 = tryCut(root, root, nodes);
+    
+    min = min==undefined ? t2 : Math.min(min, t2);
+    return min || -1;
+}
+
+
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
+
+    const q = parseInt(readLine(), 10);
+
+    for (let qItr = 0; qItr < q; qItr++) {
+        const n = parseInt(readLine(), 10);
+
+        const c = readLine().split(' ').map(cTemp => parseInt(cTemp, 10));
+
+        let edges = Array(n - 1);
+
+        for (let i = 0; i < n - 1; i++) {
+            edges[i] = readLine().split(' ').map(edgesTemp => parseInt(edgesTemp, 10));
+        }
+
+        const result = balancedForest(c, edges);
+
+        ws.write(result + '\n');
+    }
+
+    ws.end();
+}
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

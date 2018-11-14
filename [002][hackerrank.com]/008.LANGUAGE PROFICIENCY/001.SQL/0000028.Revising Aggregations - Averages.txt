@@ -1,0 +1,26 @@
+Query the average population of all cities in CITY where District is California.
+
+Input Format
+
+The CITY table is described as follows: CITY.jpg
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+select Avg(Population) from City Where District like 'California'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

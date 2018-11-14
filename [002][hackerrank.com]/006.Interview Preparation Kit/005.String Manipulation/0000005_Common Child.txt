@@ -1,0 +1,144 @@
+A string is said to be a child of a another string if it can be formed by deleting 0 or more characters from the other string. Given two strings of equal length, what's the longest string that can be constructed such that it is a child of both?
+
+For example, ABCD and ABDC have two children with maximum length 3, ABC and ABD. They can be formed by eliminating either the D or C from both strings. Note that we will not consider ABCD as a common child because we can't rearrange characters and ABCD  ABDC.
+
+Function Description
+
+Complete the commonChild function in the editor below. It should return the longest string which is a common child of the input strings.
+
+commonChild has the following parameter(s):
+
+s1, s2: two equal length strings
+Input Format
+
+There is one line with two space-separated strings,  and .
+
+Constraints
+
+All characters are upper case in the range ascii[A-Z].
+Output Format
+
+Print the length of the longest string , such that  is a child of both  and .
+
+Sample Input
+
+HARRY
+SALLY
+Sample Output
+
+ 2
+Explanation
+
+The longest string that can be formed by deleting zero or more characters from  and  is , whose length is 2.
+
+Sample Input 1
+
+AA
+BB
+Sample Output 1
+
+0
+Explanation 1
+
+ and  have no characters in common and hence the output is 0.
+
+Sample Input 2
+
+SHINCHAN
+NOHARAAA
+Sample Output 2
+
+3
+Explanation 2
+
+The longest string that can be formed between  and  while maintaining the order is .
+
+Sample Input 3
+
+ABCDEF
+FBDAMN
+Sample Output 3
+
+2
+Explanation 3 
+ is the longest child of the given strings.
+
+
+
+
+======================================================================================================================================================
+-Nếu cuối = nhau
+C[i][j] = C[i-1][j-1] + 1
+-Nếu cuối không = nhau 
+C[i][j] = max(C[i-1][j], C[i][j-1])
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the commonChild function below.
+    static int commonChild(string s1, string s2) {
+        var maxCommonLengths = new int[s1.Length+1][];
+        for(var i=0; i<=s1.Length; i++) {
+            maxCommonLengths[i] = new int[s1.Length+1];
+        }
+        
+        for(var i=0; i<s1.Length; i++) {
+            for(var j=0; j<s2.Length; j++) {
+                if(s1[i] == s2[j]) {
+                    maxCommonLengths[i+1][j+1] = maxCommonLengths[i][j] + 1;
+                    continue;
+                }
+                
+                 maxCommonLengths[i+1][j+1] = Math.Max(maxCommonLengths[i][j+1], maxCommonLengths[i+1][j]);
+            }
+        }
+        
+        return maxCommonLengths[s1.Length][s2.Length];
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string s1 = Console.ReadLine();
+
+        string s2 = Console.ReadLine();
+
+        int result = commonChild(s1, s2);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

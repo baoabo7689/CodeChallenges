@@ -1,0 +1,698 @@
+Objective 
+In this challenge, we practice using multiple linear regression. Check out the Tutorial tab for learning materials!
+
+Task 
+Andrea has a simple equation:
+
+for  real constants (, , , , ). We can say that the value of  depends on  features. Andrea studies this equation for  different feature sets  and records each respective value of . If she has  new feature sets, can you help Andrea find the value of  for each of the sets?
+Note: You are not expected to account for bias and variance trade-offs.
+
+Input Format
+
+The first line contains  space-separated integers,  (the number of observed features) and  (the number of feature sets Andrea studied), respectively. 
+Each of the  subsequent lines contain  space-separated decimals; the first  elements are features , and the last element is the value of  for the line's feature set.
+The next line contains a single integer, , denoting the number of feature sets Andrea wants to query for. 
+Each of the  subsequent lines contains  space-separated decimals describing the feature sets.
+
+Constraints
+
+Scoring
+For each feature set in one test case, we will compute the following:
+
+. We will permit up to a  margin of error.
+The normalized score for each test case will be: . If the challenge is worth  points, then your score will be .
+
+Output Format
+
+For each of the  feature sets, print the value of  on a new line (i.e., you must print a total of  lines).
+
+Sample Input
+
+2 7
+0.18 0.89 109.85
+1.0 0.26 155.72
+0.92 0.11 137.66
+0.07 0.37 76.17
+0.85 0.16 139.75
+0.99 0.41 162.6
+0.87 0.47 151.77
+4
+0.49 0.18
+0.57 0.83
+0.56 0.64
+0.76 0.18
+Sample Output
+
+105.22
+142.68
+132.94
+129.71
+Explanation
+
+We're given , so . We're also given , so we determine that Andrea studied the following feature sets:
+
+We use the information above to find the values of , , and . Then, we find the value of  for each of the  feature sets.
+
+======================================================================================================================================================
+https://en.wikipedia.org/wiki/Transpose
+In linear algebra, the transpose of a matrix is an operator which flips a matrix over its diagonal, 
+that is it switches the row and column indices of the matrix by producing another matrix denoted as AT (also written A′, Atr, tA or At).
+It is achieved by any one of the following equivalent actions:
+
+
+
+
+
+
+X
+1 0.18 0.89
+1 1 0.26
+1 0.92 0.11
+1 0.07 0.37
+1 0.85 0.16
+1 0.99 0.41
+1 0.87 0.47
+
+Real 
+1.0 0.18 0.89
+1.0 1.0 0.26
+1.0 0.92 0.11
+1.0 0.07 0.37
+1.0 0.85 0.16
+1.0 0.99 0.41
+1.0 0.87 0.47
+
+
+Y
+109.85
+155.72
+137.66
+76.17
+139.75
+162.6
+151.77
+
+Real 
+109.85
+155.72
+137.66
+76.17
+139.75
+162.6
+151.77
+
+
+XT 
+1 1 1 1 1 1 1
+0.18 1 0.92 0.07 0.85 0.99 0.87
+0.89 0.26 0.11 0.37 0.16 0.41 0.47
+
+Real
+1.0 1.0 1.0 1.0 1.0 1.0 1.0
+0.18 1.0 0.92 0.07 0.85 0.99 0.87
+0.89 0.26 0.11 0.37 0.16 0.41 0.47
+
+
+
+XT*X 
+7 4.88 2.67
+4.88 4.3432 1.4981
+2.67 1.4981 1.4233
+
+Real 
+7.0 4.88 2.67
+4.88 4.3431999999999995 1.4981
+2.67 1.4981 1.4232999999999998
+
+
+
+(XT*X)^-1 
+2.25815460564532 -1.68945639242888 -2.45787829380686
+-1.68945639242888 1.62546496473492 1.45839914572875
+-2.45787829380686 1.45839914572875 3.77833716310551
+
+Real 
+2.258154605645323 -1.6894563924288817 -2.4578782938068606
+-1.6894563924288821 1.6254649647349195 1.458399145728752
+-2.45787829380686 1.4583991457287508 3.778337163105512
+
+
+(XT*X)^-1*XT 
+-0.233459226479982 -0.0703501431733424 0.433488112291997 1.23047768946676 0.428856145071676 -0.422137323320083 -0.366875253857028
+-0.0988974590780074 0.315192350195513 -0.0336047188425934 -1.0360661609778 -0.0744673090876002 0.517697572407476 0.410145725383011
+1.16735362758822 -0.0171114856706762 -0.700533991794803 -0.957805603256808 -0.61370507384054 0.535055097337863 0.586747429636743
+
+Real 
+-0.23345922647998174 -0.07035014317334243 0.43348811229199713 1.230477689466763 0.42885614507167585 -0.4221373233200827 -0.36687525385702835
+-0.0988974590780074 0.31519235019551295 -0.03360471884259336 -1.0360661609777995 -0.07446730908760021 0.5176975724074764 0.4101457253830113
+1.1673536275882208 -0.01711148567067622 -0.700533991794803 -0.9578056032568081 -0.6137050738405401 0.5350550973378627 0.5867474296367434
+
+
+B = (XT*X)^-1*XT*Y
+52.4114990450608
+90.6933173850189
+46.4629654852743
+
+Real 
+52.411499045060836
+90.69331738501893
+46.46296548527425
+
+
+Queries 
+1 0.49 0.18
+1 0.57 0.83
+1 0.56 0.64
+1 0.76 0.18
+
+
+
+
+
+======================================================================================================================================================
+
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {    
+    static double[][] Transpose(double[][] matrix)
+    {
+        int row = matrix.Length;
+        int column = matrix[0].Length;
+        double[][] result = new double[column][];
+       for(var c=0; c<column; c++) {
+           result[c] = new double[row];
+           
+           for(var r=0; r<row; r++) {
+                result[c][r] = matrix[r][c];            
+           }
+       }
+        
+        return result;
+    }
+    
+    static double[][] MultiplyMatrix(double[][] A, double[][] B)
+    {
+        int rA = A.Length;
+        int cA = A[0].Length;
+        int rB = B.Length;
+        int cB = B[0].Length;
+        
+        double temp = 0;
+        double[][] kHasil = new double[rA][];
+        for (int i = 0; i < rA; i++)
+        {
+            kHasil[i] = new double[cB];
+            
+            for (int j = 0; j < cB; j++)
+            {
+                temp = 0;
+                for (int k = 0; k < cA; k++)
+                {
+                    temp += A[i][k] * B[k][j];
+                }
+                
+                kHasil[i][j] = temp;
+            }
+        }
+        
+        return kHasil;
+    }
+    
+    static double[][] MatrixCreate(int rows, int cols)
+        {
+            double[][] result = new double[rows][];
+            for (int i = 0; i < rows; ++i)
+            result[i] = new double[cols];
+            return result;
+        }
+
+        static double[][] MatrixIdentity(int n)
+        {
+            // return an n x n Identity matrix
+            double[][] result = MatrixCreate(n, n);
+            for (int i = 0; i < n; ++i)
+            result[i][i] = 1.0;
+
+            return result;
+        }
+
+        static double[][] MatrixProduct(double[][] matrixA, double[][] matrixB)
+        {
+            int aRows = matrixA.Length; int aCols = matrixA[0].Length;
+            int bRows = matrixB.Length; int bCols = matrixB[0].Length;
+            if (aCols != bRows)
+                throw new Exception("Non-conformable matrices in MatrixProduct");
+
+            double[][] result = MatrixCreate(aRows, bCols);
+
+            for (int i = 0; i < aRows; ++i) // each row of A
+                for (int j = 0; j < bCols; ++j) // each col of B
+                      for (int k = 0; k < aCols; ++k) // could use k less-than bRows
+                        result[i][j] += matrixA[i][k] * matrixB[k][j];
+
+            return result;
+        }
+
+        static double[][] MatrixInverse(double[][] matrix)
+        {
+            int n = matrix.Length;
+            double[][] result = MatrixDuplicate(matrix);
+
+            int[] perm;
+            int toggle;
+            double[][] lum = MatrixDecompose(matrix, out perm,
+              out toggle);
+            if (lum == null)
+                throw new Exception("Unable to compute inverse");
+
+            double[] b = new double[n];
+            for (int i = 0; i < n; ++i)
+      {
+                for (int j = 0; j < n; ++j)
+        {
+                    if (i == perm[j])
+                        b[j] = 1.0;
+                    else
+                        b[j] = 0.0;
+                }
+
+                double[] x = HelperSolve(lum, b);
+
+                for (int j = 0; j < n; ++j)
+          result[j][i] = x[j];
+            }
+            return result;
+        }
+
+        static double[][] MatrixDuplicate(double[][] matrix)
+        {
+            // allocates/creates a duplicate of a matrix.
+            double[][] result = MatrixCreate(matrix.Length, matrix[0].Length);
+            for (int i = 0; i < matrix.Length; ++i) // copy the values
+                for (int j = 0; j < matrix[i].Length; ++j)
+                    result[i][j] = matrix[i][j];
+            return result;
+        }
+
+        static double[] HelperSolve(double[][] luMatrix, double[] b)
+        {
+            // before calling this helper, permute b using the perm array
+            // from MatrixDecompose that generated luMatrix
+            int n = luMatrix.Length;
+            double[] x = new double[n];
+            b.CopyTo(x, 0);
+
+            for (int i = 1; i < n; ++i)
+            {
+                double sum = x[i];
+                for (int j = 0; j < i; ++j)
+                    sum -= luMatrix[i][j] * x[j];
+                x[i] = sum;
+            }
+
+            x[n - 1] /= luMatrix[n - 1][n - 1];
+            for (int i = n - 2; i >= 0; --i)
+            {
+                double sum = x[i];
+                for (int j = i + 1; j < n; ++j)
+                    sum -= luMatrix[i][j] * x[j];
+                x[i] = sum / luMatrix[i][i];
+            }
+
+            return x;
+        }
+
+        static double[][] MatrixDecompose(double[][] matrix, out int[] perm, out int toggle)
+        {
+            // Doolittle LUP decomposition with partial pivoting.
+            // rerturns: result is L (with 1s on diagonal) and U;
+            // perm holds row permutations; toggle is +1 or -1 (even or odd)
+            int rows = matrix.Length;
+            int cols = matrix[0].Length; // assume square
+            if (rows != cols)
+                throw new Exception("Attempt to decompose a non-square m");
+
+            int n = rows; // convenience
+
+            double[][] result = MatrixDuplicate(matrix);
+
+            perm = new int[n]; // set up row permutation result
+            for (int i = 0; i < n; ++i) { perm[i] = i; }
+
+            toggle = 1; // toggle tracks row swaps.
+                        // +1 -greater-than even, -1 -greater-than odd. used by MatrixDeterminant
+
+            for (int j = 0; j < n - 1; ++j) // each column
+            {
+                double colMax = Math.Abs(result[j][j]); // find largest val in col
+                int pRow = j;
+                //for (int i = j + 1; i less-than n; ++i)
+                //{
+                //  if (result[i][j] greater-than colMax)
+                //  {
+                //    colMax = result[i][j];
+                //    pRow = i;
+                //  }
+                //}
+
+                // reader Matt V needed this:
+                for (int i = j + 1; i < n; ++i)
+                {
+                    if (Math.Abs(result[i][j]) > colMax)
+                    {
+                        colMax = Math.Abs(result[i][j]);
+                        pRow = i;
+                    }
+                }
+                // Not sure if this approach is needed always, or not.
+
+                if (pRow != j) // if largest value not on pivot, swap rows
+                {
+                    double[] rowPtr = result[pRow];
+                    result[pRow] = result[j];
+                    result[j] = rowPtr;
+
+                    int tmp = perm[pRow]; // and swap perm info
+                    perm[pRow] = perm[j];
+                    perm[j] = tmp;
+
+                    toggle = -toggle; // adjust the row-swap toggle
+                }
+
+                // --------------------------------------------------
+                // This part added later (not in original)
+                // and replaces the 'return null' below.
+                // if there is a 0 on the diagonal, find a good row
+                // from i = j+1 down that doesn't have
+                // a 0 in column j, and swap that good row with row j
+                // --------------------------------------------------
+
+                if (result[j][j] == 0.0)
+                {
+                    // find a good row to swap
+                    int goodRow = -1;
+                    for (int row = j + 1; row < n; ++row)
+                    {
+                        if (result[row][j] != 0.0)
+                            goodRow = row;
+                    }
+
+                    if (goodRow == -1)
+                        throw new Exception("Cannot use Doolittle's method");
+
+                    // swap rows so 0.0 no longer on diagonal
+                    double[] rowPtr = result[goodRow];
+                    result[goodRow] = result[j];
+                    result[j] = rowPtr;
+
+                    int tmp = perm[goodRow]; // and swap perm info
+                    perm[goodRow] = perm[j];
+                    perm[j] = tmp;
+
+                    toggle = -toggle; // adjust the row-swap toggle
+                }
+                // --------------------------------------------------
+                // if diagonal after swap is zero . .
+                //if (Math.Abs(result[j][j]) less-than 1.0E-20) 
+                //  return null; // consider a throw
+
+                for (int i = j + 1; i < n; ++i)
+                {
+                    result[i][j] /= result[j][j];
+                    for (int k = j + 1; k < n; ++k)
+                    {
+                        result[i][k] -= result[i][j] * result[j][k];
+                    }
+                }
+
+
+            } // main j column loop
+
+            return result;
+        }
+    
+    static void PrintMatrix(double[][] X) {
+        var r = X.Length;
+        var c = X[0].Length;
+        for(var i=0; i<r; i++) {
+            Console.WriteLine(string.Join(" ", X[i]));
+        }
+    }
+        
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var m_n = Console.ReadLine()
+            .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        var m = int.Parse(m_n[0]);
+        var n = int.Parse(m_n[1]);
+        var Y = new double[n][];
+                
+        var X = new double[n][];
+        for(var i=0; i<n; i++) {
+            var data =  Console.ReadLine()
+                .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var tempX = new double[m+1];
+            tempX[0] = 1;
+            
+            for(var j=0; j<m; j++) {
+                tempX[j+1] = double.Parse(data[j]);
+            }   
+            
+            X[i] = tempX;
+            Y[i] = new double[1] { double.Parse(data[m]) };
+        }
+        
+        var XT = Transpose(X);
+        var tempMatrix = MultiplyMatrix(XT, X);
+        tempMatrix = MatrixInverse(tempMatrix);
+        tempMatrix =  MultiplyMatrix(tempMatrix, XT);
+        tempMatrix =  MultiplyMatrix(tempMatrix, Y);
+        var B = tempMatrix;
+            
+        var q = int.Parse(Console.ReadLine());
+        for(var i=0; i<q; i++) {
+            var data = Console.ReadLine()
+                .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);              
+            var query = new double[m+1];
+            query[0] = (double)1;
+            for(var j=0; j<m; j++) {
+                query[j+1] = double.Parse(data[j]);
+            }
+            
+            var result = MultiplyMatrix(new double[1][] { query }, B);
+            Console.WriteLine(Math.Round(result[0][0], 2));
+        }
+    }
+}
+
+
+
+
+===============================================================================================================================================================================================================
+import java.util.Scanner;
+import java.util.Arrays;
+
+public class Solution {
+    public static void main(String[] args) {
+        /* Read input: Create and fill X,Y arrays */
+        Scanner scan = new Scanner(System.in);
+        int m = scan.nextInt();
+        int n = scan.nextInt();
+        double [][] X = new double[n][m + 1];
+        double [][] Y   = new double[n][1];
+        for (int row = 0; row < n; row++) {
+            X[row][0] = 1;
+            for (int col = 1; col <= m; col++) {
+                X[row][col] = scan.nextDouble();
+            }
+            Y[row][0] = scan.nextDouble();
+        }
+
+        
+        /* Calculate B */
+        double [][] xtx    = multiply(transpose(X),X);
+        PrintMatrix(transpose(X));
+        
+        double [][] xtxInv = invert(xtx);
+        double [][] xty    = multiply(transpose(X), Y);
+        double [][] B      = multiply(xtxInv, xty);
+        
+        int sizeB = B.length;
+        
+        /* Calculate and print values for the "q" feature sets */
+        int q = scan.nextInt();
+        for (int i = 0; i < q; i++) {
+            double result = B[0][0];
+            for (int row = 1; row < sizeB; row++) {
+                result += scan.nextDouble() * B[row][0];
+            }
+            System.out.println(result);
+        }
+    }
+    
+    static void PrintMatrix(double X[][]) {
+        int r = X.length;
+        int c = X[0].length;
+        for(int i=0; i<r; i++) {
+            String str = Double.toString(X[i][0]);
+            for(int j=1; j<c; j++) {
+                str += " " + Double.toString(X[i][j]);
+            }
+            
+            System.out.println(str);
+        }
+    }
+    
+    /* Multiplies 2 matrices in O(n^3) time */
+    public static double[][] multiply(double [][] A, double [][] B) {
+        int aRows = A.length;
+        int aCols = A[0].length;
+        int bRows = B.length;
+        int bCols = B[0].length;
+        
+        double [][] C = new double[aRows][bCols];
+        int cRows = C.length;
+        int cCols = C[0].length;
+        
+        for (int row = 0; row < cRows; row++) {
+            for (int col = 0; col < cCols; col++) {
+                for (int k = 0; k < aCols; k++) {
+                    C[row][col] += A[row][k] * B[k][col];
+                }
+            }
+        }
+        return C;
+    }
+    
+    public static double[][] transpose(double [][] matrix) {
+        /* Create new array with switched dimensions */
+        int originalRows = matrix.length;
+        int originalCols = matrix[0].length;
+        int rows = originalCols;
+        int cols = originalRows;
+        double [][] result = new double[rows][cols];
+        
+        /* Fill our new 2D array */
+        for (int row = 0; row < originalRows; row++) {
+            for (int col = 0; col < originalCols; col++) {
+                result[col][row] = matrix[row][col];
+            }
+        }
+        return result;
+    }
+    
+    /******************************************************************/
+    /* Matrix Inversion code (shown below) is from:                   */
+    /*   http://www.sanfoundry.com/java-program-find-inverse-matrix/  */
+    /******************************************************************/
+    
+    public static double[][] invert(double a[][]) 
+    {
+        int n = a.length;
+        double x[][] = new double[n][n];
+        double b[][] = new double[n][n];
+        int index[] = new int[n];
+        for (int i=0; i<n; ++i) 
+            b[i][i] = 1;
+ 
+         // Transform the matrix into an upper triangle
+        gaussian(a, index);
+ 
+         // Update the matrix b[i][j] with the ratios stored
+        for (int i=0; i<n-1; ++i)
+            for (int j=i+1; j<n; ++j)
+                for (int k=0; k<n; ++k)
+                    b[index[j]][k]
+                            -= a[index[j]][i]*b[index[i]][k];
+ 
+         // Perform backward substitutions
+        for (int i=0; i<n; ++i) 
+        {
+            x[n-1][i] = b[index[n-1]][i]/a[index[n-1]][n-1];
+            for (int j=n-2; j>=0; --j) 
+            {
+                x[j][i] = b[index[j]][i];
+                for (int k=j+1; k<n; ++k) 
+                {
+                    x[j][i] -= a[index[j]][k]*x[k][i];
+                }
+                x[j][i] /= a[index[j]][j];
+            }
+        }
+        return x;
+    }
+ 
+        // Method to carry out the partial-pivoting Gaussian
+        // elimination.  Here index[] stores pivoting order.
+ 
+    public static void gaussian(double a[][], int index[]) 
+    {
+        int n = index.length;
+        double c[] = new double[n];
+ 
+         // Initialize the index
+        for (int i=0; i<n; ++i) 
+            index[i] = i;
+ 
+         // Find the rescaling factors, one from each row
+        for (int i=0; i<n; ++i) 
+        {
+            double c1 = 0;
+            for (int j=0; j<n; ++j) 
+            {
+                double c0 = Math.abs(a[i][j]);
+                if (c0 > c1) c1 = c0;
+            }
+            c[i] = c1;
+        }
+ 
+         // Search the pivoting element from each column
+        int k = 0;
+        for (int j=0; j<n-1; ++j) 
+        {
+            double pi1 = 0;
+            for (int i=j; i<n; ++i) 
+            {
+                double pi0 = Math.abs(a[index[i]][j]);
+                pi0 /= c[index[i]];
+                if (pi0 > pi1) 
+                {
+                    pi1 = pi0;
+                    k = i;
+                }
+            }
+ 
+           // Interchange rows according to the pivoting order
+            int itmp = index[j];
+            index[j] = index[k];
+            index[k] = itmp;
+            for (int i=j+1; i<n; ++i)     
+            {
+                double pj = a[index[i]][j]/a[index[j]][j];
+ 
+                 // Record pivoting ratios below the diagonal
+                a[index[i]][j] = pj;
+ 
+                 // Modify other elements accordingly
+                for (int l=j+1; l<n; ++l)
+                    a[index[i]][l] -= pj*a[index[j]][l];
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+

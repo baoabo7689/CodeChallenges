@@ -1,0 +1,183 @@
+We define to be a permutation of the first natural numbers in the range . Let denote the value at position in permutation using -based indexing.
+
+is considered to be an absolute permutation if holds true for every .
+
+Given and , print the lexicographically smallest absolute permutation . If no absolute permutation exists, print -1.
+
+For example, let giving us an array . If we use based indexing, create a permutation where every . If , we could rearrange them to :
+
+pos[i]	i	|Difference|
+3	1	2
+4	2	2
+1	3	2
+2	4	2
+
+Input Format
+
+The first line contains an integer , the number of test cases.
+Each of the next lines contains space-separated integers, and .
+
+Constraints
+
+Output Format
+
+On a new line for each test case, print the lexicographically smallest absolute permutation. If no absolute permutation exists, print -1.
+
+Sample Input
+
+3
+2 1
+3 0
+3 2
+
+Sample Output
+
+2 1
+1 2 3
+-1
+
+Explanation
+
+Test Case 0:
+
+[perm.png]
+
+Test Case 1:
+
+[perm(1).png]
+
+Test Case 2:
+No absolute permutation exists, so we print -1 on a new line.
+
+
+
+
+======================================================================================================================================================
+Problem Statement
+
+Given and , a permutation of the first natural numbers is called an absolute permutation if for every . We must print the lexicographically smallest absolute permutation for the given and , or if no such permutation exists.
+
+
+Solution
+
+    If , print the permutation in the order from to .
+    If is odd, it's easy to prove that the answer does not exist.
+
+Proof by Contradiction
+
+Let us assume such a permutation exists when is odd. We know the following:
+
+If , ; otherwise, .
+
+Because is odd, We can't have a number of 's equal to a number of 's. Therefore, we can't have . Because this will hold for any possible permutation, we can say such a permutation does not exist.
+
+If is even, choose every slot of elements and shuffle them to get the lexicographically smallest absolute permutation.
+
+For example: and
+
+    first slot
+    second slot
+
+Therefore, the lexicographically smallest absolute permutation is . Note that if is not evenly divisible by , we can't have an absolute permutation and thus print -1.
+
+
+
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the absolutePermutation function below.
+    static int[] NoResult = new int[] { -1 };
+    static int[] absolutePermutation(int n, int k) {
+        var result = new int[n];
+        var useNums = new Dictionary<int, bool>();
+        
+        for(var i=1; i<=n; i++) {
+            var v1 = i+k;
+            var v2 = i-k;
+            
+            var min = Math.Min(v1, v2);
+            var max = Math.Max(v1, v2);
+            
+            if(min < 1 && n < max) {
+                return NoResult;
+            }
+            
+            if(v1 < 1 || v1 > n) {  
+                if(useNums.ContainsKey(v2)) {
+                    return NoResult;                    
+                }
+                
+                result[i-1] = v2; 
+                useNums.Add(v2, true);
+                continue;
+            }
+            
+            if(v2 < 1 || v2 > n) {  
+                if(useNums.ContainsKey(v1)) {
+                    return NoResult;                    
+                }
+                
+                result[i-1] = v1; 
+                useNums.Add(v1, true);
+                continue;
+            }
+            
+            if(useNums.ContainsKey(min)) {
+                result[i-1] = max; 
+                useNums.Add(max, true);
+                continue;         
+            }
+            
+            result[i-1] = min; 
+            useNums.Add(min, true);
+        }
+
+        return result;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int t = Convert.ToInt32(Console.ReadLine());
+
+        for (int tItr = 0; tItr < t; tItr++) {
+            string[] nk = Console.ReadLine().Split(' ');
+
+            int n = Convert.ToInt32(nk[0]);
+
+            int k = Convert.ToInt32(nk[1]);
+
+            int[] result = absolutePermutation(n, k);
+
+            textWriter.WriteLine(string.Join(" ", result));
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,80 @@
+ is the smallest number that can be divided by each of the numbers from  to  without any remainder. 
+What is the smallest positive number that is evenly divisible(divisible with no remainder) by all of the numbers from  to ?
+
+Input Format
+
+First line contains  that denotes the number of test cases. This is followed by  lines, each containing an integer, .
+
+Constraints
+
+Output Format
+
+Print the required answer for each test case.
+
+Sample Input 0
+
+2
+3
+10
+Sample Output 0
+
+6
+2520
+Explanation 0
+
+You can check  is divisible by each of , giving quotient of  respectively.
+You can check  is divisible by each of  giving quotient of  respectively.
+
+
+
+
+
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+
+class Solution {
+
+    static BigInteger BCNN(BigInteger a, BigInteger b) {
+        BigInteger m = a*b;
+            
+        if(b < a) {
+            var t = a;
+            a = b;
+            b = t;
+        }
+        
+        while(a != 0) {
+            var r = b%a;
+            b = a;
+            a = r;
+        }
+        
+        return m/b;
+    }
+    
+    
+    static void Main(String[] args) {
+        int t = Convert.ToInt32(Console.ReadLine());
+        for(int a0 = 0; a0 < t; a0++){
+            int n = Convert.ToInt32(Console.ReadLine());
+            BigInteger result = 1;
+            
+            for(var i=2; i<=n; i++) {
+                result = BCNN(i, result);
+            }
+            
+            Console.WriteLine(result);
+        }
+    }
+}
+
+
+
+

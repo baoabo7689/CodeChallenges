@@ -1,0 +1,141 @@
+A Pythagorean triplet is a set of three natural numbers, , for which,
+
+For example,
+
+Given , Check if there exists any Pythagorean triplet for which
+Find maximum possible value of among all such Pythagorean triplets, If there is no such Pythagorean triplet print .
+
+Input Format
+
+The first line contains an integer i.e. number of test cases.
+The next lines will contain an integer .
+
+Constraints
+
+Output Format
+
+Print the value corresponding to each test case in separate lines.
+
+Sample Input 0
+
+2
+12
+4
+
+Sample Output 0
+
+60
+-1
+
+Explanation 0
+
+    For , we have a triplet , whose product is .
+    For , we don't have any pythagorean triple.
+
+
+
+
+======================================================================================================================================================
+
+a^2 + b^2 = c^2
+a + b + c = N 
+c = (N - a - b)
+a^2 + b^2 = (N-a-b)^2
+= N^2 - 2N(a+b) + (a+b)^2 
+
+=> N^2 - 2N(a+b) + 2ab = 0;
+2b (N - a) = N^2 - 2Na = N(N - 2a)
+=> b = N(N - 2a)/2(N - a)
+= N/2 - aN/2(N-a)
+= N/2 - a/2 - a^2/2(N-a)
+= (N-a)/2 - a^2/2(N-a)
+= ((N-a)^2 - a^2)/2
+= (N-2a)N/2(N-a)
+
+
+c = N - (a+b)
+= (N-a) - b
+= (N-a)/2 + a^2/2(N-a)
+
+=> a<N, 
+c^2 - b^2 = 4a^2/2(N-a)*(N-a)/2=a^2
+
+a = ka1
+N=kN1
+=> b = k[(N1 - a1)/2 - ka1^2/2(N1-a1) ]
+c = kc1
+=> (a,N)=1 
+
+a*b*c = a*(N-2a)N/2(N-a)*[(N-a)/2 + a^2/2(N-a)]
+ 
+
+
+
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+
+    static void Main(String[] args) {
+        int t = Convert.ToInt32(Console.ReadLine());
+        for(int a0 = 0; a0 < t; a0++){
+            int n = Convert.ToInt32(Console.ReadLine());
+            
+            var minA = Math.Floor(Math.Sqrt(n/2));
+            var maxA = n/2;
+            var max = -1;
+            for(var a=minA; a<maxA; a++) {
+                var b = (n-2*a)*n;
+                var c = (n-a)*(n-a) + a*a;
+                var d = 2*(n-a);
+                if(b%d != 0 || c%d != 0) {
+                    continue;
+                }
+                
+                //Console.WriteLine(a + " " + b + " " + c);
+                max = (int)Math.Max(a*b*c/d/d, max); 
+            }  
+            
+            Console.WriteLine(max);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

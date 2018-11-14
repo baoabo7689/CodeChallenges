@@ -1,0 +1,90 @@
+You are given a table, Functions, containing two columns: X and Y.
+
+
+
+Two pairs (X1, Y1) and (X2, Y2) are said to be symmetric pairs if X1 = Y2 and X2 = Y1.
+
+Write a query to output all such symmetric pairs in ascending order by the value of X.
+
+Sample Input
+
+
+
+Sample Output
+
+20 20
+20 21
+22 23
+
+
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+/*
+Enter your query here.
+*/
+Select Distinct f1.X, f1.Y
+From Functions f1, Functions f2
+Where (f1.X < f1.Y And f1.X = f2.Y And f1.Y = f2.X)
+Or (f1.X = f1.Y And 1 <
+    (
+        Select Count(*)
+        From Functions f3
+        Where f3.X = f1.X And f3.Y = f1.X
+        Group By f3.X
+    )   
+   )
+Order By f1.X
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

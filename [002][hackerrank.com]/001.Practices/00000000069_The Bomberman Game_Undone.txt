@@ -1,0 +1,309 @@
+Bomberman lives in a rectangular grid. Each cell in the grid either contains a bomb or nothing at all.
+
+Each bomb can be planted in any cell of the grid but once planted, it will detonate after exactly 3 seconds. Once a bomb detonates, it's destroyed — along with anything in its four neighboring cells. This means that if a bomb detonates in cell , any valid cells and are cleared. If there is a bomb in a neighboring cell, the neighboring bomb is destroyed without detonating, so there's no chain reaction.
+
+Bomberman is immune to bombs, so he can move freely throughout the grid. Here's what he does:
+
+    Initially, Bomberman arbitrarily plants bombs in some of the cells, the initial state.
+    After one second, Bomberman does nothing.
+    After one more second, Bomberman plants bombs in all cells without bombs, thus filling the whole grid with bombs. No bombs detonate at this point.
+    After one more second, any bombs planted exactly three seconds ago will detonate. Here, Bomberman stands back and observes.
+    Bomberman then repeats steps 3 and 4 indefinitely.
+
+Note that during every second Bomberman plants bombs, the bombs are planted simultaneously (i.e., at the exact same moment), and any bombs planted at the same time will detonate at the same time.
+
+Given the initial configuration of the grid with the locations of Bomberman's first batch of planted bombs, determine the state of the grid after seconds.
+
+For example, if the initial grid looks like:
+
+...
+.O.
+...
+
+it looks the same after the first second. After the second second, Bomberman has placed all his charges:
+
+OOO
+OOO
+OOO
+
+At the third second, the bomb in the middle blows up, emptying all surrounding cells:
+
+...
+...
+...
+
+Input Format
+
+The first line contains three space-separated integers , , and , The number of rows, columns and seconds to simulate.
+Each of the next lines contains a row of the matrix as a single string of characters. The . character denotes an empty cell, and the O character (ascii 79) denotes a bomb.
+
+Constraints
+
+Subtask
+
+    for of the maximum score.
+
+Output Format
+
+Print the grid's final state. This means lines where each line contains characters, and each character is either a . or an O (ascii 79). This grid must represent the state of the grid after seconds.
+
+Sample Input
+
+6 7 3
+.......
+...O...
+....O..
+.......
+OO.....
+OO.....
+
+Sample Output
+
+OOO.OOO
+OO...OO
+OOO...O
+..OO.OO
+...OOOO
+...OOOO
+
+Explanation
+
+The initial state of the grid is:
+
+.......
+...O...
+....O..
+.......
+OO.....
+OO.....
+
+Bomberman spends the first second doing nothing, so this is the state after 1 second:
+
+.......
+...O...
+....O..
+.......
+OO.....
+OO.....
+
+Bomberman plants bombs in all the empty cells during his second second, so this is the state after 2 seconds:
+
+OOOOOOO
+OOOOOOO
+OOOOOOO
+OOOOOOO
+OOOOOOO
+OOOOOOO
+
+In his third second, Bomberman sits back and watches all the bombs he planted 3 seconds ago detonate. This is the final state after seconds:
+
+OOO.OOO
+OO...OO
+OOO...O
+..OO.OO
+...OOOO
+...OOOO
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the twoPluses function below.
+    static char BadCell = 'B';
+    static char GoodCell = 'G';
+    class CellLength {
+        public int Left {get; set;}
+        public int Right {get; set;}
+        public int Top {get; set;}
+        public int Bottom {get; set;}
+        public char Value {get; set;}
+        
+        public int MaxLength {get; set;}
+    }
+    
+    static int twoPluses(string[] grid) {
+        var n = grid.Length;
+        var m = grid[0].Length;
+        var lengthGrid = new dynamic[n][];
+        for(var i=0; i<n; i++) {
+            var temp = new dynamic[m];
+            for(var j=0; j<m; j++) {
+                if(grid[i][j] == BadCell) {
+                    temp[j] = new CellLength{  Left=-1, Right=-1, Top=-1, Bottom=-1, Value=BadCell };                    
+                } else {                    
+                    temp[j] = new CellLength{  Left=0, Right=m-1, Top=0, Bottom=n-1, Value=GoodCell };
+                }
+            }
+            
+            lengthGrid[i] = temp;
+        }
+        
+        for(var i=0; i<n; i++) {
+            var row = grid[i];
+            for(var j=1; j<m; j++) {
+                if(row[j] == BadCell) {
+                    lengthGrid[i][j].Left = -1;
+                    continue;
+                }
+                
+                if(grid[i][j-1] == BadCell) {
+                    lengthGrid[i][j].Left = j;
+                    continue;
+                }
+                
+                lengthGrid[i][j].Left = lengthGrid[i][j-1].Left;
+            }   
+            
+            for(var j=m-2; j>=0; j--) {
+                if(row[j] == BadCell) {
+                    lengthGrid[i][j].Right = -1;
+                    continue;
+                }
+                
+                if(grid[i][j+1] == BadCell) {
+                    lengthGrid[i][j].Right = j;
+                    continue;
+                }
+                
+                lengthGrid[i][j].Right = lengthGrid[i][j+1].Right;
+            }   
+        }
+     
+        for(var i=0; i<m; i++) {
+            for(var j=1; j<n; j++) {
+                if(grid[j][i] == BadCell) {
+                    lengthGrid[j][i].Top = -1;
+                    continue;
+                }
+                                
+                if(grid[j-1][i] == BadCell) {
+                    lengthGrid[j][i].Top = j;
+                    continue;
+                }
+                
+                lengthGrid[j][i].Top = lengthGrid[j-1][i].Top;
+            }
+            
+            for(var j=n-2; j>=0; j--) {
+                if(grid[j][i] == BadCell) {
+                    lengthGrid[j][i].Bottom = -1;
+                    continue;
+                }
+                
+                if(grid[j+1][i] == BadCell) {
+                    lengthGrid[j][i].Bottom = j;
+                    continue;
+                }
+                
+                lengthGrid[j][i].Bottom = lengthGrid[j+1][i].Bottom;
+            }
+        }
+        
+        var maxLength = 0;
+        var maxLengthCount = 0;
+        
+        for(var i=0; i<n; i++) {
+            for(var j=0; j<m; j++) {
+                var cell = lengthGrid[i][j];
+                if(cell.Value == BadCell) {
+                    continue;                    
+                }
+                
+                var topL = i - cell.Top;
+                var rightL = cell.Right - j;
+                var bottomL = cell.Bottom - i;
+                var leftL = j - cell.Left;
+                var min = Math.Min(topL, rightL);
+                min = Math.Min(min, bottomL);
+                min = Math.Min(min, leftL);
+                
+                cell.MaxLength = min*4 + 1;
+                maxLength = Math.Max(maxLength, cell.MaxLength);
+            }
+        }
+        
+        for(var i=0; i<n; i++) {
+           Console.WriteLine(string.Join(",",  lengthGrid[i].Select(c => c.Top)));
+        }
+        
+        var secondMax = 0;
+        for(var i=0; i<n; i++) {
+            for(var j=0; j<m; j++) {
+                var cell = lengthGrid[i][j];
+                if(cell.Value == BadCell) {
+                    continue;                    
+                }
+                
+               if(cell.MaxLength == maxLength) {
+                   maxLengthCount++;
+                   continue;
+               }
+                
+                secondMax = Math.Max(secondMax, cell.MaxLength);
+            }
+        }
+        
+        if(maxLengthCount >= 2) {
+            return maxLength*maxLength;
+        }
+        
+        return maxLength*secondMax;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string[] nm = Console.ReadLine().Split(' ');
+
+        int n = Convert.ToInt32(nm[0]);
+
+        int m = Convert.ToInt32(nm[1]);
+
+        string[] grid = new string [n];
+
+        for (int i = 0; i < n; i++) {
+            string gridItem = Console.ReadLine();
+            grid[i] = gridItem;
+        }
+
+        int result = twoPluses(grid);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+

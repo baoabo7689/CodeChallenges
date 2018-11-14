@@ -1,0 +1,124 @@
+You are given an array A of size N. You are also given an integer Q. Can you figure out the answer to each of the Q queries?
+
+Each query contains 2 integers x and y, and you need to find whether the value find(x,y) is Odd or Even:
+
+find(int x,int y)
+{
+    if(x>y) return 1;
+    ans = pow(A[x],find(x+1,y))
+    return ans
+}
+Note : pow(a,b) = ab.
+
+Input Format 
+The first line of the input contains an integer N. The next line contains N space separated non-negative integers(whole numbers less than or equal to 9). 
+The line after that contains a positive integer, Q , the denotes the number of queries to follow. Q lines follow, each line contains two positive integer x and y separated by a single space.
+
+Output Format 
+For each query, display 'Even' if the value returned is Even, otherwise display 'Odd'.
+
+Constraints 
+2 ≤ N ≤ 105 
+2 ≤ Q ≤ 105 
+1 ≤ x,y ≤ N 
+x ≤ y
+
+Array is 1-indexed.
+
+No 2 consecutive entries in the array will be zero.
+
+Sample Input
+
+3
+3 2 7
+2
+1 2
+2 3
+Sample Output
+
+Odd
+Even
+Explanation
+
+find(1,2) = 9, which is Odd 
+find(2,3) = 128, which is even
+
+======================================================================================================================================================
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+
+    // Complete the solve function below.
+    static string[] solve(int[] arr, int[][] queries) {
+        var results = new string[queries.Length];
+        for(var i=0; i<queries.Length; i++) {
+            var x = queries[i][0];
+            var y = queries[i][1];
+            results[i] = x>y ? "Odd"
+                : arr[x-1] == 0 ? "Even" 
+                    : (arr[x-1]%2 == 0 && x==y) ? "Even" 
+                        : (arr[x-1]%2 == 0 && x<y && arr[x] == 0) ? "Odd" 
+                            : (arr[x-1]%2 == 0 && x<y && arr[x] != 0) ? "Even" 
+                                : "Odd";      
+        }
+        
+        return results;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int arrCount = Convert.ToInt32(Console.ReadLine());
+
+        int[] arr = Array.ConvertAll(Console.ReadLine().Split(' '), arrTemp => Convert.ToInt32(arrTemp))
+        ;
+        int q = Convert.ToInt32(Console.ReadLine());
+
+        int[][] queries = new int[q][];
+
+        for (int queriesRowItr = 0; queriesRowItr < q; queriesRowItr++) {
+            queries[queriesRowItr] = Array.ConvertAll(Console.ReadLine().Split(' '), queriesTemp => Convert.ToInt32(queriesTemp));
+        }
+
+        string[] result = solve(arr, queries);
+
+        textWriter.WriteLine(string.Join("\n", result));
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

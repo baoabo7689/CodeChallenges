@@ -1,0 +1,80 @@
+Surprisingly there are only three numbers that can be written as the sum of fourth powers of their digits:
+
+As 1 = 1^4 is not a sum it is not included. 
+The sum of these numbers is .
+
+Find the sum of all the numbers that can be written as the sum of  powers of their digits.
+
+Input Format
+
+Input contains an integer 
+
+Constraints
+
+
+Output Format
+
+Print the answer corresponding to the test case.
+
+Sample Input
+
+4
+Sample Output
+
+19316
+======================================================================================================================================================
+
+a[n]a[n-1]...a[1] = a[n]^n + a[n-1]^n + ... + a[1]^n
+=a[n]*10^[n-1] + ... + a[1]*10^0 
+<= 10^6 + 10^5 + ... + 10 
+= 1111110
+
+
+<= n*10^n <= 6*10^6 
+>= 0
+
+9*(10^5 + ... + 1) = 999999
+
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static bool isValid(long i, long N) {
+        long sum = 0;
+        long t = i;
+        while(t > 0) {
+            sum += (long) Math.Pow(t%10, N);
+            t /= 10;
+        }
+        
+        return sum == i;
+    }
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        long N = long.Parse(Console.ReadLine());
+        long sum = 0;
+        long upper = N*((long)Math.Pow(10, N));
+        for(long i=2; i<= 600000; i++) {
+            if(isValid(i, N)) {
+                sum += i;
+            }            
+        }
+        
+        Console.WriteLine(sum);               
+    }
+}
+
+
+
+
+
+
+
+
+

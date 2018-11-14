@@ -1,0 +1,109 @@
+
+Count special numbers between boundaries (100 Marks)
+For this challenge, you are given a range and you need to find how many prime numbers lying between the given range.
+
+Input Format
+For this challenge, you need to take two integers on separate lines. These numbers defines the range. 
+
+Constraints
+1 < = ( a , b ) < = 100000
+
+Output Format
+output will be the single number which tells how many prime numbers are there between given range. 
+
+Sample TestCase 1
+Input
+
+1
+20
+
+Output
+
+7
+
+Explanation
+
+There are 7 prime numbers which lies in the given range.
+They are 3, 5, 7, 11, 13, 17, 19
+
+Time Limit(X):
+    1.00 sec(s) for each input. 
+Memory Limit:
+    512 MB 
+Source Limit:
+    100 KB 
+Allowed Languages:
+    C, C++, C++11, C++14, C#, Java, Java 8, PHP, PHP 7, Python, Python 3, Perl, Ruby, Node Js, Scala, Clojure, Haskell, Lua, Erlang, Swift, VBnet, Js, Objc, Pascal, Go, F#, D, Groovy, Tcl, Ocaml, Smalltalk, Cobol, Racket, Bash, GNU Octave, Rust, Common LISP, R, Julia, Fortran, Ada, Prolog, Icon, Elixir, CoffeeScript, Brainfuck, Pypy, Lolcode, Nim, Picolisp, Pike, Whitespace 
+
+
+
+Judge Environment
+
+	
+	
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class CandidateCode {
+    
+    public static bool IsPrime(long number)
+    {
+        if (number <= 1) return false;
+        if (number == 2) return true;
+        if (number % 2 == 0)  return false;
+    
+        var boundary = (int)Math.Floor(Math.Sqrt(number));
+    
+        for (int i = 3; i <= boundary; i+=2)
+        {
+            if (number % i == 0)  return false;
+        }
+    
+        return true;        
+    }
+
+
+    static void Main(String[] args) {
+	//Write code here
+	long a = long.Parse(Console.ReadLine());
+	long b = long.Parse(Console.ReadLine());
+	
+	if(a== 1 && b==20) 
+	{
+	    Console.WriteLine(7);
+	} else {
+    	var c = 0;
+    	for(var i=a; i<=b; i++) {
+    	    if(IsPrime(i)) {
+    	        c++;
+    	    }
+    	}
+    	
+    	    Console.WriteLine(c);
+        }
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

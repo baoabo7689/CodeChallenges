@@ -1,0 +1,128 @@
+You are given a string containing characters  and  only. Your task is to change it into a string such that there are no matching adjacent characters. To do this, you are allowed to delete zero or more characters in the string.
+
+Your task is to find the minimum number of required deletions.
+
+For example, given the string , remove an  at positions  and  to make  in  deletions.
+
+Function Description
+
+Complete the alternatingCharacters function in the editor below. It must return an integer representing the minimum number of deletions to make the alternating string.
+
+alternatingCharacters has the following parameter(s):
+
+s: a string
+Input Format
+
+The first line contains an integer , the number of queries. 
+The next  lines each contain a string .
+
+Constraints
+
+Each string  will consist only of characters  and 
+Output Format
+
+For each query, print the minimum number of deletions required on a new line.
+
+Sample Input
+
+5
+AAAA
+BBBBB
+ABABABAB
+BABABA
+AAABBB
+Sample Output
+
+3
+4
+0
+0
+4
+Explanation
+
+The characters marked red are the ones that can be deleted so that the string doesn't have matching consecutive characters.
+
+image
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the alternatingCharacters function below.
+    static int alternatingCharacters(string s) {
+        var currentChar = s[0];
+        var count = 0;
+        
+        for(var i=1; i<s.Length; i++) {
+           var c = s[i];
+            if(c != currentChar) {
+                currentChar = c;
+                continue;
+            }
+            
+            count++;
+        }
+        
+        return count;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int q = Convert.ToInt32(Console.ReadLine());
+
+        for (int qItr = 0; qItr < q; qItr++) {
+            string s = Console.ReadLine();
+
+            int result = alternatingCharacters(s);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

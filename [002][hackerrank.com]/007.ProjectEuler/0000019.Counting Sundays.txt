@@ -1,0 +1,185 @@
+You are given the following information, but you may prefer to do some research for yourself.
+
+1 Jan 1900 was a Monday. 
+Thirty days has September, 
+April, June and November. 
+All the rest have thirty-one, 
+Saving February alone, 
+Which has twenty-eight, rain or shine. 
+And on leap years, twenty-nine.
+
+A leap year occurs on any year evenly divisible by , but not on a century unless it is divisible by .
+
+How many Sundays fell on the first of the month between two dates(both inclusive)?
+
+Input Format
+
+The first line contains an integer , i.e., number of test cases. 
+Each testcase will contain two lines 
+ on first line denoting starting date. 
+ on second line denoting ending date.
+
+Constraints
+
+Output Format
+
+Print the values corresponding to each test case.
+
+Sample Input
+
+2
+1900 1 1
+1910 1 1
+2000 1 1
+2020 1 1
+Sample Output
+
+18
+35
+Explanation
+
+For testcase 1, we have the following sundays :-
+
+1 April 1900
+1 July 1900
+1 September 1901
+1 December 1901
+1 June 1902
+1 February 1903
+1 March 1903
+1 November 1903
+1 May 1904
+1 January 1905
+1 October 1905
+1 April 1906
+1 July 1906
+1 September 1907 
+1 December 1907
+1 March 1908
+1 November 1908
+1 August 1909
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+
+class Solution {
+    static bool IsLeapYear(long year) {
+        return year % 400 == 0 || (year%100 != 0 && year%4 == 0);
+    }
+    
+    static int[] MonthDays(long year) {
+        return new int[] { 31, IsLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };        
+    }
+    
+    static List<int[]> Cache() {
+        var loop = 2800;
+        var minYear = 1900;
+        var maxYear = loop + minYear;
+        var result = new List<int[]>();
+        
+        var cYear = minYear;
+        var cDay = 7;
+        while(cYear < maxYear) {
+            var monthDays = MonthDays(cYear);
+            
+            for(var i=0; i<12; i++) {
+                var md = monthDays[i];
+                var remainDays = 7 - (md - cDay)%7;
+                //Console.WriteLine(md + "-" + cDay + "-" + remainDays);
+                cDay = remainDays == 0 ? 7 : remainDays; 
+                var nextYear = cYear + (i==11 ? 1 : 0);
+                
+                if(cDay == 1 && nextYear < maxYear) {                    
+                    result.Add(new int[2] { nextYear, i==11 ? 1 : i+2 });                       
+                }
+            }
+            
+            cYear++;
+        }
+        
+        return result;
+    }
+    
+    static BigInteger Count(List<int[]> cache, long d2, long m2, long y2) {
+        long loop = 2800;
+        long years = (y2 - 1900);
+        BigInteger count = years;
+        count /= loop;
+        count *= cache.Count;
+        
+        y2 = 1900 + (y2-1900)%loop;
+        
+        for(var i=0 ; i<cache.Count; i++) {
+            var c = cache[i];
+            var cYear = c[0];
+            var cMonth = c[1];
+            
+            if(cYear > y2 || (cYear == y2 && cMonth > m2)) {
+                break;
+            }
+                       
+            if(cYear < y2) {
+                count++;
+                continue;
+            }
+            
+            if(cMonth < m2) {
+                count++;   
+                continue; 
+            }
+            
+            count++;  
+        }
+            
+        return count;
+    }
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        int t= Convert.ToInt32(Console.ReadLine());  
+        var cache = Cache();
+        //Console.WriteLine(string.Join(",", cache.Where(d => d[0] > 1900+2500).Select(d => d[0] + "-" + d[1])));
+        //Console.WriteLine(string.Join(",", cache.Select(d => d[0] + "-" + d[1])));
+        
+        for(int a0 = 0; a0 < t; a0++) {
+            var mdy1 = Console.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var mdy2 = Console.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);   
+            
+            var y1 = long.Parse(mdy1[0]);
+            var m1 = long.Parse(mdy1[1]);
+            var d1 = long.Parse(mdy1[2]);
+            
+            var y2 = long.Parse(mdy2[0]);
+            var m2 = long.Parse(mdy2[1]);
+            var d2 = long.Parse(mdy2[2]);
+            
+            if(y2 < y1 || (y2 == y1 && m2 < m1) || (y2 == y1 && m2 == m1 && d2 < d1)) {
+                Console.WriteLine(0);
+                continue;
+            }
+            
+            var mds = MonthDays(y1);            
+            var y3 = (d1==1 && m1==1) ? y1-1 : y1;
+            var m3 = (d1==1 && m1==1) ? 12 : (d1==1) ? m1-1 : m1;
+            var d3 = (d1==1 && m1==1) ? 31 : (d1==1) ? mds[m1-2] : d1-1;
+                     
+            //Console.WriteLine("Test: " + Count(cache, d3, m3, y3));
+            BigInteger count = Count(cache, d2, m2, y2) - Count(cache, d3, m3, y3);            
+            Console.WriteLine(count);
+        }
+    }
+}
+
+
+
+

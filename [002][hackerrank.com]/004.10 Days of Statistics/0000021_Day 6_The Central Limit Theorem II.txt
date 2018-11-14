@@ -1,0 +1,90 @@
+Objective 
+In this challenge, we practice solving problems based on the Central Limit Theorem. We recommend reviewing the Central Limit Theorem Tutorial before attempting this challenge.
+
+Task 
+The number of tickets purchased by each student for the University X vs. University Y football game follows a distribution that has a mean of  and a standard deviation of .
+
+A few hours before the game starts,  eager students line up to purchase last-minute tickets. If there are only  tickets left, what is the probability that all  students will be able to purchase tickets?
+
+Input Format
+
+There are  lines of input (shown below):
+
+250
+100
+2.4
+2.0
+The first line contains the number of last-minute tickets available at the box office. The second line contains the number of students waiting to buy tickets. The third line contains the mean number of purchased tickets, and the fourth line contains the standard deviation.
+
+If you do not wish to read this information from stdin, you can hard-code it into your program.
+
+Output Format
+
+Print the probability that  students can successfully purchase the remaining  tickets, rounded to a scale of  decimal places (i.e.,  format).
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    public static double Erf(double x)
+    {    
+        var a1 =  0.254829592;
+        var a2 = -0.284496736;
+        var a3 =  1.421413741;
+        var a4 = -1.453152027;
+        var a5 =  1.061405429;
+        var p  =  0.3275911;
+
+        var sign = 1;
+        if (x < 0) {
+            sign = -1;
+        }
+
+        x = Math.Abs(x);
+
+        var t = 1.0/(1.0 + p*x);
+        var y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.Exp(-x*x);
+
+        return sign*y;
+    }    
+    
+    static double P(double x) {
+        double mean = 2.4;
+        double standardDeviation = 2.0;
+        var e = 2.71828;
+        double n = 100;
+        
+        var nMean = n*mean;
+        var nStandardDeviation = Math.Sqrt(n) * standardDeviation;
+                
+        mean = nMean;
+        standardDeviation = nStandardDeviation;
+        
+        var result = 0.5*(1 + Erf((x - mean)/(standardDeviation*Math.Sqrt(2))));
+        
+        return result;
+    }
+        
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        Console.WriteLine(P(250).ToString("0.####")); 
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

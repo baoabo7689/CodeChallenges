@@ -1,0 +1,187 @@
+Check out the resources on the page's right side to learn more about breadth-first search. The video tutorial is by Gayle Laakmann McDowell, author of the best-selling interview book Cracking the Coding Interview.
+
+Consider an undirected graph consisting of  nodes where each node is labeled from  to  and the edge between any two nodes is always of length . We define node  to be the starting position for a BFS. Given a graph, determine the distances from the start node to each of its descendants and return the list in node number order, ascending. If a node is disconnected, it's distance should be .
+
+For example, there are  nodes in the graph with a starting node . The list of , and each has a weight of .
+
+image
+
+Starting from node  and creating a list of distances, for nodes  through  we have .
+
+Function Description
+
+Define a Graph class with the required methods to return a list of distances.
+
+Input Format
+
+The first line contains an integer, , the number of queries.
+
+Each of the following  sets of lines is as follows:
+
+The first line contains two space-separated integers,  and , the number of nodes and the number of edges.
+Each of the next  lines contains two space-separated integers,  and , describing an edge connecting node  to node .
+The last line contains a single integer, , the index of the starting node.
+Constraints
+
+Output Format
+
+For each of the  queries, print a single line of  space-separated integers denoting the shortest distances to each of the  other nodes from starting position . These distances should be listed sequentially by node number (i.e., ), but should not include node . If some node is unreachable from , print  as the distance to that node.
+
+Sample Input
+
+2
+4 2
+1 2
+1 3
+1
+3 1
+2 3
+2
+Sample Output
+
+6 6 -1
+-1 6
+Explanation
+
+We perform the following two queries:
+
+The given graph can be represented as: 
+image 
+where our start node, , is node . The shortest distances from  to the other nodes are one edge to node , one edge to node , and there is no connection to node .
+The given graph can be represented as:
+image 
+where our start node, , is node . There is only one edge here, so node  is unreachable from node  and node  has one edge connecting it to node . We then print node 's distance to nodes  and  (respectively) as a single line of space-separated integers: -1 6.
+
+Note: Recall that the actual length of each edge is , and we print  as the distance to any node that's unreachable from .
+
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static Dictionary<int, long> BuildTree(int n, int m, int s, int[][] connections) {
+        var relations = new Dictionary<int, List<int>>();
+        for(var i=0; i<connections.Length; i++) {
+            var connection = connections[i];
+            var left = connection[0];
+            var right = connection[1];
+            
+            if(relations.ContainsKey(left)) {
+                relations[left].Add(right);
+            } else {
+                relations.Add(left, new List<int> { right });
+            }  
+            
+            if(relations.ContainsKey(right)) {
+                relations[right].Add(left);
+            } else {
+                relations.Add(right, new List<int> { left });
+            }  
+        }
+                
+        var usedNodes = new Dictionary<int, bool>();
+        var nodeHeights = new Dictionary<int, long>();
+        var nodes = new List<int> { s };
+        var w = 0;
+        
+        while(nodes.Count > 0) {
+            var temp = new List<int>();
+            for(var i=0; i<nodes.Count; i++) {
+                var node = nodes[i];
+                if(usedNodes.ContainsKey(node)) {
+                    continue;
+                }
+
+                nodeHeights.Add(node, w);
+                
+                if(!relations.ContainsKey(node)) {
+                    usedNodes.Add(node, true);
+                    continue;
+                }
+
+                var rs = relations[node];
+                for(var j=0; j<rs.Count; j++) {
+                    var nJ = rs[j];
+                    if(usedNodes.ContainsKey(nJ)) {
+                        continue;
+                    }
+
+                    temp.Add(nJ);                        
+                }
+
+                usedNodes.Add(node, true);                
+            }        
+            
+            w += 6;
+            nodes = temp;            
+        }  
+        
+        return nodeHeights;
+    }
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var q = int.Parse(Console.ReadLine());
+        for(var i=0; i<q; i++) {
+            var n_m = Console.ReadLine()
+                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var n = int.Parse(n_m[0]);
+            var m = int.Parse(n_m[1]);
+            var connections = new int[m][];
+            for(var j=0; j<m; j++) {    
+                var u_v = Console.ReadLine()
+                    .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var u = int.Parse(u_v[0]);
+                var v = int.Parse(u_v[1]);
+                connections[j] = new int[] { u, v };  
+            }
+            
+            var s = int.Parse(Console.ReadLine());    
+            var nodeHeights = BuildTree(n, m, s, connections);
+            var result = new List<long>();
+            for(var k=1; k<=n; k++) {
+                if(k == s) {
+                    continue;
+                }
+                
+                result.Add(nodeHeights.ContainsKey(k) ? nodeHeights[k] : -1);
+            }
+            
+            Console.WriteLine(string.Join(" ", result));
+        }    
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,430 @@
+
+
+A few palindromic sentences exist in many languages. They look the same, regardless of whether they are read normally (from left to right) or backwards (from right to left). Here are some English examples:
+
+        was it a rat i saw
+        mr owl ate my metal worm
+        live on time emit no evil
+
+Precisely speaking, a sentence is palindromic if, after removing all its spaces (and punctuation), it looks the same when read both left to right and right to left. For example, the second example sentence would become "mrowlatemymetalworm", which looks exactly the same when spelled backwards.
+
+Tom just found a list of words in an old language, and he wonders if he can use them to create a palindromic sentence. Since he doesn't know the language, he will have to assume that any sequence of words from the list is a valid sentence. In order to create a palindromic sentence, he can use each word as many times as he wants. In particular, he may decide not to use some words at all.
+
+Write a function:
+
+    function solution(S);
+
+that, given a string S of length N containing a space-separated list of all the words in the language, returns any palindromic sentence built from the words in S. All of the words in the output sentence should be written in lower case and separated by single spaces. If no such sentence exists, the function should return the word "NO". The length of the sentence should not exceed 600,000 characters. You can assume that if a palindromic sentence can be constructed using the input words, then a palindromic sentence of length not greater than 600,000 characters can be constructed as well.
+
+Examples:
+
+1. Given S="by metal owl egg mr crow worm my ate", your function may return "mr owl ate my metal worm", "mr owl worm", or any other palindromic sentence built using the words from the list, that does not exceed 600,000 characters.
+
+2. Given S="live on time emit no evil", your function may for example return "live on time emit no evil", "no on on no no on", "evil time emit live", or any other palindromic sentence built using the words from the list, that does not exceed 600,000 characters.
+
+3. Given S="abcc bc ac", your function should return "NO", since no palindromic sentence may be constructed using words from the list.
+
+Write an efficient algorithm for the following assumptions:
+
+        N is an integer within the range [1..500];
+        string S consists only of lowercase letters (a−z) and spaces.
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+
+
+======================================================================================================================================================
+
+S toLower => Split words
+reverse word list
+
+
+
+S1 => S2
+	S1.length = S2.length: done 
+	S1.length > S2.length: find next 
+		liee il
+		live il 
+	S2.length < S2.length: 
+		aabbil evlibbaa
+		ilve: remain S2: đối xứng, next
+
+
+
+        console.log(word + " " + reverseWord);
+
+		
+		
+mr worm		
+		
+		
+'ab cdab dcba'
+
+ba badc abcd
+
+
+by => nexts = []
+
+
+
+
+
+[word-remain] = true => không check nữa, return false (loop vô tận)
+
+
+
+console.log("Test:" + n.value + ":" + n.matchNode);
+
+
+'owl'
+' worm'
+
+
+
+solution('kobyla kolacja maly ma majong bok okno');
+
+solution('ab cdab dcba');
+
+solution('by metal owl egg mr crow worm my ate');
+
+
+
+solution('yzfzfyvyvyyygzzvtzyg vzzgyyyvyvyfzfzy fzvyzvfftgz vvgyygvvgvzyfzzyytvv zfzzgtffvzyvzfgyzt zfzvvtyyzzfyzvg');
+
+
+
+
+
+
+0: "gyztvzzgyyyvyvyfzfzy"
+1: "yzfzfyvyvyyygzzv"
+2: "zgtffvzyvzf"
+3: "vvtyyzzfyzvgvvgyygvv"
+4: "tzygfzvyzvfftgzzfz"
+5: "gvzyfzzyytvvzfz"
+
+
+
+
+fzvyzvfftgz
+fzvyzvfftgzzfz
+
+
+yzfzfyvyvyyygzzvtzyg fzvyzvfftgz zfzvvtyyzzfyzvg vvgyygvvgvzyfzzyytvv zfzvvtyyzzfyzvg	vvgyygvvgvzyfzzyytvv zfzzgtffvzyvzfgyzt	vzzgyyyvyvyfzfzy
+
+
+
+======================================================================================================================================================
+
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+function reverseString(s) {
+    return s.split("").reverse().join("");
+}
+
+function isSymmetric(s) {
+    return s == reverseString(s);
+}
+
+function solution(S) {
+    // write your code in JavaScript (Node.js 8.9.4)
+	console.log(S);
+	console.log(S.length);
+	var result = checkS(S);
+	
+	//console.log("'" + result + "'");
+	return result.trim();
+}
+
+function checkS(S) {	
+	var words = S.toLowerCase().split(" ");
+    var exists = [];
+    
+    var originWords = [];
+    var reverseWords = [];
+    
+    for(var i=0; i<words.length; i++) {
+        var word = words[i];
+        if(exists[word]) {
+            continue;
+        }
+		
+        exists[word] = true;
+        var reverseWord = reverseString(words[i]);
+        originWords.push(word);
+        reverseWords.push(reverseWord);
+    }
+    
+    words = null;
+	exists = null;
+	
+	
+    for(var i=0; i<originWords.length; i++) {
+		var originWord = originWords[i];
+		var result = buildTree(originWord, originWords, reverseWords);
+		if(result == "") {
+			continue;
+		}
+		
+		return result;
+	}	
+	
+	return "NO";
+}
+
+function buildString(node) {
+    var left = "";
+    var right = "";
+    
+    var n = node;
+    while(n != null) {
+        if(n.rightValue != "") {
+            right += " " + reverseString(n.rightValue);
+        }
+        
+		var separator = (n.parentNode == null || n.parentNode.isRemain) ? ""  : " ";
+		left = separator + n.leftValue + left;
+        
+        n = n.parentNode;
+    }
+    
+    return left + right;
+}
+
+
+function buildTree(originWord, originWords, reverseWords) {
+	var root = {
+		checkWord: originWord,
+		parentNode: null,
+		isRemain: false,
+		leftValue: "",
+		rightValue: "",
+		isBackwards: false,
+		//charLength: 0
+	};
+	
+	var checkedDicts = [];
+	var siblings = [root];
+	debugger;
+	
+	while(siblings.length) {
+		var temps = [];
+		
+		for(var j=0; j<siblings.length; j++) {
+			var node = siblings[j];
+			
+			//if(node.charLength > 600000) {
+				//continue;
+			//}
+			
+			if(node.isBackwards) {
+				for(var m=0; m<originWords.length; m++) {
+					var w2 = originWords[m];					
+					if(w2.startsWith(node.checkWord)) {
+						var w3 = w2.substring(node.checkWord.length);
+						if(isSymmetric(w3)) {
+							var result = buildString({
+								checkWord: "",
+								parentNode: node,
+								isRemain: false,
+								leftValue: w2,
+								rightValue: "",
+								isBackwards: false,
+								//charLength: 0
+							});
+										
+							return result;
+						}
+						
+						temps.push({
+							checkWord: w3,
+							parentNode: node,
+							isRemain: true,
+							leftValue: w2.substring(0, node.checkWord.length),
+							rightValue: "",
+							isBackwards: false,
+							//charLength: node.charLength + node.checkWord.length
+						});							
+						
+						continue;						
+					}					
+					
+					if(node.checkWord.startsWith(w2)) {
+						var w3 = node.checkWord.substring(w2.length);
+						if(isSymmetric(w3)) {
+							var result = buildString({
+								checkWord: "",
+								parentNode: node,
+								isRemain: false,
+								leftValue: w2,
+								rightValue: "",
+								isBackwards: false,
+								//charLength: 0
+							});
+										
+							return result;
+						}
+						
+						
+						temps.push({
+							checkWord: w3,
+							parentNode: node,
+							isRemain: false,
+							leftValue: w2,
+							rightValue: "",
+							isBackwards: true,
+							//charLength: node.charLength + w2.length
+						});   
+					}		
+				}
+				
+				continue;
+			}
+						
+			if(checkedDicts[node.checkWord + ":" + node.rightValue]) {
+				continue;
+			}
+			
+			if(isSymmetric(node.checkWord)) {
+				var result = buildString({
+					checkWord: "",
+					parentNode: node,
+					isRemain: false,
+					leftValue: node.checkWord,
+					rightValue: "",
+					isBackwards: false,
+					//charLength: 0
+				});
+				
+				return result;
+			}
+			
+			for(var k=0; k<reverseWords.length; k++) {
+				var reverseWord = reverseWords[k];
+				
+				if(reverseWord == node.checkWord) {
+					var result = buildString({
+						checkWord: "",
+						parentNode: node,
+						isRemain: false,
+						leftValue: node.checkWord,
+						rightValue: reverseWord,
+						isBackwards: false,
+						//charLength: 0
+					});
+					
+					return result;
+				}    
+
+				if(node.checkWord.startsWith(reverseWord)) {
+					var remain =  node.checkWord.substring(reverseWord.length);
+					
+					if(isSymmetric(remain)) {
+						var result = buildString({
+							checkWord: "",
+							parentNode: node,
+							isRemain: false,
+							leftValue: node.checkWord,
+							rightValue: reverseWord,
+							isBackwards: false,
+							//charLength: 0
+						});
+						
+						return result;
+					}
+					
+					temps.push({
+						checkWord: remain,
+						parentNode: node,
+						isRemain: true,
+						leftValue: node.checkWord.substring(0, reverseWord.length),
+						rightValue: reverseWord,
+						isBackwards: false,
+						//charLength: node.charLength + reverseWord.length * 2
+					});
+				
+					continue;
+                }	
+				
+				if(reverseWord.startsWith(node.checkWord)) {
+					var remain =  reverseWord.substring(node.checkWord.length);
+					if(isSymmetric(remain)) {
+						var result = buildString({
+							checkWord: "",
+							parentNode: node,
+							isRemain: false,
+							leftValue: node.checkWord,
+							rightValue: reverseWord,
+							isBackwards: false,
+							//charLength: 0
+						});
+						
+						return result;
+					}
+                        
+					temps.push({
+						checkWord: remain,
+						parentNode: node,
+						isRemain: false,
+						leftValue: node.checkWord,
+						rightValue: reverseWord,
+						isBackwards: true,
+						//charLength: node.charLength +  node.checkWord.length + reverseWord.length
+					});
+					
+					continue;
+				}   
+			}
+			
+			checkedDicts[node.checkWord + ":" + node.rightValue] = true;
+		}
+				
+		siblings = temps;		
+	}
+    
+    return "";
+}
+
+
+
+checkedDicts[node.checkWord + ":" + node.rightValue] => loop????
+
+abcabcabcabcabcabcabcabcabcabcabc cbacbacbacbacbacbacbacbacbacbacbacbacbacbacbacbacba
+85
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

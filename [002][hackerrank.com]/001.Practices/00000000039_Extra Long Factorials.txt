@@ -1,0 +1,99 @@
+The factorial of the integer , written , is defined as:
+
+Calculate and print the factorial of a given integer.
+
+For example, if , we calculate and get .
+
+Function Description
+
+Complete the extraLongFactorials function in the editor below. It should print the result and return.
+
+extraLongFactorials has the following parameter(s):
+
+    n: an integer
+
+Note: Factorials of can't be stored even in a long long variable. Big integers must be used for such calculations. Languages like Java, Python, Ruby etc. can handle big integers, but we need to write additional code in C/C++ to handle huge values.
+
+We recommend solving this challenge using BigIntegers.
+
+Input Format
+
+Input consists of a single integer
+
+Constraints
+
+Output Format
+
+Print the factorial of .
+
+Sample Input
+
+Sample Output
+
+Explanation
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+using System.Numerics;
+
+class Solution {
+
+    // Complete the extraLongFactorials function below.
+    static void extraLongFactorials(int n) {
+        BigInteger result = 1;
+        for(var i=1; i<=n; i++) {
+         result *= i;   
+        }
+        
+        Console.WriteLine(result);
+    }
+
+    static void Main(string[] args) {
+        int n = Convert.ToInt32(Console.ReadLine());
+
+        extraLongFactorials(n);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

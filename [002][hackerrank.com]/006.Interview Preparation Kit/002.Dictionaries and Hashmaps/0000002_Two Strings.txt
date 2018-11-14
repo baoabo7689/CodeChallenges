@@ -1,0 +1,186 @@
+Given two strings, determine if they share a common substring. A substring may be as small as one character.
+
+For example, the words "a", "and", "art" share the common substring . The words "be" and "cat" do not share a substring.
+
+Function Description
+
+Complete the function twoStrings in the editor below. It should return a string, either YES or NO based on whether the strings share a common substring.
+
+twoStrings has the following parameter(s):
+
+s1, s2: two strings to analyze .
+Input Format
+
+The first line contains a single integer , the number of test cases.
+
+The following  pairs of lines are as follows:
+
+The first line contains string .
+The second line contains string .
+Constraints
+
+ and  consist of characters in the range ascii[a-z].
+Output Format
+
+For each pair of strings, return YES or NO.
+
+Sample Input
+
+2
+hello
+world
+hi
+world
+Sample Output
+
+YES
+NO
+Explanation
+
+We have  pairs to check:
+
+, . The substrings  and  are common to both strings.
+, .  and  share no common substrings.
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the twoStrings function below.
+    static string twoStrings(string s1, string s2) {
+        for(var i=0; i<s1.Length; i++) {
+            if(s2.IndexOf(s1[i]) != -1) {
+                return "YES";
+            }
+        }
+
+        return "NO";
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int q = Convert.ToInt32(Console.ReadLine());
+
+        for (int qItr = 0; qItr < q; qItr++) {
+            string s1 = Console.ReadLine();
+
+            string s2 = Console.ReadLine();
+
+            string result = twoStrings(s1, s2);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+======================================================================================================================================================
+
+
+
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the twoStrings function below.
+    static string twoStrings(string s1, string s2) {
+        var exists = new Dictionary<char, bool>();
+        
+        for(var i=0; i<s1.Length; i++) {
+            var c = s1[i];
+            if(!exists.ContainsKey(c)) {
+                exists.Add(c, true);
+            }
+        }
+
+        for(var i=0; i<s2.Length; i++) {
+            var c = s2[i];
+            if(exists.ContainsKey(c)) {
+                return "YES";
+            }
+        }
+        
+        return "NO";
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int q = Convert.ToInt32(Console.ReadLine());
+
+        for (int qItr = 0; qItr < q; qItr++) {
+            string s1 = Console.ReadLine();
+
+            string s2 = Console.ReadLine();
+
+            string result = twoStrings(s1, s2);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,66 @@
+The sum of the squares of the first ten natural numbers is, . The square of the sum of the first ten natural numbers is, . Hence the absolute difference between the sum of the squares of the first ten natural numbers and the square of the sum is .
+
+Find the absolute difference between the sum of the squares of the first  natural numbers and the square of the sum.
+
+Input Format
+
+First line contains  that denotes the number of test cases. This is followed by  lines, each containing an integer, .
+
+Constraints
+
+Output Format
+
+Print the required answer for each test case.
+
+Sample Input 0
+
+2
+3
+10
+Sample Output 0
+
+22
+2640
+Explanation 0
+
+For  , 
+For , 
+
+
+
+
+
+======================================================================================================================================================
+
+1^2 + ... + n^2 = n(n+1)(2n+1)/ 6
+
+(1+...+n)^2 = (n+1)^2*n^2/4
+
+Diff*12 = 2n(n+1)(2n+1) - 3(n+1)^2*n^2
+= (n+1)n [4n+2 - 3(n+1)n]
+= n(n+1)(3n^2 - n - 2)
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+
+class Solution {
+
+    static void Main(String[] args) {
+        int t = Convert.ToInt32(Console.ReadLine());
+        for(int a0 = 0; a0 < t; a0++){
+            int n = Convert.ToInt32(Console.ReadLine());
+            
+            BigInteger result = 3*n*n - n - 2;
+            result *= (n+1);
+            result *= n;
+            result /= 12;
+            
+            Console.WriteLine(result);
+        }
+    }
+}
+

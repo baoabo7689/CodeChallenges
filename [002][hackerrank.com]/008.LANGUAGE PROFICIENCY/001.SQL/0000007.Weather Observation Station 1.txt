@@ -1,0 +1,33 @@
+Query a list of CITY and STATE from the STATION table.
+
+Input Format
+
+The STATION table is described as follows:
+
+where LAT_N is the northern latitude and LONG_W is the western longitude.
+
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+/*
+Enter your query here.
+*/
+select city, state from station 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

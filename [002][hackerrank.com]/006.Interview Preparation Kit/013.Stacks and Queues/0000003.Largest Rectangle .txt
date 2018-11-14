@@ -1,0 +1,111 @@
+Skyline Real Estate Developers is planning to demolish a number of old, unoccupied buildings and construct a shopping mall in their place. Your task is to find the largest solid area in which the mall can be constructed.
+
+There are a number of buildings in a certain two-dimensional landscape. Each building has a height, given by . If you join  adjacent buildings, they will form a solid rectangle of area .
+
+For example, the heights array . A rectangle of height  and length  can be constructed within the boundaries. The area formed is .
+
+Function Description
+
+Complete the function largestRectangle int the editor below. It should return an integer representing the largest rectangle that can be formed within the bounds of consecutive buildings.
+
+largestRectangle has the following parameter(s):
+
+h: an array of integers representing building heights
+Input Format
+
+The first line contains , the number of buildings. 
+The second line contains  space-separated integers, each representing the height of a building.
+
+Constraints
+
+Output Format
+
+Print a long integer representing the maximum area of rectangle formed.
+
+Sample Input
+
+5
+1 2 3 4 5
+Sample Output
+
+9
+Explanation
+
+An illustration of the test case follows. 
+image
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.IO;
+using System.Collections;
+using System.Collections.Generic;
+class Solution {
+    
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var n = int.Parse(Console.ReadLine().Trim());
+        var queue = new Queue();
+
+        for(var i=0; i<n; i++) {
+            var o_a = Console.ReadLine()
+                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var o = int.Parse(o_a[0]);
+            switch(o) {
+                case 1:
+                    queue.Enqueue(int.Parse(o_a[1]));
+                    break;
+                case 2:
+                    queue.Dequeue();
+                    break;
+                case 3:
+                    Console.WriteLine(queue.Peek());
+                    break;
+            }
+        }
+        
+    }
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+

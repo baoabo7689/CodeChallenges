@@ -1,0 +1,301 @@
+You will be given a square chess board with one queen and a number of obstacles placed on it. Determine how many squares the queen can attack.
+
+A queen is standing on an chessboard. The chess board's rows are numbered from to , going from bottom to top. Its columns are numbered from to , going from left to right. Each square is referenced by a tuple, , describing the row, , and column, , where the square is located.
+
+The queen is standing at position . In a single move, she can attack any square in any of the eight directions (left, right, up, down, and the four diagonals). In the diagram below, the green circles denote all the cells the queen can attack from :
+
+image
+
+There are obstacles on the chessboard, each preventing the queen from attacking any square beyond it on that path. For example, an obstacle at location in the diagram above prevents the queen from attacking cells , , and :
+
+image
+
+Given the queen's position and the locations of all the obstacles, find and print the number of squares the queen can attack from her position at .
+
+Input Format
+
+The first line contains two space-separated integers and , the length of the board's sides and the number of obstacles.
+The next line contains two space-separated integers and , the queen's row and column position.
+Each of the next lines contains two space-separated integers and , the row and column position of .
+
+Constraints
+
+    A single cell may contain more than one obstacle.
+    There will never be an obstacle at the position where the queen is located.
+
+Subtasks
+
+For of the maximum score:
+
+For of the maximum score:
+
+Output Format
+
+Print the number of squares that the queen can attack from position .
+
+Sample Input 0
+
+4 0
+4 4
+
+Sample Output 0
+
+9
+
+Explanation 0
+
+The queen is standing at position on a chessboard with no obstacles:
+
+image
+
+Sample Input 1
+
+5 3
+4 3
+5 5
+4 2
+2 3
+
+Sample Output 1
+
+10
+
+Explanation 1
+
+The queen is standing at position on a chessboard with obstacles:
+
+image
+
+The number of squares she can attack from that position is .
+
+Sample Input 2
+
+1 0
+1 1
+
+Sample Output 2
+
+0
+
+Explanation 2
+
+Since there is only one square, and the queen is on it, the queen can move 0 squares.
+
+
+
+======================================================================================================================================================
+
+Q(x,y)
+=> 
+đường chéo 1 = x+y-1 
+đường chéo 2 = x-y
+đường thẳng = x
+đường ngang = y
+
+
+0 < y < n 
+=> sum - n < x < sum 
+x = sum - y > sum - n 
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the queensAttack function below.
+    static long queensAttack(int n, int k, int r_q, int c_q, int[][] obstacles) {
+        var rowLine = new List<int> { 0 };
+        var columnLine = new List<int> { 0 };
+        var leftLine_C = new List<int> { 0 };
+        var leftLine_R = new List<int> { 0 };
+        
+        var rightLine_C = new List<int> { 0 };
+        var rightLine_R = new List<int> { 0 };
+        
+        var left_q = r_q + c_q;
+        var right_q = r_q - c_q;
+        
+        for(var i=0; i<obstacles.Length; i++) {
+            var obstacle = obstacles[i];
+            var r = obstacle[0];
+            var c = obstacle[1];
+            
+            if(r == r_q && c == c_q) {
+                continue;
+            }
+            
+            if(r == r_q) {
+                rowLine.Add(c);
+                continue;
+            }
+            
+            if(c == c_q) {
+                columnLine.Add(r);
+                continue;                
+            }
+            
+            if(r + c == left_q) {
+                leftLine_C.Add(c);
+                leftLine_R.Add(r);
+                continue;           
+            }
+            
+            if(r - c == right_q) {
+                rightLine_C.Add(c);
+                rightLine_R.Add(r);
+                continue;                    
+            }
+        }
+        
+        rowLine.Sort();
+        columnLine.Sort();
+        leftLine_C.Sort();
+        leftLine_R.Sort();
+        rightLine_C.Sort();
+        rightLine_R.Sort();
+        
+        rowLine.Add(n+1);
+        columnLine.Add(n+1);
+        leftLine_C.Add(n+1);
+        leftLine_R.Add(n+1);
+        rightLine_C.Add(n+1);
+        rightLine_R.Add(n+1);
+        
+        long result = 0;
+        for(var i=1; i<rowLine.Count; i++) {    
+            if(rowLine[i] >= c_q && c_q >= rowLine[i-1]) { 
+                if(rowLine[i] == c_q || c_q == rowLine[i-1]) {
+                    result += 1;
+                }
+                
+                result += rowLine[i] - rowLine[i-1] - 2;
+                break;
+            }
+        }
+        
+        Console.WriteLine("Row: " + result);        
+        for(var i=1; i<columnLine.Count; i++) {      
+            if(columnLine[i] >= r_q && r_q >= columnLine[i-1]) {
+                if(columnLine[i] == r_q || r_q == columnLine[i-1]) {
+                    result += 1;
+                }
+            
+                result += columnLine[i] - columnLine[i-1] - 2;
+                break;
+            }
+        }
+        
+        Console.WriteLine("Column: " + result);
+        var leftCount = n;
+        for(var i=1; i<leftLine_C.Count; i++) {      
+            if(leftLine_C[i] >= c_q && c_q >= leftLine_C[i-1]) {
+                var c = 0;
+                if(leftLine_C[i] == c_q || c_q == leftLine_C[i-1]) {
+                    c += 1;
+                }
+            
+                c += leftLine_C[i] - leftLine_C[i-1] - 2;
+                leftCount = Math.Min(c, leftCount);
+                break;
+            }
+        }
+        
+        for(var i=1; i<leftLine_R.Count; i++) {      
+            if(leftLine_R[i] >= r_q && r_q >= leftLine_R[i-1]) {
+                var c = 0;
+                if(leftLine_R[i] == r_q || r_q == leftLine_R[i-1]) {
+                    c += 1;
+                }
+            
+                c += leftLine_R[i] - leftLine_R[i-1] - 2;
+                leftCount = Math.Min(c, leftCount);
+                break;
+            }
+        }
+        
+        result += leftCount;
+        Console.WriteLine("Left: " + result);
+        var rightCount = n;
+        for(var i=1; i<rightLine_C.Count; i++) {              
+            if(rightLine_C[i] >= c_q && c_q >= rightLine_C[i-1]) {   
+                var c = 0;
+                if(rightLine_C[i] == c_q || c_q == rightLine_C[i-1]) {
+                    c += 1;
+                }
+                
+                c += rightLine_C[i] - rightLine_C[i-1] - 2;
+                rightCount  = Math.Min(c, rightCount);
+                break;
+            }
+        }
+        
+        for(var i=1; i<rightLine_R.Count; i++) {              
+            if(rightLine_R[i] >= r_q && r_q >= rightLine_R[i-1]) {   
+                var c = 0;
+                if(rightLine_R[i] == r_q || r_q == rightLine_R[i-1]) {
+                    c += 1;
+                }
+                
+                c += rightLine_R[i] - rightLine_R[i-1] - 2;
+                rightCount  = Math.Min(c, rightCount);
+                break;
+            }
+        }
+        
+        result += rightCount;
+        Console.WriteLine("Right: " + result);
+        return result;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string[] nk = Console.ReadLine().Split(' ');
+
+        int n = Convert.ToInt32(nk[0]);
+
+        int k = Convert.ToInt32(nk[1]);
+
+        string[] r_qC_q = Console.ReadLine().Split(' ');
+
+        int r_q = Convert.ToInt32(r_qC_q[0]);
+
+        int c_q = Convert.ToInt32(r_qC_q[1]);
+
+        int[][] obstacles = new int[k][];
+
+        for (int i = 0; i < k; i++) {
+            obstacles[i] = Array.ConvertAll(Console.ReadLine().Split(' '), obstaclesTemp => Convert.ToInt32(obstaclesTemp));
+        }
+
+        var result = queensAttack(n, k, r_q, c_q, obstacles);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,84 @@
+Consider a function  where  is any set, and  is a bijection.
+
+Now, if  then  is called an involution. In other words, a function  is called an involution if 
+
+In this task you're given a permutation .
+
+Determine whether  is an involution or not.
+
+Constraints
+
+
+Input Format
+
+There are  lines in the input. 
+The first line contains a single positive integer . 
+The second line contains  space separated integers, the values of , respectively.
+
+Output Format
+
+Output "YES" if  is an involution. Otherwise, output "NO".
+
+Sample Input
+
+2
+2 1
+Sample Output
+
+YES
+Explanation
+
+Since,  and  and .
+
+Hence,  is an involution.
+
+
+
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var n = int.Parse(Console.ReadLine());
+        var X = Console.ReadLine()
+            .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(s => int.Parse(s))
+            .ToList();
+        var i=0;
+        for(; i<n; i++) {
+            if(X[X[i]-1] != i+1) {
+                Console.WriteLine("NO");   
+                break;
+            }
+        }
+        
+        if(i==n) {
+            Console.WriteLine("YES");   
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

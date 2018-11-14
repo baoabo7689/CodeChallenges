@@ -1,0 +1,259 @@
+Today we're learning about running time! Check out the Tutorial tab for learning materials and an instructional video!
+
+Task 
+A prime is a natural number greater than  that has no positive divisors other than  and itself. Given a number, , determine and print whether it's  or .
+
+Note: If possible, try to come up with a  primality algorithm, or see what sort of optimizations you come up with for an  algorithm. Be sure to check out the Editorial after submitting your code!
+
+Input Format
+
+The first line contains an integer, , the number of test cases. 
+Each of the  subsequent lines contains an integer, , to be tested for primality.
+
+Constraints
+
+Output Format
+
+For each test case, print whether  is  or  on a new line.
+
+Sample Input
+
+3
+12
+5
+7
+Sample Output
+
+Not prime
+Prime
+Prime
+Explanation
+
+Test Case 0: . 
+ is divisible by numbers other than  and itself (i.e.: , , ), so we print  on a new line.
+
+Test Case 1: . 
+ is only divisible  and itself, so we print  on a new line.
+
+Test Case 2: . 
+ is only divisible  and itself, so we print  on a new line.
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+class Node
+{
+	public int data;
+	public Node next;
+    public Node(int d){
+        data=d;
+        next=null;
+    }
+		
+}
+class Solution {
+	public static Node removeDuplicates(Node head){
+      //Write your code here
+      var exists = new Dictionary<int, bool>();
+      var node = head;
+      var prev = node;
+      while(node != null) {
+          if(exists.ContainsKey(node.data)) {
+              prev.next = node.next;
+              node = node.next;
+              continue;
+          }
+          
+          exists.Add(node.data, true);
+          prev = node;
+          node = node.next;
+      }
+      
+      return head;
+  }
+
+	public static  Node insert(Node head,int data)
+	{
+        Node p=new Node(data);
+		
+		
+		if(head==null)
+			head=p;
+		else if(head.next==null)
+			head.next=p;
+		else
+		{
+			Node start=head;
+			while(start.next!=null)
+				start=start.next;
+			start.next=p;
+			
+		}
+		return head;
+    }
+	public static void display(Node head)
+	{
+		Node start=head;
+		while(start!=null)
+		{
+			Console.Write(start.data+" ");
+			start=start.next;
+		}
+	}
+    static void Main(String[] args) {
+	
+		Node head=null;
+        int T=Int32.Parse(Console.ReadLine());
+        while(T-->0){
+            int data=Int32.Parse(Console.ReadLine());
+            head=insert(head,data);
+        }
+      	head=removeDuplicates(head);
+		display(head);
+	}
+}
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

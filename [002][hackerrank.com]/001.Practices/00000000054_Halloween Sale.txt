@@ -1,0 +1,119 @@
+You wish to buy video games from the famous online video game store Mist.
+
+Usually, all games are sold at the same price, dollars. However, they are planning to have the seasonal Halloween Sale next month in which you can buy games at a cheaper price. Specifically, the first game you buy during the sale will be sold at dollars, but every subsequent game you buy will be sold at exactly dollars less than the cost of the previous one you bought. This will continue until the cost becomes less than or equal to dollars, after which every game you buy will cost dollars each.
+
+For example, if , and , then the following are the costs of the first games you buy, in order:
+
+You have dollars in your Mist wallet. How many games can you buy during the Halloween Sale?
+
+Input Format
+
+The first and only line of input contains four space-separated integers , , and .
+
+Constraints
+
+Output Format
+
+Print a single line containing a single integer denoting the maximum number of games you can buy.
+
+Sample Input 0
+
+20 3 6 80
+
+Sample Output 0
+
+6
+
+Explanation 0
+
+We have , and , the same as in the problem statement. We also have dollars. We can buy games since they cost dollars. However, we cannot buy a th game. Thus, the answer is .
+
+Sample Input 1
+
+20 3 6 85
+
+Sample Output 1
+
+7
+
+Explanation 1
+
+This is the same as the previous case, except this time we have dollars. This time, we can buy games since they cost dollars. However, we cannot buy an th game. Thus, the answer is . 
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the howManyGames function below.
+    static int howManyGames(int p, int d, int m, int s) {
+        // Return the number of games you can buy
+        var price = p;
+        var count = 0;
+        while(s > 0) {
+            s -= price;
+            if(s < 0) {
+                break;
+            }
+            
+            count++;
+            price -= d;
+            if(price < m) {
+                price = m;
+            }
+        }
+        
+        return count;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string[] pdms = Console.ReadLine().Split(' ');
+
+        int p = Convert.ToInt32(pdms[0]);
+
+        int d = Convert.ToInt32(pdms[1]);
+
+        int m = Convert.ToInt32(pdms[2]);
+
+        int s = Convert.ToInt32(pdms[3]);
+
+        int answer = howManyGames(p, d, m, s);
+
+        textWriter.WriteLine(answer);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+

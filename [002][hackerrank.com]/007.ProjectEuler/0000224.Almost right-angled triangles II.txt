@@ -1,0 +1,122 @@
+Let us call an integer sided triangle with sides  barely obtuse if the sides satisfy 
+
+How many barely obtuse triangles are there with perimeter no greater than  ?
+
+Input Format
+
+First line of each test file contains a single integer  that is the number of queries per test file.  lines follow, each with a single integer .
+
+Constraints
+
+Output Format
+
+Print exactly  lines with an answer for the corresponding query on each.
+
+Sample Input 0
+
+1
+21
+Sample Output 0
+
+2
+Explanation 0
+
+The only barely obtuse triangles with perimeter no greater than  are  and ; two total.
+
+
+
+======================================================================================================================================================
+a <= b <= c 
+a^2 + b^2 = c^2 - 1
+
+p <= N 
+a + b + c <= N
+
+
+(a+b)^2 - 2*ab = c^2 - 1
+(a+b-c)*(a+b+c) = 2*ab - 1
+
+=> a+b-c, a+b+c cùng lẻ
+
+c = b + x1 
+a = b - x2
+
+
+x2^2 - 2bx2 + b^2 = x1^2 + 2bx1 - 1 
+b^2 - 2b(x1+x2) + (x2^2 - x1^2 + 1) = 0
+
+delta = 4(x1+x2)^2 - 4(x2^2 - x1^2 + 1)
+	= 4(x1^2 + x2^2 + 2x1x2 - x2^2 + x1^2 - 1)
+	= 4(2x1^2 + 2x1x2 - 1)
+
+2x1^2 + 2x1x2 - 1 = (2q + 1)^2 
+2x1^2 + 2x1x2 - 1 = 4q^2+4q+1
+x1^2 + x1x2 = 2q^2 + 2q + 1
+=> x1 lẻ
+
+x1 = 2x3 + 1
+4x3^2 + 4x3 + 2x3x2 = 2q^2 + 2q 
+2x3^2 + 2x3 + x3x2 = q^2 + q 
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var q = long.Parse(Console.ReadLine());
+        
+        for(var i=0; i<q; i++) {
+            var n = long.Parse(Console.ReadLine());
+            var maxA = n/(1 + Math.Sqrt(2));
+            long count = 0;
+            
+            for(var a=1; a<=maxA; a++) {
+                for(var b=a; b<n/2.0; b++) {
+                    var c2 = a*a + b*b + 1;
+                    var c = (int)Math.Sqrt(c2);
+                    if(c*c != c2 || c < b || a + b + c > 2*n) {
+                        continue;
+                    }
+                    
+                    //Console.WriteLine(a + ":" + b + ":" + c + ":" + n);
+                    count++;
+                }
+            }
+            
+            
+            Console.WriteLine(count);
+        }    
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

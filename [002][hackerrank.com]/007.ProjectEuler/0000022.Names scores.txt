@@ -1,0 +1,100 @@
+This problem is a programming version of Problem 22 from projecteuler.net
+
+You are given around five-thousand first names, begin by sorting it into alphabetical order. Then working out the alphabetical value for each name, multiply this value by its alphabetical position in the list to obtain a name score.
+
+For example, when the list in sample is sorted into alphabetical order, PAMELA, which is worth , is the  name in the list. So, PAMELA would obtain a score of .
+
+You are given  queries, each query is a name, you have to print the score.
+
+Input Format
+
+The first line contains an integer , i.e., number of names. 
+Next  lines will contain a Name. 
+Followed by integer  followed by  lines each having a word.
+
+Constraints
+
+length of each word will be less than 
+Output Format
+
+Print the values corresponding to each test case.
+
+Sample Input
+
+5
+ALEX
+LUIS
+JAMES
+BRIAN
+PAMELA
+1
+PAMELA
+Sample Output
+
+240
+Explanation
+
+Explained in statement.
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+    static long Score(string name) {
+        return name.Select(c => c-'A'+1).Sum();
+    }
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var n = int.Parse(Console.ReadLine());
+        var names = new List<string>();
+        var scores = new Dictionary<string, long>();
+            
+        for(var i=0; i<n; i++) {
+            var name = Console.ReadLine();
+            if(scores.ContainsKey(name)) {
+                continue;
+            }
+            
+            scores.Add(name, Score(name));
+            names.Add(name);
+        }
+        
+        names.Sort();
+        //Console.WriteLine(string.Join(",", scores));
+        var Q = int.Parse(Console.ReadLine());
+        for(var i=0; i<Q; i++) {
+            var q = Console.ReadLine();  
+            for(var j=0; j<n; j++) {
+                if(names[j] == q) { 
+                    Console.WriteLine((j+1)*scores[q]);
+                    break;
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

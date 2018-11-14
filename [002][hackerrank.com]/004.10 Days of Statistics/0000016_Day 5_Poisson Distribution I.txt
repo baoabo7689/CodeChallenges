@@ -1,0 +1,81 @@
+Objective 
+In this challenge, we learn about Poisson distributions. Check out the Tutorial tab for learning materials!
+
+Task 
+A random variable, , follows Poisson distribution with mean of . Find the probability with which the random variable  is equal to .
+
+Input Format
+
+The first line contains 's mean. The second line contains the value we want the probability for:
+
+2.5
+5
+If you do not wish to read this information from stdin, you can hard-code it into your program.
+
+Output Format
+
+Print a single line denoting the answer, rounded to a scale of  decimal places (i.e.,  format).
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var a = 2.5;
+        double b = 5;
+        Console.WriteLine(PoisonDistribution(a, b).ToString("0.###"));
+    }
+    
+    static long Factorial(int n) {
+        var result = 1;
+        for(var i=2; i<=n; i++) {
+            result *= i;
+        }
+        
+        return result;
+    }
+    static double PoisonDistribution(double a, double b) {
+        var e = 2.71828;
+        
+        return Math.Pow(e, -a)*Math.Pow(a, b)/Factorial((int)b);        
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

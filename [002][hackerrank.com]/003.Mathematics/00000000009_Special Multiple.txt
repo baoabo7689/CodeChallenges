@@ -1,0 +1,107 @@
+You are given an integer N. Can you find the least positive integer X made up of only 9's and 0's, such that, X is a multiple of N?
+
+Update
+
+X is made up of one or more occurences of 9 and zero or more occurences of 0.
+
+Input Format 
+The first line contains an integer T which denotes the number of test cases. T lines follow. 
+Each line contains the integer N for which the solution has to be found.
+
+Output Format 
+Print the answer X to STDOUT corresponding to each test case. The output should not contain any leading zeroes.
+
+Constraints 
+1 <= T <= 104 
+1 <= N <= 500
+
+Sample Input
+
+3
+5
+7
+1
+Sample Output
+
+90
+9009
+9
+Explanation 
+90 is the smallest number made up of 9's and 0's divisible by 5. Similarly, you can derive for other cases.
+
+Timelimits Timelimits for this challenge is given here
+
+======================================================================================================================================================
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+
+    // Complete the solve function below.
+    static string solve(int n) {
+        var nums = new List<long> { 9 };
+        while(true) {
+            var nextNums = new List<long>();
+            for(var i=0; i<nums.Count; i++) {
+                long num = nums[i];
+                if(num % n == 0 ) {
+                    return num.ToString();
+                }
+                
+                nextNums.Add(num*10);
+                nextNums.Add(num*10+9);
+            }
+            
+            nums = nextNums;
+        }      
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int t = Convert.ToInt32(Console.ReadLine());
+
+        for (int tItr = 0; tItr < t; tItr++) {
+            int n = Convert.ToInt32(Console.ReadLine());
+
+            string result = solve(n);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

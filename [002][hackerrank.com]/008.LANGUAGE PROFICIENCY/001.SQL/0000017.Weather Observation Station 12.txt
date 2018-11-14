@@ -1,0 +1,19 @@
+Query the list of CITY names from STATION that do not start with vowels and do not end with vowels. Your result cannot contain duplicates.
+
+Input Format
+
+The STATION table is described as follows:
+
+Station.jpg
+
+where LAT_N is the northern latitude and LONG_W is the western longitude.
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+/*
+Enter your query here.
+*/
+Select Distinct City from Station
+Where NOT (City like '%a' OR City like '%e' OR City like '%i' OR City like '%o' OR City like '%u')
+And NOT(City like 'a%' OR City like 'e%' OR City like 'i%' OR City like 'o%' OR City like 'u%')

@@ -1,0 +1,217 @@
+You are given four integers: , , , . You will use them in order to create the sequence  with the following pseudo-code.
+
+a[0] = S (modulo 2^31)
+for i = 1 to N-1
+    a[i] = a[i-1]*P+Q (modulo 2^31) 
+Your task is to calculate the number of distinct integers in the sequence .
+
+Input Format
+
+Four space separated integers on a single line, , , , and  respectively.
+
+Output Format
+
+A single integer that denotes the number of distinct integers in the sequence .
+
+Constraints
+
+
+
+
+Sample Input
+
+3 1 1 1
+Sample Output
+
+3
+Explanation
+
+
+Hence, there are  different integers in the sequence.
+
+
+======================================================================================================================================================
+
+a[0] = S (modulo 2^31)
+a[1] = a[0]*P+Q (modulo 2^31) 
+a[2] = a[0]*P^2 + Q*P + Q (modulo 2^31) 
+a[3] = a[0]*P^3 + Q*P^2 + Q*P + Q (modulo 2^31) 
+a[k] = S*P^k + Q*(P^k - 1)/(P-1) (modulo 2^31) 
+
+
+a[m] = a[k] => a[m+1] = a[k+1] => có k+1 số khác nhau
+
+
+
+a[m] - a[k] = S*(P^m - P^k) + Q*(P^m - P^k)/(P-1)
+= (P^m - P^k)(P*S + Q - S)/(P-1) (modulo 2^31) 
+= P^k(P^[m-k] - 1)(P*S + Q - S)/(P-1) (modulo 2^31) 
+# P^k(P^k - 1)(P*S + Q - S)/(P-1) (modulo 2^31) 
+
+1.
+(P*S + Q - S) (modulo 2^31) == 0 
+=> length = 1, tất cả cùng mod
+
+2.
+(P*S + Q - S) = r1*2^r2
+
+a[m] - a[k] = P^k(P^[m-k] - 1)(P*S + Q - S)/(P-1)
+
+	3. P chẵn = p1*2^p2
+	a[m] - a[k] = p1^k*r1*(P^[m-k] - 1)*2^(p2*k + r2)/(P-1)
+	=> p2*k + r2 >= 31 
+	k >= (31-r2)/p2
+
+	
+	4. P lẻ = p1*2^p2 + 1
+		a[m] - a[k] = P^k(P^[m-k] - 1)*r1*2^r2
+					= P^k*r1*(P^[m-k] - 1)*2^r2/(P-1)
+		P^[m-k] = 1 mode 2^(31-r2)				
+		=> min m: P^m = 1 mode 2^(31-r2)			
+
+
+
+Test case 8:
+100000000 1232077670 126810854 1536183938
+N			S			P			Q 
+Expect: 26 
+
+
+(P*S + Q - S) = r1*2^6*
+
+Test case 5:
+100000000 569099406 1607140150 823906344
+Expect: 31
+
+
+P = 803570075*2 
+(P*S + Q - S) = 914622504978557838
+
+
+
+
+
+
+======================================================================================================================================================
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int count2(long long p) {
+    int p2 = 0;
+    long long p1 = p;
+    while(p1 > 0 && p1 % 2 == 0) {
+        p2++;
+        p1 /= 2;
+    }
+    
+    return p2;
+}
+
+int solve(int N, int S, int P, int Q) {
+    long long mod = pow(2, 31); 
+    long long t = P;
+    t *= S;
+    t = t + Q - S;
+    if(t % mod == 0) {
+        return 1;
+    }
+     
+    int r2 = count2(t);
+     
+    int m = 1;
+    if(P%2 == 0) {
+        int p2 = count2(P);
+        //cout << p2 << " " << r2 << endl;
+        double r = 31-r2;
+        m = 0;
+        int s = r2;
+        
+        while(s <= 31) {
+            s += p2;
+            m++;
+        }
+        
+        return m<N ? m : N;
+    }
+    
+    long long p3 = P;
+    long long sum = P;
+    long long modr = pow(2, 31-r2); 
+    
+    while(sum % modr != 0 && m < N) {
+        m++;
+        p3 *= P;
+        p3 %= modr;
+        sum += p3;
+        sum %= modr;
+    }    
+    
+    return m<N ? m : N;
+}
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */   
+    int N,S,P,Q;
+    cin >> N >> S >> P >> Q;
+    int r = solve(N,S,P,Q);
+    cout << r << endl;
+    
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

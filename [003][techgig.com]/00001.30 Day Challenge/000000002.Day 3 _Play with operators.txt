@@ -1,0 +1,89 @@
+ Play with operators (100 Marks)
+For this challenge, you will be given the values of principal, interest and year. You need to calculate the simple interest, round it to the nearest integer and print it.
+
+Input Format
+There will be 3 lines of numeric input - 
+'a' : principal which is of type double. 
+'b' : interest which is of type integer. 
+'c' : year which is again of type integer. 
+
+Constraints
+1 < = (a,b,c) < = 1000
+
+Output Format
+Just print the simple interest value after performing the calculation using the formula to the stdout. The result should be an integer. 
+
+Sample TestCase 1
+Input
+
+1000
+4
+2
+
+Output
+
+80
+
+Explanation
+
+Given the value of principal, interest and year. You can calculate the simple interest using the formula
+Sample Interest = (principal * interest * year)/100
+Round the value to the nearest integer and print it.
+
+Time Limit(X):
+    1.00 sec(s) for each input. 
+Memory Limit:
+    512 MB 
+Source Limit:
+    100 KB 
+Allowed Languages:
+    C, C++, C++11, C++14, C#, Java, Java 8, PHP, PHP 7, Python, Python 3, Perl, Ruby, Node Js, Scala, Clojure, Haskell, Lua, Erlang, Swift, VBnet, Js, Objc, Pascal, Go, F#, D, Groovy, Tcl, Ocaml, Smalltalk, Cobol, Racket, Bash, GNU Octave, Rust, Common LISP, R, Julia, Fortran, Ada, Prolog, Icon, Elixir, CoffeeScript, Brainfuck, Pypy, Lolcode, Nim, Picolisp, Pike, Whitespace 
+	
+	
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class CandidateCode {
+    static void Main(String[] args) {
+	//Write code here
+    	int a,b,c;
+    	a = int.Parse(Console.ReadLine());
+    	b = int.Parse(Console.ReadLine());
+    	c = int.Parse(Console.ReadLine());
+    	
+    	Console.WriteLine(Math.Round(1.0*a*b*c/100));
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

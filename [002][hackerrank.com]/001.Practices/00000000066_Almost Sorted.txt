@@ -1,0 +1,182 @@
+Given an array of integers, determine whether the array can be sorted in ascending order using only one of the following operations one time.
+
+    Swap two elements.
+    Reverse one sub-segment.
+
+Determine whether one, both or neither of the operations will complete the task. If both work, choose swap. For instance, given an array either swap the and , or reverse them to sort the array. Choose swap. The Output Format section below details requirements.
+
+Function Description
+
+Complete the almostSorted function in the editor below. It should print the results and return nothing.
+
+almostSorted has the following parameter(s):
+
+    arr: an array of integers
+
+Input Format
+
+The first line contains a single integer , the size of .
+The next line contains space-separated integers where .
+
+Constraints
+
+
+
+All are distinct.
+
+Output Format
+
+    If the array is already sorted, output yes on the first line. You do not need to output anything else.
+
+    If you can sort this array using one single operation (from the two permitted operations) then output yes on the first line and then:
+
+    a. If elements can be swapped, and , output swap l r in the second line. and are the indices of the elements to be swapped, assuming that the array is indexed from to .
+
+    b. Otherwise, when reversing the segment , output reverse l r in the second line. and are the indices of the first and last elements of the subsequence to be reversed, assuming that the array is indexed from to .
+
+    represents the sub-sequence of the array, beginning at index and ending at index , both inclusive.
+
+If an array can be sorted by either swapping or reversing, choose swap.
+
+    If you cannot sort the array either way, output no on the first line.
+
+Sample Input 1
+
+2  
+4 2  
+
+Sample Output 1
+
+yes  
+swap 1 2
+
+Explanation 1
+
+You can either swap(1, 2) or reverse(1, 2). You prefer swap.
+
+Sample Input 2
+
+3
+3 1 2
+
+Sample Output 2
+
+no
+
+Explanation 2
+
+It is impossible to sort by one single operation.
+
+Sample Input 3
+
+6
+1 5 4 3 2 6
+
+Sample Output 3
+
+yes
+reverse 2 5
+
+Explanation 3
+
+You can reverse the sub-array d[2...5] = "5 4 3 2", then the array becomes sorted. 
+
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the almostSorted function below.
+    static void almostSorted(int[] arr) {
+        var n = arr.Length;
+        var newArr = new List<int>();
+               
+        for(var i=0; i<n; i++) {
+            newArr.Add(arr[i]);
+        }
+
+        newArr.Sort();        
+        var diffs = new List<int>();
+        for(var i=0; i< arr.Length; i++) {
+            if(newArr[i] != arr[i]) {
+                diffs.Add(i + 1);
+            }
+        }
+        
+        if(!diffs.Any()) {
+            Console.WriteLine("yes");
+            return;
+        }
+        
+        if(diffs.Count == 2) {
+            Console.WriteLine("yes");    
+            Console.WriteLine("swap " + diffs[0] + " " + diffs[1]); 
+            return;
+        }
+        
+        for(var i=1; i<n;) {
+            if(arr[i] > arr[i-1]) {
+                i++;
+                continue;
+            }
+             
+            var j=i+1;
+            for(; j<n && arr[j] < arr[j-1]; j++);
+            
+            var left = arr[j-1];
+            var right = arr[i-1];
+            
+            var preL = i>=2 ? arr[i-2] : arr[0];
+            var nextR = j==n-1 ? arr[n-1] : arr[j+1];
+            //Console.WriteLine(preL + "-" + nextR);
+            //Console.WriteLine("reverse " + i + "-" + j);
+            
+            if(preL <= left && right <= nextR) {
+                Console.WriteLine("yes");    
+                Console.WriteLine("reverse " + i + " " + j);             
+                return;
+            }              
+            
+            break;            
+        }
+            
+        Console.WriteLine("no");    
+    }
+
+    static void Main(string[] args) {
+        int n = Convert.ToInt32(Console.ReadLine());
+
+        int[] arr = Array.ConvertAll(Console.ReadLine().Split(' '), arrTemp => Convert.ToInt32(arrTemp))
+        ;
+        almostSorted(arr);
+    }
+}
+
+
+
+
+
+
+
+
+
+

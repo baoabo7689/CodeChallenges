@@ -1,0 +1,94 @@
+This problem is a programming version of Problem 18 from projecteuler.net
+
+By starting at the top of the triangle below and moving to adjacent numbers on the row below, the maximum total from top to bottom is . The path is denoted by numbers in bold.
+
+ 
+ 
+ 
+
+That is, .
+
+Find the maximum total from top to bottom of the triangle given in input.
+
+Input Format
+
+First line contains , the number of testcases. For each testcase: 
+First line contains , the number of rows in the triangle. 
+For next  lines, 'th line contains  numbers.
+
+Constraints
+
+Output Format
+
+For each testcase, print the required answer in a newline.
+
+Sample Input
+
+1
+4
+3
+7 4
+2 4 6
+8 5 9 3
+Sample Output
+
+23
+Explanation
+
+As shown in statement.
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        int t= Convert.ToInt32(Console.ReadLine());  
+          
+        for(int a0 = 0; a0 < t; a0++) {
+            int n= Convert.ToInt32(Console.ReadLine());
+            var rows = new int[n][];
+            var result = new int[n][];
+            
+            for(var i=0; i<n; i++) {
+                var row = Console.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s => int.Parse(s)).ToArray();
+                rows[i] = row;                
+                result[i] = new int[row.Length];
+            }         
+            
+            result[0][0] = rows[0][0];
+            for(var i=1; i<n; i++) {
+                result[i][0] = result[i-1][0] + rows[i][0];
+                result[i][i] = result[i-1][i-1] + rows[i][i];
+                                
+                for(var j=1; j<i; j++) {
+                    result[i][j] = rows[i][j] +  Math.Max(result[i-1][j-1], result[i-1][j]);
+                }              
+            }       
+            
+            // Console.WriteLine(string.Join("," , result[0]));
+            Console.WriteLine(result[n-1].Max());
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+

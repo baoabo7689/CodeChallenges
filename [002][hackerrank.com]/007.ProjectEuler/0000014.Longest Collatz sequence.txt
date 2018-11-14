@@ -1,0 +1,124 @@
+The following iterative sequence is defined for the set of positive integers:
+
+Using the rule above and starting with 13, we generate the following sequence:
+
+It can be seen that this sequence (starting at 13 and finishing at 1) contains 10 terms. Although it has not been proved yet (Collatz Problem), it is thought that all starting numbers finish at 1.
+
+Which starting number,  produces the longest chain? If many possible such numbers are there print the maximum one.
+
+Note: Once the chain starts the terms are allowed to go above .
+
+Input Format
+
+The first line contains an integer  , i.e., number of test cases. 
+Next  lines will contain an integers .
+
+Constraints
+
+Output Format
+
+Print the values corresponding to each test case.
+
+Sample Input
+
+3
+10 
+15
+20
+Sample Output
+
+9
+9
+19
+Explanation
+
+Collatz sequence for  is, 
+
+containing  steps and is the longest for 
+
+
+
+======================================================================================================================================================
+n = 4k => n->2k->k
+n = 4k+1 => n->12k+4->6k+2->3k+1
+n = 4k+2 => n->2k+1->6k+4->3k+2
+n = 4k+3 => n->12k+10->6k+5->18k+16->9k+8
+
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+    static int[] CacheList(List<int> startingNumber) {
+        var n = 5*(int)Math.Pow(10, 6);
+        var cache = new int[n+1];        
+        for (int i = 0; i < cache.Length; i++) {
+            cache[i] = -1;
+        }
+        
+        cache[1] = 1;        
+        int sequenceLength = 0;
+        long sequence;        
+        
+        for (int i = 2; i <= n; i++) {
+            sequence = i;
+            int k = 0;
+            while (sequence != 1 && sequence >= i) {
+                k++;
+                if ((sequence % 2) == 0) {
+                    sequence = sequence / 2;
+                } else {
+                    sequence = sequence * 3 + 1;
+                }
+            }
+            //Store result in cache
+            cache[i] = k + cache[sequence];
+
+            //Check if sequence is the best solution
+            if (cache[i] >= sequenceLength) {
+                sequenceLength = cache[i];
+                startingNumber.Add(i);
+            }
+        }
+        
+        return cache;     
+    }
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+         int t = Convert.ToInt32(Console.ReadLine());   
+        
+        var startingNumber = new List<int>();
+         var cache = CacheList(startingNumber);
+        
+        //Console.WriteLine(string.Join(",",cache.Take(30)));
+        //Console.WriteLine(string.Join(",",startingNumber.Take(30)));
+        
+         for(int a0 = 0; a0 < t; a0++){
+             int n = Convert.ToInt32(Console.ReadLine());
+             var i = 0;
+             for(; i<startingNumber.Count && startingNumber[i] <= n; i++);
+             
+             
+             Console.WriteLine(startingNumber[i-1]);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+

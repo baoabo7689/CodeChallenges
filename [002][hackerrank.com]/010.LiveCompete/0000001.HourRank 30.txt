@@ -1,0 +1,468 @@
+Video Conference
+Bob is making a video conference software. Whenever a new person joins the conference, Bob displays the person's name in the interface.
+
+However, displaying full name is tedious and takes much space. So he decided to display the shortest prefix which doesn't match with any prefix of any person who has joined earlier.
+
+Let's suppose the first person to enter the conference is alvin.
+
+image
+
+Now suppose next person to join is alice. The shortest prefix of alice that doesn't match with any prefix of alvin is ali.
+
+image
+
+If the full name of a new person matches completely with the full name of any person who has joined earlier, he will display the full name and add a suffix which indicates how many times the same name has occurred in the list so far. For example, if another person name alvin joins, the list will look like this:
+
+image
+
+You are given the list of the persons who have joined the call in the chronological order. Your task is to figure out how the final list looks like.
+
+Input Format
+
+The first line contains an integer .
+
+The subsequent  line contains a string  denoting the name of the  person to join the call.
+
+Constraints
+
+ will contain only lower-case english letters.
+Subtask
+
+ for  of the maximum score
+Output Format
+
+Return a string array with  items, the  line should contain the prefix of name of the  person which doesn't match with any other person who has joined earlier.
+
+Sample Input 0
+
+3
+alvin
+alice
+alvin
+Sample Output 0
+
+a
+ali
+alvin 2
+Sample Input 1
+
+6
+mary
+stacy
+sam
+samuel
+sam
+miguel
+Sample Output 1
+
+m
+s
+sa
+samu
+sam 2
+mi
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Result
+{
+
+    /*
+     * Complete the 'solve' function below.
+     *
+     * The function is expected to return a STRING_ARRAY.
+     * The function accepts STRING_ARRAY names as parameter.
+     */
+
+    public static List<string> solve(List<string> names)
+    {
+        var result = new List<string>();
+        var counts = new Dictionary<string, int>();
+        for(var i=0; i<names.Count; i++) {
+            var name = names[i];
+            if(counts.ContainsKey(name)) {
+                counts[name]++;
+                result.Add(name + " " + counts[name].ToString());
+                continue;
+            } 
+            
+            counts.Add(name, 1);
+            
+            var prefix = name[0].ToString();
+            var pI = 1;
+            
+            for(var j=0; j<i; j++) {
+                var prevPrefix = result[j];
+                if(!prevPrefix.StartsWith(prefix)) {
+                    continue;
+                }
+                
+                var prevName = names[j];                
+                for(; pI < name.Length && pI < prevName.Length && name[pI] == prevName[pI]; prefix += name[pI].ToString(), pI++);
+                
+                if(pI < name.Length) {
+                    prefix += name[pI].ToString();
+                }
+            }
+            
+            result.Add(prefix);      
+        }
+        
+        return result;
+    }
+
+}
+
+class Solution
+{
+    public static void Main(string[] args)
+    {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int n = Convert.ToInt32(Console.ReadLine().Trim());
+
+        List<string> names = new List<string>();
+
+        for (int i = 0; i < n; i++)
+        {
+            string namesItem = Console.ReadLine();
+            names.Add(namesItem);
+        }
+
+        List<string> res = Result.solve(names);
+
+        textWriter.WriteLine(String.Join("\n", res));
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+Jerry's Expression
+This problem revolves around the Polish notation.
+
+Polish notation is the way to write parenthesis-free expressions. Its distinguishing feature is that it places operators to the left of their operands.
+expression ::= number | (operator expression expression)
+operator ::=  |  |  |  | …
+For example: "" is "".
+You are given a Polish notation expression. Operators can be only  and . Each number in expression is replaced with . You have to replace each  with positive integer number, so that value of expression was . Also, you have to make the biggest number in expression as small as possible.
+
+Input Format
+
+The only line contains string with expression (string will contain only '?', '+' and '-').
+
+Constraints
+
+ string length .
+Output Format
+
+Return an integer array,  number should be the number for  '?' in the string. If there are many solutions print any.
+
+Sample Input 0
+
+-?-??
+Sample Output 0
+
+1
+2
+1
+Explanation 0
+
+- 1 - 2 1   is   1-(2-1) = 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+Diverse Strings
+In this challenge, we introduce the concept of assorted and diversed strings.
+
+A string  is called assorted if no two distinct letters in  appear the same number of times. For example, aacbcc is assorted, but aabaccab is not assorted, since b and c each appears exactly  times.
+A string  is called diverse if it is assorted and all its prefixes and suffixes are assorted. For example, aabaa is diverse, but aaba is not diverse, since the suffix ba is not assorted.
+Given  and , find the lexicographically smallest diverse string of length  with exactly  distinct letters. Your output string can only contain lowercase English letters. If no such string exists, output NONE.
+
+Input Format
+
+The first line of input contains , the number of queries.
+
+Each query consists of a single line containing two space-separated integers  and .
+
+Constraints
+
+Output Format
+
+For each case, output a single line containing the required diverse string, or the string NONE if no such string exists.
+
+Sample Input 0
+
+3
+1 1
+2 2
+5 2
+Sample Output 0
+
+a
+NONE
+aabaa
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Result
+{
+
+    /*
+     * Complete the 'solve' function below.
+     *
+     * The function is expected to return a STRING.
+     * The function accepts following parameters:
+     *  1. INTEGER n
+     *  2. INTEGER k
+     */
+
+    public static string solve(int n, int k)
+    {
+        if(k == 1) {
+            return "a";
+        }
+        
+        var minN = 2 + (k-1) + 2;
+        if(n<minN) {
+            return "NONE";
+        }
+               
+        if(k == 2) {
+            return string.Join("", Enumerable.Repeat("a", n-3)) + "baa";
+        }
+        
+        var middle = "";
+        char c = 'b';
+        for(var i=0; i<k-1; middle += c.ToString(), c++, i++);
+        
+        return string.Join("", Enumerable.Repeat("a", n-k+1-2)) + middle + "aa";
+    }
+
+}
+
+class Solution
+{
+    public static void Main(string[] args)
+    {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int t = Convert.ToInt32(Console.ReadLine().Trim());
+
+        for (int tItr = 0; tItr < t; tItr++)
+        {
+            string[] firstMultipleInput = Console.ReadLine().TrimEnd().Split(' ');
+
+            int n = Convert.ToInt32(firstMultipleInput[0]);
+
+            int k = Convert.ToInt32(firstMultipleInput[1]);
+
+            string res = Result.solve(n, k);
+
+            textWriter.WriteLine(res);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

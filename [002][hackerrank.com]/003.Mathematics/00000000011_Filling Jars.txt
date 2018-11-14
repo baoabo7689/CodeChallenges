@@ -1,0 +1,112 @@
+Animesh has  empty candy jars, numbered from  to , with infinite capacity. He performs  operations. Each operation is described by  integers, , , and . Here,  and  are indices of the jars, and  is the number of candies to be added inside each jar whose index lies between  and  (both inclusive). Can you tell the average number of candies after  operations?
+
+Input Format
+
+The first line contains two integers,  and , separated by a single space. 
+ lines follow; each of them contains three integers, , , and , separated by spaces.
+
+Constraints 
+ 
+ 
+ 
+
+Output Format
+
+A single line containing the average number of candies across  jars, rounded down to the nearest integer.
+
+Note: Rounded down means finding the greatest integer which is less than or equal to the given number. E.g. 13.65 and 13.23 are rounded down to 13, while 12.98 is rounded down to 12.
+
+Sample Input
+
+5 3
+1 2 100
+2 5 100
+3 4 100
+Sample Output
+
+160
+Explanation
+
+Initially each of the jars contains 0 candies
+
+0 0 0 0 0  
+First operation:
+
+100 100 0 0 0  
+Second operation:
+
+100 200 100 100 100  
+Third operation:
+
+100 200 200 200 100  
+Total = 800, Average = 800/5 = 160
+
+======================================================================================================================================================
+
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+
+class Solution {
+
+    // Complete the solve function below.
+    static BigInteger solve(int n, int[][] operations) {
+        BigInteger candies = 0;
+        
+        for(var i=0; i<operations.Length; i++) {
+            var o = operations[i];
+            
+            BigInteger c = (o[1] - o[0] + 1);
+            c *= o[2];
+            candies += c;
+        }
+        
+        return candies/n;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string[] nm = Console.ReadLine().Split(' ');
+
+        int n = Convert.ToInt32(nm[0]);
+
+        int m = Convert.ToInt32(nm[1]);
+
+        int[][] operations = new int[m][];
+
+        for (int operationsRowItr = 0; operationsRowItr < m; operationsRowItr++) {
+            operations[operationsRowItr] = Array.ConvertAll(Console.ReadLine().Split(' '), operationsTemp => Convert.ToInt32(operationsTemp));
+        }
+
+        var result = solve(n, operations);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

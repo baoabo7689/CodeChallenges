@@ -1,0 +1,89 @@
+
+How Much Big Is Your Number (100 Marks)
+For this challenge, you will take an integer input from stdin, store it in a variable and  calculate the number of digits in the number using division operator.
+
+Input Format
+A single integer value to be taken as input from stdin and stored it in a variable of your choice. 
+
+Constraints
+1 < = n < = 18
+
+Output Format
+Print the value which you will get after calculating the number of digits. 
+
+Sample TestCase 1
+Input
+
+34567
+
+Output
+
+5
+
+Explanation
+
+Every time you divide the input number by 10, one digit get reduced and you need to maintain a count of that until the input number reduced to 0. The count value is your answer.
+34567/10 = 3456 count = 1
+3456/10 = 345 count = 2
+345/10 = 34 count = 3
+34/10 = 3 count = 4
+3/10 = 0 count = 5
+
+Time Limit(X):
+    1.00 sec(s) for each input. 
+Memory Limit:
+    512 MB 
+Source Limit:
+    100 KB 
+Allowed Languages:
+    C, C++, C++11, C++14, C#, Java, Java 8, PHP, PHP 7, Python, Python 3, Perl, Ruby, Node Js, Scala, Clojure, Haskell, Lua, Erlang, Swift, VBnet, Js, Objc, Pascal, Go, F#, D, Groovy, Tcl, Ocaml, Smalltalk, Cobol, Racket, Bash, GNU Octave, Rust, Common LISP, R, Julia, Fortran, Ada, Prolog, Icon, Elixir, CoffeeScript, Brainfuck, Pypy, Lolcode, Nim, Picolisp, Pike, Whitespace 
+
+
+
+Judge Environment
+
+	
+	
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class CandidateCode {
+    static void Main(String[] args) {
+	//Write code here
+	    long n = long.Parse(Console.ReadLine());
+	    var c = 0;
+	    while(n > 0) {
+	        n /= 10;
+	        c++;
+	    }
+	
+	    Console.WriteLine(c);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

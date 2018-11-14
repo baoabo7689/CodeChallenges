@@ -1,0 +1,71 @@
+This problem is a programming version of Problem 13 from projecteuler.net
+
+Work out the first ten digits of the sum of   numbers.
+
+Input Format
+
+First line contains , next  lines contain a 50 digit number each.
+
+Constraints
+
+Output Format
+
+Print only first 10 digit of the final sum
+
+Sample Input
+
+5
+37107287533902102798797998220837590246510135740250
+46376937677490009712648124896970078050417018260538
+74324986199524741059474233309513058123726617309629
+91942213363574161572522430563301811072406154908250
+23067588207539346171171980310421047513778063246676
+Sample Output
+
+2728190129
+Explanation
+
+Summing the numbers we get , first 10 digits are .
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Numerics;
+
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        int n = Convert.ToInt32(Console.ReadLine());
+        BigInteger sum = 0;
+        for(int a0 = 0; a0 < n; a0++){
+            BigInteger v = BigInteger.Parse(Console.ReadLine());
+            sum += v;
+        }
+        
+        Console.WriteLine(sum.ToString().Substring(0, 10));
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

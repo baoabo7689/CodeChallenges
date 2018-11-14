@@ -1,0 +1,122 @@
+The sum of the primes below is .
+
+Find the sum of all the primes not greater than given .
+
+Input Format
+
+The first line contains an integer i.e. number of the test cases.
+The next lines will contains an integer .
+
+Constraints
+
+Output Format
+
+Print the value corresponding to each test case in separate line.
+
+Sample Input 0
+
+2
+5
+10
+
+Sample Output 0
+
+10
+17
+
+Explanation 0
+
+    For , we have primes as and the sum is .
+    For , we have primes as and the sum is .
+
+
+
+
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+
+class Solution {
+    static List<int> Primes_10_6() {
+        var maxP = 1000000;
+        var primes = new List<int>();        
+        var lp = new int[maxP+1];
+        
+        for(var i=2; i<= maxP; i++) {
+            if (lp[i] == 0) {
+                lp[i] = i;
+                primes.Add(i);
+            }
+            
+            for (int j=0; j<primes.Count && primes[j] <= lp[i]; j++) {
+                var next = i*primes[j];
+                if(next > maxP) {
+                    break;
+                }
+                
+                lp[next] = primes[j];                
+            }            
+        }
+        
+        return primes;
+    }
+    
+    static void Main(String[] args) {
+        var primes = Primes_10_6();
+        
+        int t = Convert.ToInt32(Console.ReadLine());
+         for(int a0 = 0; a0 < t; a0++){
+            int n = Convert.ToInt32(Console.ReadLine());
+             long result = 0;
+             
+             for(var i=0; i<primes.Count;i++) {
+                 var v = primes[i];
+                 if(v > n) {
+                     break;
+                 }
+                 
+                 result += v;
+             }
+             
+            Console.WriteLine(result);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

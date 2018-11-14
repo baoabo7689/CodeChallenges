@@ -1,0 +1,100 @@
+Starting with the number 1 and moving to the right in a clockwise direction a 5 by 5 spiral is formed as follows:
+
+It can be verified that the sum of the numbers on the diagonals is . 
+What is the sum of the numbers on the diagonals in a , (N is odd) spiral formed in the same way? 
+As the sum will be huge you have to print the result mod 
+
+Input Format
+
+The first line contains an integer  , i.e., number of test cases. 
+Next  lines will contain an integer .
+
+Constraints
+
+ 
+
+Output Format
+
+Print the values corresponding to each test case.
+
+Sample Input
+
+2
+3
+5
+Sample Output
+
+25
+101
+
+======================================================================================================================================================
+https://en.wikipedia.org/wiki/Ulam_spiral
+
+
+
+i = (1=> N/2)
+
+Hình vuông thứ i:
+	Có cạnh = (2i + 1)
+	=> có số số = 4(2i + 1) - 4 = 8i
+	=> end = 1 + 8*1 + 8*2 + ... + 8*i = 1 + 4(i+1)i
+	
+f[i] = 4 + 16(i+1)i - (2i + 4i + 6i) = 4 + 16i + 16i^2 - 12i 
+= 4 + 4i + 16i^2 = 4(1 + i + 4i^2)
+
+sum[i] = 4(i + [1+...+i] + 4[1^2+2^2+...+i^2]) + 1
+= 4i + 2i^2 + 2i + 8i(i+1)(2i+1)/3 + 1
+= 2i^2 + 6i + 8i(i+1)(2i+1)/3 + 1	
+
+sum[0] = 1
+sum[1] = 25 
+sum[2] = 8 + 12 + 16.3.5/3 + 1 = 101		
+	
+	
+	
+
+======================================================================================================================================================
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Numerics;
+
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        long T = long.Parse(Console.ReadLine());
+        for(var j=0; j<T; j++) {
+            long N = long.Parse(Console.ReadLine());
+
+            long mod = 1000000007;
+            long i = N/2;
+            //Console.WriteLine(i);  
+
+            BigInteger part1 = (i+3);
+            part1 = (part1*i)%mod;
+            part1 = (part1*2)%mod;
+
+            BigInteger part2 = 8;
+            part2 = (part2*i);
+            part2 = (part2*(i+1));
+            part2 = (part2*(2*i+1));        
+            part2 /= 3;
+
+            Console.WriteLine((part1 + part2 + 1)%mod);   
+        }     
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

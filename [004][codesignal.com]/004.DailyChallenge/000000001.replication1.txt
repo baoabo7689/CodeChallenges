@@ -1,0 +1,118 @@
+The CodeSignal crew has been in need of extra help lately but they don't have the time needed to search for suitable candidates. Tigran has recently heard of an experimental replication technique and has offered a reward to all team members who try it out. On the first of the month, a number of employees underwent the procedure but to their dismay, nothing happened throughout the day. The next day during work one of the employees suddenly split into two! Everyone was shocked at the sight of having two exact copies of their teammate. The next day the same thing thing happened, another employee randomly split into two.
+
+Given numberOfPeople, an integer representing the number of employees involved in the experiment, and daysAfterOperation, an integer representing the number of days since the procedure was done, your task is to return the expected value for the highest replicated employee.
+
+Notes:
+
+Only one employee can replicate per day.
+New copies of employees also have the potential to replicate.
+Example
+
+For numberOfPeople = 1 and daysAfterOperation = 2, the output should be replication1(numberOfPeople, daysAfterOperation) = 3.
+
+Since there's only one employee to begin with, there will definitely be 3 of them after 2 replications.
+
+For numberOfPeople = 3 and daysAfterOperation = 1, the output should be replication1(numberOfPeople, daysAfterOperation) = 2.
+
+There are three employees and each of them has an equal probability of being duplicated. Here's an example of the possibilities:
+
+Day 0:
+Entombed, Albinutte, Eduard
+
+Day 1:
+Entombed, Entombed, Albinutte, Eduard
+Entombed, Albinutte, Albinutte, Eduard
+Entombed, Albinutte, Eduard, Eduard
+
+In each case, there are 2 copies of the most replicated employee, so the expected value should be (2+2+2)/3 = 2.
+
+For numberOfPeople = 2 and daysAfterOperation = 2, the output should be replication1(numberOfPeople, daysAfterOperation) = 2.666667.
+
+There are two employees and each of them has an equal probability of being duplicated. Here's an example of the possibilities:
+
+Day 0:
+Tigran, Zero_Cool
+
+Day 1:
+Tigran, Tigran, Zero_Cool
+Tigran, Zero_Cool, Zero_Cool
+
+Day 2:
+Tigran, Tigran, Tigran, Zero_Cool
+Tigran, Tigran, Tigran, Zero_Cool
+Tigran, Tigran, Zero_Cool, Zero_Cool
+Tigran, Tigran, Zero_Cool, Zero_Cool
+Tigran, Zero_Cool, Zero_Cool, Zero_Cool
+Tigran, Zero_Cool, Zero_Cool, Zero_Cool
+
+So the expected value should be (3+3+2+2+3+3)/6 = 2.666667.
+
+Input / Output
+
+[execution time limit] 4 seconds (js)
+
+[input] integer numberOfPeople
+
+An integer representing the number of employees at the beginning of the experiment.
+
+Guaranteed constraints:
+1 ≤ numberOfPeople ≤ 500
+
+[input] integer daysAfterOperation
+
+An integer representing the number of days that have passed since the procedure.
+
+Guaranteed constraints:
+1 ≤ daysAfterOperation ≤ 500
+
+[output] float
+
+A floating point value representing the expected value of the most replicated employee.
+[JavaScript (ES6)] Syntax Tips
+
+// Prints help message to the console
+// Returns a string
+function helloWorld(name) {
+    console.log("This prints to the console when you Run Tests");
+    return "Hello, " + name;
+}
+
+======================================================================================================================================================
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+var twoSum = function(nums, target) {
+    var num_1 = [];
+    var indices = [];
+    
+    for(var i=0; i<nums.length; i++) {
+        indices[nums[i]] = i;
+    }
+    
+    for(var i=0; i<nums.length; i++) {
+        var i_1 = indices[target - nums[i]];
+        if(i_1 != undefined && i_1 != i) {
+            return [i, i_1];
+        }
+    }
+    
+    return [];
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

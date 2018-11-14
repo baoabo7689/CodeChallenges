@@ -1,0 +1,284 @@
+
+
+You are given a string S consisting of N characters and an integer K. You can modify string S by removing any substring of it. A substring is defined as a contiguous segment of a string.
+
+The goal is to find the shortest substring of S that, after removal, leaves S containing exactly K different characters.
+
+Write a function:
+
+    function solution(S, K);
+
+that, given a non-empty string S consisting of N characters and an integer K, returns the length of the shortest substring that can be removed. If there is no such substring, your function should return −1.
+
+Examples:
+
+1. Given S = "abaacbca" and K = 2, your function should return 3. After removing substring "cbc", string S will contain exactly two different characters: a and b.
+
+2. Given S = "aabcabc" and K = 1, your function should return 5. After removing "bcabc", string S will contain exactly one character: a.
+
+3. Given S = "zaaaa" and K = 1, your function should return 1. You can remove only one letter: z.
+
+4. Given S = "aaaa" and K = 2, your function should return −1. There is no such substring of S that, after removal, leaves S containing exactly 2 different characters.
+
+Write an efficient algorithm for the following assumptions:
+
+        N is an integer within the range [1..1,000,000];
+        string S consists only of lowercase letters (a−z);
+        K is an integer within the range [0..26].
+
+Copyright 2009–2019 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+Mỗi kí tự xác định:
+	[Start-End] 
+	
+i từ 1->N 
+	Nếu <= K kí tự => tiếp tục
+	Nếu hơn K kí tự: 
+		Nếu giữ a1 => phải bỏ a[k+1] trở về end[a[k+1]], sau đó kiểm tra khúc sau để giữ lại đoạn [a1-ak]
+		Nếu bỏ a1 => phải bỏ tới end[a1] 
+			xét kí tự tiếp theo, nếu end < end[a1] => tiếp tục 
+			=> end > end[a1], đi ngược từ sau lấy đủ k kí tự => bỏ từ 1-> vị trí cuối cùng		
+
+	Lấy vài kí tự bên trái + vài kí tự bên phải? 
+	
+Nếu end mà không đủ k => trả -1
+
+
+======================================================================================================================================================
+
+function findEnd(S, K, counts, kCount) {
+    var aI = 'a'.charCodeAt(0);
+    var charCount = 'z'.charCodeAt(0) - aI + 1;
+    var wCounts = [];	
+    for(var i=0; i<charCount; i++) {
+        wCounts[i] = counts[i];
+    }
+
+	
+    var N = S.length;
+	var wCount = kCount;
+	for(var i=N-1; i>=0 && wCount<=K; i--) {
+		var cI = S[i].charCodeAt(0) - aI;
+		if(wCounts[cI] == 0) {
+			wCount++;
+		}
+		
+		wCounts[cI]++;
+	}
+	
+	return i+1;
+}
+
+
+function solution(S, K) {
+    console.log(K + "-" + S.length);
+    console.log(S);
+    
+    var N = S.length;
+    if(K == 0) {
+        return N;
+    }
+    
+    // write your code in JavaScript (Node.js 8.9.4)
+    var aI = 'a'.charCodeAt(0);
+    var charCount = 'z'.charCodeAt(0) - aI + 1;
+    var counts = [];
+    
+    for(var i=0; i<charCount; i++) {
+        counts[i] = 0;
+    }
+
+	var N = S.length;
+    var kCount = 0;
+    
+    for(var i=0; i<N; i++) {
+        var c = S[i].charCodeAt(0)  - aI;
+        
+        if(counts[c] == 0) {
+			kCount++;
+        }
+        
+		counts[c]++;
+		
+        if(kCount > K) {
+            break;
+        }
+    }
+	
+	if(kCount == K) {
+        return 0;
+    } 
+	
+	if (kCount < K) {
+		return  -1;
+	}
+		
+	var result = N - 1;
+	for(var m=i; m>=0;) {
+		var cM = S[m].charCodeAt(0) - aI;
+		//console.log("Start: " + cM + "-" + m);
+		for(var p=m; p>=0 && counts[cM] > 0; p--) {
+			var cP = S[p].charCodeAt(0) - aI;
+			counts[cP]--;
+			if(counts[cP] == 0) {
+				kCount--;
+				p--;
+				break;						
+			}
+		}
+		
+		//console.log(counts);
+		var end = findEnd(S, K, counts, kCount);
+		var l1 = end - p;
+		//console.log(S.substring(0, p+1));
+		//console.log(S.substring(end+1));
+		//console.log(p + "-" + end + "-" + kCount + "-" + l1);
+		result = Math.min(result, l1);
+		
+		m = p;
+	}
+  
+	return result;
+}
+
+
+
+
+
+['erqmfuvnng', 1]
+
+======================================================================================================================================================
+
+
+
+456 of 445
+
+20-501
+["qxlsyntswaeztgtejlfdnqirzbhcrklgutlvgiyfdarvbmkigjdxfnqrmnyefhtlkcdqflgiexqmfvodeyikcwgosnjgsgqyxrpevxjbnlwtlnmrqrfubgoapiicjpbvznovqrmnjcurauzkxfqukhdohmqgkbrthfqlvtllppmojrmdqiipwkkqwuzbnjjiptrbmvkhjpheadrbihvvbdgemykrnxkrdjanqfmriybjzzmeikjljxbwjzxxnwdidbyjfxvphcdpxqgevtmpbdzauetdcrynxrwowrkkvbmcvovklopgbncndpneumyhmksiomfzixpljgdhyemmiatnplxnrfkqytvmtuudtzuraibspycnzwdkziodxxkcjqxnkeiivluebeeymibgsroivjvaynwzdagesopyiqgpzcqyvgsjnarogfcvkgzejbflfwfumsvxxsdhlzqwbzxxjiotanwymauophsqaszjnhbytezqt", 20]
+
+function findEnd(S, K, counts, kCount) {
+    var aI = 'a'.charCodeAt(0);
+    var charCount = 'z'.charCodeAt(0) - aI + 1;
+    var wCounts = [];	
+    for(var i=0; i<charCount; i++) {
+        wCounts[i] = counts[i];
+    }
+
+	
+    var N = S.length;
+	var wCount = kCount;
+	for(var i=N-1; i>=0 && wCount<=K; i--) {
+		var cI = S[i].charCodeAt(0) - aI;
+		if(wCounts[cI] == 0) {
+			wCount++;
+		}
+		
+		wCounts[cI]++;
+	}
+	
+	return i+1;
+}
+
+
+function solution(S, K) {
+    console.log(K + "-" + S.length);
+    console.log(S);
+    
+    var N = S.length;
+    if(K == 0) {
+        return N;
+    }
+    
+    // write your code in JavaScript (Node.js 8.9.4)
+    var aI = 'a'.charCodeAt(0);
+    var charCount = 'z'.charCodeAt(0) - aI + 1;
+    var counts = [];
+    
+    for(var i=0; i<charCount; i++) {
+        counts[i] = 0;
+    }
+
+	var N = S.length;
+    var kCount = 0;
+    
+    for(var i=0; i<N; i++) {
+        var c = S[i].charCodeAt(0)  - aI;
+        
+        if(counts[c] == 0) {
+			kCount++;
+        }
+        
+		counts[c]++;
+		
+        if(kCount > K) {
+            break;
+        }
+    }
+	
+	if(kCount == K) {
+        return 0;
+    } 
+	
+	if (kCount < K) {
+		return  -1;
+	}
+		
+	var result = N - 1;
+	for(var m=i; m>=0;) {
+		var cM = S[m].charCodeAt(0) - aI;
+		// console.log("Start: " + cM + "-" + m);
+		// console.log(counts);
+		for(var p=m; p>=0 && counts[cM] > 0; p--) {
+			var cP = S[p].charCodeAt(0) - aI;
+			counts[cP]--;
+			if(counts[cP] == 0) {
+				kCount--;
+				p--;
+				break;				
+			}
+		}
+		
+		var end = findEnd(S, K, counts, kCount);
+		var l1 = end - p;
+		console.log(S.substring(0, p+1));
+		console.log(S.substring(end+1));
+		// console.log(p + "-" + end + "-" + kCount + "-" + l1);
+		result = Math.min(result, l1);
+		
+		m = p;
+	}
+  
+	return result;
+}
+
+
+
+
+['qxlsyntswaeztgtejlfdnqirzbhcrklgutlvgiyfdarvbmkigjdxfnqrmnyefhtlkcdqflgiexqmfvodeyikcwgosnjgsgqyxrpevxjbnlwtlnmrqrfubgoapiicjpbvznovqrmnjcurauzkxfqukhdohmqgkbrthfqlvtllppmojrmdqiipwkkqwuzbnjjiptrbmvkhjpheadrbihvvbdgemykrnxkrdjanqfmriybjzzmeikjljxbwjzxxnwdidbyjfxvphcdpxqgevtmpbdzauetdcrynxrwowrkkvbmcvovklopgbncndpneumyhmksiomfzixpljgdhyemmiatnplxnrfkqytvmtuudtzuraibspycnzwdkziodxxkcjqxnkeiivluebeeymibgsroivjvaynwzdagesopyiqgpzcqyvgsjnarogfcvkgzejbflfwfumsvxxsdhlzqwbzxxjiotanwymauophsqaszjnhbytezqt', 20]
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

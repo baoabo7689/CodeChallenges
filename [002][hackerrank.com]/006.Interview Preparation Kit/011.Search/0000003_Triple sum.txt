@@ -1,0 +1,199 @@
+Given  arrays  of different sizes, find the number of distinct triplets  where  is an element of , written as , , and , satisfying the criteria: .
+
+For example, given  and , we find four distinct triplets: .
+
+Function Description
+
+Complete the triplets function in the editor below. It must return the number of distinct triplets that can be formed from the given arrays.
+
+triplets has the following parameter(s):
+
+a, b, c: three arrays of integers .
+Input Format
+
+The first line contains  integers , the sizes of the three arrays. 
+The next  lines contain space-separated integers numbering  respectively.
+
+Constraints
+
+
+
+Output Format
+
+Print an integer representing the number of distinct triplets.
+
+Sample Input 0
+
+3 2 3
+1 3 5
+2 3
+1 2 3
+Sample Output 0
+
+8 
+Explanation 0
+
+The special triplets are  .
+
+Sample Input 1
+
+3 3 3
+1 4 5
+2 3 3
+1 2 3
+Sample Output 1
+
+5 
+Explanation 1
+
+The special triplets are 
+
+Sample Input 2
+
+4 3 4
+1 3 5 7
+5 7 9
+7 9 11 13
+Sample Output 2
+
+12
+Explanation 2
+
+The special triplets are .
+
+======================================================================================================================================================
+int*int => overflow 
+
+must convert to long => *long 
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the triplets function below.
+    static long triplets(int[] a, int[] b, int[] c) {
+        var sortedA = a.Distinct().ToList();
+        sortedA.Sort();
+        
+        var sortedB = b.Distinct().ToList();
+        sortedB.Sort();
+        
+        var sortedC = c.Distinct().ToList();
+        sortedC.Sort();
+        
+        //Console.WriteLine(string.Join(",", sortedA));
+        //Console.WriteLine(string.Join(",", sortedB));
+        //Console.WriteLine(string.Join(",", sortedC));
+        
+        long result = 0;
+        
+        var iA = 0;  
+        var iB = 0;
+        var iC = 0;  
+        for(; iB<sortedB.Count; iB++) {
+            for(; iA<sortedA.Count && sortedA[iA] <= sortedB[iB]; iA++);
+            for(; iC<sortedC.Count && sortedC[iC] <= sortedB[iB]; iC++);
+            
+            //Console.WriteLine(iA + ":" + iB + ":" + iC);
+            long count = iA;
+            count *= iC;
+            
+            result += count;
+        }
+        
+        return result;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string[] lenaLenbLenc = Console.ReadLine().Split(' ');
+
+        int lena = Convert.ToInt32(lenaLenbLenc[0]);
+
+        int lenb = Convert.ToInt32(lenaLenbLenc[1]);
+
+        int lenc = Convert.ToInt32(lenaLenbLenc[2]);
+
+        int[] arra = Array.ConvertAll(Console.ReadLine().Split(' '), arraTemp => Convert.ToInt32(arraTemp))
+        ;
+
+        int[] arrb = Array.ConvertAll(Console.ReadLine().Split(' '), arrbTemp => Convert.ToInt32(arrbTemp))
+        ;
+
+        int[] arrc = Array.ConvertAll(Console.ReadLine().Split(' '), arrcTemp => Convert.ToInt32(arrcTemp))
+        ;
+        long ans = triplets(arra, arrb, arrc);
+
+        textWriter.WriteLine(ans);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+

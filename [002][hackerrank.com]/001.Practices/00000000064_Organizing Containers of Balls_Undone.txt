@@ -1,0 +1,189 @@
+David has several containers, each with a number of balls in it. He has just enough containers to sort each type of ball he has into its own container. David wants to sort the balls using his sort method.
+
+As an example, David has containers and different types of balls, both of which are numbered from to . The distribution of ball types per container are described by an matrix of integers, . For example, consider the following diagram for :
+
+image
+
+In a single operation, David can swap two balls located in different containers.
+
+The diagram below depicts a single swap operation:
+
+image
+
+David wants to perform some number of swap operations such that:
+
+    Each container contains only balls of the same type.
+    No two balls of the same type are located in different containers.
+
+You must perform queries where each query is in the form of a matrix, . For each query, print Possible on a new line if David can satisfy the conditions above for the given matrix. Otherwise, print Impossible.
+
+Input Format
+
+The first line contains an integer , the number of queries.
+
+Each of the next sets of lines is as follows:
+
+    The first line contains an integer , the number of containers (rows) and ball types (columns).
+    Each of the next lines contains space-separated integers describing row .
+
+Constraints
+
+Scoring
+
+    For of score, .
+    For of score, .
+
+Output Format
+
+For each query, print Possible on a new line if David can satisfy the conditions above for the given matrix. Otherwise, print Impossible.
+
+Sample Input 0
+
+2
+2
+1 1
+1 1
+2
+0 2
+1 1
+
+Sample Output 0
+
+Possible
+Impossible
+
+Explanation 0
+
+We perform the following queries:
+
+    The diagram below depicts one possible way to satisfy David's requirements for the first query: image
+    Thus, we print Possible on a new line.
+    The diagram below depicts the matrix for the second query: image
+    No matter how many times we swap balls of type and between the two containers, we'll never end up with one container only containing type and the other container only containing type . Thus, we print Impossible on a new line.
+
+
+
+
+======================================================================================================================================================
+
+https://stackoverflow.com/questions/12567329/multidimensional-array-vs
+var counts = new int[n][];
+
+
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the organizingContainers function below.
+    static string organizingContainers(int[][] container) {
+        var n = container.Length;
+        var counts = new int[n][];
+        var sums = new int[n];
+        
+        for(var i=0; i<n; i++) {
+            var temp = new int[n];
+            var sumI = 0;
+            
+            for(var j=0; j<n; j++) {
+                var t = container[i][j];
+                temp[j] = t;
+                
+                if(j != i) {
+                    sumI += t;
+                }
+            }
+            
+            counts[i] = temp;
+            sums[i] = sumI;
+        }
+        
+        // Console.WriteLine(string.Join("," , sums));
+        
+        for(var i=0; i<n; i++) {            
+           var needToMoveFromI = sums[i];
+            
+           var needToMoveToI = 0;            
+           for(var j=i+1; j<n; j++) {
+               needToMoveToI += counts[j][i];
+           } 
+            
+           // Console.WriteLine(needToMoveFromI + "-" + needToMoveToI);
+           if(needToMoveToI != needToMoveFromI) {
+              return "Impossible";               
+           }
+            
+           var k = i + 1; 
+           for(var j=i+1; j<n; j++) {
+              var t = counts[j][i];
+               
+               for(; k<n && t > 0; k++) {
+                   var rowIK = counts[i][k];
+                   if(rowIK <= t) {
+                       t -= rowIK;
+                       sums[j] -= rowIK; 
+                       
+                       counts[i][k] = 0;
+                       counts[j][k] += rowIK;
+                       
+                       if(k != j) {
+                            sums[j] += rowIK;                       
+                       }
+                           
+                       continue;
+                   }
+                   
+                   counts[i][k] -= t;
+                   counts[j][k] += t;                   
+                   sums[j] -= t; 
+                   if(k != j) {
+                        sums[j] += t;                       
+                   }
+                   
+                   t = 0;
+                   break;
+               }
+           } 
+        }
+        
+        return "Possible";
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int q = Convert.ToInt32(Console.ReadLine());
+
+        for (int qItr = 0; qItr < q; qItr++) {
+            int n = Convert.ToInt32(Console.ReadLine());
+
+            int[][] container = new int[n][];
+
+            for (int i = 0; i < n; i++) {
+                container[i] = Array.ConvertAll(Console.ReadLine().Split(' '), containerTemp => Convert.ToInt32(containerTemp));
+            }
+
+            string result = organizingContainers(container);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}

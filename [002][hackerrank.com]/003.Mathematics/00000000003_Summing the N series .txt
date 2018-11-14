@@ -1,0 +1,82 @@
+You are given a sequence whose  term is
+
+You have to evaluate the series
+Find .
+Input Format
+
+The first line of input contains , the number of test cases. 
+Each test case consists of one line containing a single integer .
+
+Constraints
+
+Output Format
+
+For each test case, print the required answer in a line.
+
+Sample Input 0
+
+2
+2
+1
+Sample Output 0
+
+4
+1
+Explanation 0
+
+Case 1: We have  
+Case 2: We have 
+
+
+
+======================================================================================================================================================
+T = 2n - 1
+
+S = n(n+1) - n = n^2
+
+
+
+
+======================================================================================================================================================
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+
+class Solution {
+
+    /*
+     * Complete the summingSeries function below.
+     */
+    static long summingSeries(long n) {
+        /*
+         * Write your code here.
+         */
+        var mod = 1000000007;
+        BigInteger temp = n%mod;
+        temp *= temp;
+        return (long)(temp%mod);
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int t = Convert.ToInt32(Console.ReadLine());
+
+        for (int tItr = 0; tItr < t; tItr++) {
+            long n = Convert.ToInt64(Console.ReadLine());
+
+            var result = summingSeries(n);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+

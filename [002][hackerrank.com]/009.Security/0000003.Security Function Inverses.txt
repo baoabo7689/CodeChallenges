@@ -1,0 +1,106 @@
+Consider a bijective function .
+
+Define another function  so that for  and  if  then . 
+
+Now, the function  is said to be the inverse function of  and is denoted as .
+
+In this task, you'll be given an integer  and a bijective function  where . 
+
+Output the inverse of .
+
+Input Format
+
+There are  lines in the input. 
+The first line contains a single positive integer . 
+The second line contains  space separated integers, the values of , respectively.
+
+Constraints
+
+
+Output Format
+
+Output  lines. The  line should contain the value of .
+
+Sample Input#00
+
+3
+1 2 3
+Sample Output#00
+
+1
+2
+3
+Sample Input#01
+
+3
+2 3 1
+Sample Output#01
+
+3
+1
+2
+Explanation
+
+First sample :-
+
+Basically, this is the function . Hence, it's the inverse of itself.
+
+Second Sample :-
+
+Here you can see that
+
+hence  is  
+ is  
+ is 
+
+One way to confirm is .
+
+
+
+
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var n = int.Parse(Console.ReadLine());
+        var X = Console.ReadLine()
+            .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(s => int.Parse(s))
+            .ToList();
+        var g = new int[n+1];
+        
+        for(var i=0; i<n; i++) {
+            g[X[i]] = i+1;        
+        }
+        
+        for(var i=0; i<n; i++) {
+            Console.WriteLine(g[i+1]);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,64 @@
+Objective
+In this challenge, we practice calculating the probability of a compound event. We recommend you review today's Probability Tutorial before attempting this challenge.
+
+Task
+There are urns labeled , , and .
+
+    Urn contains red balls and black balls.
+    Urn contains red balls and black balls.
+    Urn contains red balls and black balls.
+
+One ball is drawn from each of the urns. What is the probability that, of the balls drawn, are red and is black?
+10 / 63
+2 / 7
+17 / 42
+31 / 126
+You have 3 attempts left.
+
+
+
+======================================================================================================================================================
+4/7*5/9*1/2
+4/7*4/9*1/2 
+3/7*5/9*1/2
+
+= 1/2 * (20 + 16 + 15) / 63
+= 51/126 
+= 17/42
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,24 @@
+Query the list of CITY names ending with vowels (a, e, i, o, u) from STATION. Your result cannot contain duplicates.
+
+Input Format
+
+The STATION table is described as follows:
+
+Station.jpg
+
+where LAT_N is the northern latitude and LONG_W is the western longitude.
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+/*
+Enter your query here.
+*/
+Select Distinct City from Station
+Where City like '%a' OR City like '%e' OR City like '%i' OR City like '%o' OR City like '%u'
+
+
+
+
+
+

@@ -1,0 +1,174 @@
+This problem is a programming version of Problem 26 from projecteuler.net
+
+A unit fraction contains 1 in the numerator. The decimal representation of the unit fractions with denominators 2 to 10 are given:
+
+Where  means , and has a 1-digit recurring cycle. It can be seen that  has a 6-digit recurring cycle.
+
+Find the value of smallest  for which  contains the longest recurring cycle in its decimal fraction part.
+
+Input Format
+
+The first line contains an integer  , i.e., number of test cases. 
+Next  lines will contain an integer .
+
+Constraints
+
+ 
+
+Output Format
+
+Print the values corresponding to each test case.
+
+Sample Input
+
+2
+5
+10
+Sample Output
+
+3
+7
+
+======================================================================================================================================================
+
+https://medium.com/@aiswaryamathur/length-of-recurring-cycle-repetend-in-decimal-representation-of-a-unit-fraction-1afe6461cc59
+
+
+If p is a prime number, then for any integer a, the number a^p − a is an integer multiple of p.
+a^p = a (mod p)
+
+If a is not divisible by p, Fermat's little theorem is equivalent to the statement that a^(p − 1) - 1 is an integer multiple of p, or in symbols:
+a^(p-1) = 1 (mod p)
+
+
+
+
+If p is prime, the period of 1/p divides evenly into p − 1.
+[i, j]
+10^i = 10^j (mod p)
+=> 10^(i-j) = 1 (mod p)
+
+=> 10^r=1 (mod p)
+r nhỏ nhất 10^r = 1 (mod p)
+p-1 không chia hết r => 10^r2 = 1 (mod p) với r2 = (p-1)%r < r 
+=> p-1 chia hết r
+=> p-1 = k(i-j)
+
+
+The period of 1/k for integer k is always ≤ k − 1.
+If k is composite, the period of 1/k is strictly less than k − 1. 
+
+
+
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Numerics;
+
+class Solution {
+    static int CountDigits(int n) {
+        var remains = new Dictionary<int, int>();   
+        int i = 0;     
+        var remain = 1;
+        
+        while(!remains.ContainsKey(remain)) {            
+            remains.Add(remain, i);            
+            i++;
+            
+            remain = (remain*10) % n;
+        }
+        
+        var result = remains.Count - remains[remain];
+        //Console.WriteLine(string.Join(",", remains));
+        //Console.WriteLine(n + ":" + result);
+        
+        return result;
+    }
+    
+    static bool isPrime(int n) {
+        for(var i=2; i<=Math.Sqrt(n); i++) {
+            if(n%i == 0) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    static List<int> Cache() {
+        var max = 10000;
+        var result = new List<int>();
+        var currentMaxDigits = 0;
+        for(var i=3; i<=max; i++) {
+            if(!isPrime(i)) {
+                continue;
+            }
+            
+            var digits = CountDigits(i);
+            if(digits <= currentMaxDigits) {
+                continue;
+            }
+            
+            result.Add(i);
+            
+            currentMaxDigits = digits; 
+        }
+        
+        return result;
+    }
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var t = int.Parse(Console.ReadLine());  
+        //Console.WriteLine(CountDigits(23));
+        
+        var cache = Cache();
+        //Console.WriteLine(string.Join(",", cache));
+        
+        for(var i=0; i<t; i++) {
+            var n = int.Parse(Console.ReadLine()); 
+            
+            var j=0;
+            for(; j<cache.Count && cache[j] < n; j++);
+            
+            Console.WriteLine(cache[j-1]);
+        }   
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

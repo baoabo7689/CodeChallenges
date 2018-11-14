@@ -1,0 +1,106 @@
+Leonardo loves primes and created  queries where each query takes the form of an integer, . For each , he wants you to count the maximum number of unique prime factors of any number in the inclusive range  and then print this value on a new line.
+
+Note: Recall that a prime number is only divisible by  and itself, and  is not a prime number.
+
+Input Format
+
+The first line contains an integer, , denoting the number of queries. 
+Each line  of the  subsequent lines contains a single integer, .
+
+Constraints
+
+Output Format
+
+For each query, print the maximum number of unique prime factors for any number in the inclusive range  on a new line.
+
+Sample Input
+
+6
+1
+2
+3
+500
+5000
+10000000000
+Sample Output
+
+0
+1
+1
+4
+5
+10
+Explanation
+
+The maximum number of unique prime factors of any number in the inclusive range  is , because  is not prime and its only factor is itself.
+The maximum number of unique prime factors of any number in the inclusive range  is . We already know that the number  has  prime factors, but  has  prime factor (itself).
+The maximum number of unique prime factors of any number in the inclusive range  is . The number  has  prime factor (itself), and we already know that the number  has  prime factor and the number  has  prime factors.
+The maximum number of unique prime factors in the inclusive range  is . The product of our first four unique primes is , and there are no additional unique primes we can multiply that number by that results in a value .
+
+======================================================================================================================================================
+
+q is middle [r,p]
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+
+class Solution {
+
+    /*
+     * Complete the primeCount function below.
+     */
+    static int primeCount(long n) {
+        /*
+         * Write your code here.
+         */
+
+        if(n == 1) {
+            return 0;
+        }
+        
+        var primes = new List<long> {
+            2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79,
+            83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173,
+            179, 181, 191, 193, 197, 199
+        };
+                
+        var i=0;
+        BigInteger compare = 1;
+        
+        for(; i<primes.Count && compare*primes[i] <= n; compare*=primes[i], i++);
+        
+        return i;        
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int q = Convert.ToInt32(Console.ReadLine());
+
+        for (int qItr = 0; qItr < q; qItr++) {
+            long n = Convert.ToInt64(Console.ReadLine());
+
+            int result = primeCount(n);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,115 @@
+Famous wizard Sumar moonji kumaru is stuck in a huge room and has to save Hermione Granger from a monster. Kumaru is at location P1 given by integral coordinates (x1,y1) and Hermione is at location P2 given by integral coordinates (x2,y2). Sadly P1 and P2 are the only points at which floating rocks are present. Rest of the room is without floor and underneath is hot lava.
+
+Kumaru has to go from P1 to P2 but there are no floating rocks to walk on. Kumaru knows a spell that can make the rocks appear but only on the integral coordinates on the straight line joining P1 and P2.
+
+How many rocks can appear at locations (x,y) on the line segment between P1 and P2 (excluding P1 and P2) which satisfy the condition that both x and y are integers?
+
+Input Format 
+The first line contains a single integer T, the number of test cases. T lines follow. 
+Each of the following T lines contains one test case each. Each test case contains 4 integers x1, y1, x2 and y2 separated by a single space.
+
+Output Format 
+A single line containing the number of rocks.
+
+Constraints 
+1 <= T <= 105 
+-109 <= x1, y1, x2, y2 <= 109
+
+Sample input
+
+3
+0 2 4 0
+2 2 5 5
+1 9 8 16
+Sample Output
+
+1
+2
+6
+Explanation
+
+2Dplane
+
+Case 1: As shown in the figure, between (0,2) and (4,0) there's only 1 integral point (2,1) hence 1 rock. 
+Case 2: Between (2,2) and (5,5) lies (3,3) and (4,4), hence 2 rocks. 
+Case 3: Between (1,9) and (8,16) there lies 6 rocks at positions (2,10) (3,11) (4,12) (5,13) (6,14) (7,15).
+
+======================================================================================================================================================
+
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+
+    // Complete the solve function below.
+    static int solve(int x1, int y1, int x2, int y2) {
+        var a = Math.Abs(y1 - y2);
+        var b = Math.Abs(x1 - x2);
+        if(b == 0) {
+            return a-1;
+        }
+        
+        if(a == 0) {
+            return b-1;
+        }
+        
+        var a1 = a<b ? a:b;
+        var b1 = a<b ? b:a;
+        while(b1 % a1 != 0) {
+            var r = b1 % a1;
+            b1 = a1;
+            a1 = r;
+        }
+        
+        return a1 - 1;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int t = Convert.ToInt32(Console.ReadLine());
+
+        for (int tItr = 0; tItr < t; tItr++) {
+            string[] x1Y1X2Y2 = Console.ReadLine().Split(' ');
+
+            int x1 = Convert.ToInt32(x1Y1X2Y2[0]);
+
+            int y1 = Convert.ToInt32(x1Y1X2Y2[1]);
+
+            int x2 = Convert.ToInt32(x1Y1X2Y2[2]);
+
+            int y2 = Convert.ToInt32(x1Y1X2Y2[3]);
+
+            var result = solve(x1, y1, x2, y2);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,141 @@
+Given an array of integers, find the subset of non-adjacent elements with the maximum sum. Calculate the sum of that subset.
+
+For example, given an array  we have the following possible subsets:
+
+Subset      Sum
+[-2, 3, 5]   6
+[-2, 3]      1
+[-2, -4]    -6
+[-2, 5]      3
+[1, -4]     -3
+[1, 5]       6
+[3, 5]       8
+Our maximum subset sum is .
+
+Function Description
+
+Complete the  function in the editor below. It should return an integer representing the maximum subset sum for the given array.
+
+maxSubsetSum has the following parameter(s):
+
+arr: an array of integers
+Input Format
+
+The first line contains an integer, . 
+The second line contains  space-separated integers .
+
+Constraints
+
+Output Format
+
+Return the maximum sum described in the statement.
+
+Sample Input 0
+
+5
+3 7 4 6 5
+Sample Output 0
+
+13
+Explanation 0
+
+Our possible subsets are  and . The largest subset sum is  from subset 
+
+Sample Input 1
+
+5
+2 1 5 8 4
+Sample Output 1
+
+11
+Explanation 1
+
+Our subsets are  and . The maximum subset sum is  from the first subset listed.
+
+Sample Input 2
+
+5
+3 5 -7 8 10
+Sample Output 2
+
+15
+Explanation 2
+
+Our subsets are  and . The maximum subset sum is  from the fifth subset listed.
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the maxSubsetSum function below.
+    static int maxSubsetSum(int[] arr) {
+        var n = arr.Length;
+        if(n == 1) {
+            return arr[0];
+        }
+        
+        var maxes = new int[n];
+        maxes[0] = arr[0] < 0 ? 0 : arr[0];
+        maxes[1] = arr[1] < 0 ? 0 : arr[1];
+        maxes[2] = arr[2] < 0 ? maxes[0] : arr[2] + maxes[0];
+        if(n == 2) {
+            return Math.Max(Math.Max(maxes[0], maxes[1]), maxes[2]);
+        }
+          
+        var result = 0;
+        
+        for(var i=3; i<n; i++) {
+            maxes[i] = Math.Max(
+                maxes[i-2] + (arr[i] < 0 ? 0 : arr[i]),
+                maxes[i-3] + (arr[i] < 0 ? 0 : arr[i]));
+            result = Math.Max(result, maxes[i]);
+        }
+        
+        //Console.WriteLine(string.Join(",", maxes));
+        
+        return result;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int n = Convert.ToInt32(Console.ReadLine());
+
+        int[] arr = Array.ConvertAll(Console.ReadLine().Split(' '), arrTemp => Convert.ToInt32(arrTemp))
+        ;
+        int res = maxSubsetSum(arr);
+
+        textWriter.WriteLine(res);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+

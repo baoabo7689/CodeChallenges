@@ -1,0 +1,177 @@
+
+
+You are given a matrix A consisting of N rows and M columns, where each cell contains a digit. Your task is to find a continuous sequence of neighbouring cells, starting in the top-left corner and ending in the bottom-right corner (going only down and right), that creates the biggest possible integer by concatenation of digits on the path. By neighbouring cells we mean cells that have exactly one common side.
+
+Write a function:
+
+    function solution(A);
+
+that, given matrix A consisting of N rows and M columns, returns a string which represents the sequence of cells that we should pick to obtain the biggest possible integer.
+
+For example, given the following matrix A:
+
+[9 9 7] [9 7 2] [6 9 5] [9 1 2]
+
+the function should return "997952", because you can obtain such a sequence by choosing a path as shown below:
+
+[9 9 *] [* 7 *] [* 9 5] [* * 2]
+
+Write an efficient algorithm for the following assumptions:
+
+        N and M are integers within the range [1..1,000];
+        each element of matrix A is an integer within the range [1..9].
+
+Copyright 2009–2019 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+======================================================================================================================================================
+
+======================================================================================================================================================
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+
+function solution(A) {
+    // write your code in JavaScript (Node.js 8.9.4)
+    var N = A.length;
+    var M = A[0].length;
+    
+    // console.log(N + ":" + M);
+    
+    var Amax = [];
+    for(var i = 0; i<N; i++) {
+        Amax[i] = [];
+    }
+    
+    Amax[0][0] = A[0][0].toString();
+    
+    for(var i = 0; i<N; i++) {
+        for(var j=0; j<M; j++) {
+            var a = A[i][j];
+            if(i==0 && j==0) {
+                continue;
+            }
+            
+            if(i == 0) {
+                Amax[i][j] = Amax[i][j-1] + a;
+                continue;
+            }
+            
+            if(j == 0) {
+                Amax[i][j] = Amax[i-1][j] + a;
+                continue;
+            }
+            
+            var max1 = Amax[i-1][j];
+            var max2 = Amax[i][j-1];
+            var max = max1 < max2 ? max2 : max1;
+            Amax[i][j] = max + a;
+        }
+    }
+    
+    // console.log(Amax);
+    return Amax[N-1][M-1];
+}
+
+
+======================================================================================================================================================
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+
+function solution(A) {
+    // write your code in JavaScript (Node.js 8.9.4)
+    var N = A.length;
+    var M = A[0].length;
+    
+    // console.log(N + ":" + M);
+    
+    var maxTop = [];
+    for(var i = 0; i<N; i++) {
+        maxTop[i] = [];
+    }
+    
+    for(var i = 0; i<N; i++) {
+        var tempMax = [];
+        tempMax[0] = A[i][0].toString();
+        
+        for(var j=0; j<M; j++) {
+            var a = A[i][j];
+            
+            if(i==0 && j==0) {
+                continue;
+            }
+            
+            if(i == 0) {
+                tempMax[j] = tempMax[j-1] + a;
+                continue;
+            }
+            
+            if(j == 0) {
+                tempMax[j] = maxTop[j] + a;
+                continue;
+            }
+            
+            var max1 = maxTop[j];
+            var max2 = tempMax[j-1];
+            var max = max1 < max2 ? max2 : max1;
+            tempMax[j] = max + a;
+        }
+        
+        maxTop = tempMax;
+    }
+    
+    // console.log(Amax);
+    return maxTop[M-1];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

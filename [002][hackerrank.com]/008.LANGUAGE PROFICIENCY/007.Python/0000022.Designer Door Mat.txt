@@ -1,0 +1,158 @@
+Mr. Vincent works in a door mat manufacturing company. One day, he designed a new door mat with the following specifications:
+
+Mat size must be X. ( is an odd natural number, and  is  times .)
+The design should have 'WELCOME' written in the center.
+The design pattern should only use |, . and - characters.
+Sample Designs
+
+    Size: 7 x 21 
+    ---------.|.---------
+    ------.|..|..|.------
+    ---.|..|..|..|..|.---
+    -------WELCOME-------
+    ---.|..|..|..|..|.---
+    ------.|..|..|.------
+    ---------.|.---------
+    
+    Size: 11 x 33
+    ---------------.|.---------------
+    ------------.|..|..|.------------
+    ---------.|..|..|..|..|.---------
+    ------.|..|..|..|..|..|..|.------
+    ---.|..|..|..|..|..|..|..|..|.---
+    -------------WELCOME-------------
+    ---.|..|..|..|..|..|..|..|..|.---
+    ------.|..|..|..|..|..|..|.------
+    ---------.|..|..|..|..|.---------
+    ------------.|..|..|.------------
+    ---------------.|.---------------
+Input Format
+
+A single line containing the space separated values of  and .
+
+Constraints
+
+Output Format
+
+Output the design pattern.
+
+Sample Input
+
+9 27
+Sample Output
+
+------------.|.------------
+---------.|..|..|.---------
+------.|..|..|..|..|.------
+---.|..|..|..|..|..|..|.---
+----------WELCOME----------
+---.|..|..|..|..|..|..|.---
+------.|..|..|..|..|.------
+---------.|..|..|.---------
+------------.|.------------
+
+======================================================================================================================================================
+i = midN + x 
+f[i] = f[midN+x] = f[midN - x]
+x = i-midN 
+f[i] = f[midN-i-midN] = f[2*midN - i]
+
+
+======================================================================================================================================================
+# Enter your code here. Read input from STDIN. Print output to STDOUT
+import textwrap
+if __name__ == '__main__':
+    s = input()
+    N = int(s.split(" ")[0])
+    M = int(s.split(" ")[1])
+    
+    mid = N // 2
+    a = ""
+    c = "-"
+    midM = M // 2
+    for i in range (0, mid):
+        a += (c*(midM - i - 2*i - 1)).ljust(1)
+        a += "."
+        a += ("|.."*i).ljust(0)
+        a += "|"
+        a += ("..|"*i).rjust(0)
+        a += "."
+        a += (c*(midM - i - 2*i - 1)).rjust(1)
+        a += "\n"    
+
+    a += (c*(midM - 3)).ljust(1)
+    a += "WELCOME"
+    a += (c*(midM - 3)).rjust(1)
+    a += "\n"    
+
+    for i in range (mid + 1, N):
+        x = 2*mid - i
+        a += (c*(midM - x - 2*x - 1)).ljust(1)
+        a += "."
+        a += ("|.."*x).ljust(0)
+        a += "|"
+        a += ("..|"*x).rjust(0)
+        a += "."
+        a += (c*(midM - x - 2*x - 1)).rjust(1)
+        a += "\n"    
+
+    print(a)    
+
+
+======================================================================================================================================================
+	def getVals():
+    height, width = map(int, input().split())
+    assert h % 2 == 1  # make sure the numbers are odd
+    assert w == h * 3  # make sure the width is 3 times the height
+    return height, width
+
+def designMat(design, message):
+    h, w = getVals()
+    
+    # Top 
+    pattern = [i for i in range(1, h, 2)]
+    for i in pattern:
+        yield '{}'.format(str(design*i)).center(w, '-')
+
+    # Middle
+    yield '{}'.format(message).center(w, '-')
+    
+    # Bottom 
+    pattern = list(reversed(pattern))
+    for i in pattern:
+        yield '{}'.format(str(design*i)).center(w, '-')
+
+for line in designMat('.|.', 'WELCOME'):
+    print(line)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+

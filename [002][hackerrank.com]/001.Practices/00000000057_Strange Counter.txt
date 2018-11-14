@@ -1,0 +1,96 @@
+Bob has a strange counter. At the first second, it displays the number . Each second, the number displayed by the counter decrements by until it reaches .
+
+The counter counts down in cycles. In next second, the timer resets to and continues counting down. The diagram below shows the counter values for each time in the first three cycles:
+
+[strange(1).png]
+
+Find and print the value displayed by the counter at time .
+
+Function Description
+
+Complete the strangeCounter function in the editor below. It should return the integer value displayed by the counter at time .
+
+strangeCounter has the following parameter(s):
+
+    t: an integer
+
+Input Format
+
+A single integer denoting the value of .
+
+Constraints
+
+Subtask
+
+    for of the maximum score.
+
+Output Format
+
+Print the value displayed by the strange counter at the given time .
+
+Sample Input
+
+4
+
+Sample Output
+
+6
+
+Explanation
+
+Time marks the beginning of the second cycle. It is double the number displayed at the beginning of the first cycle:. This is also shown in the diagram in the Problem Statement above.
+
+
+	
+
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the strangeCounter function below.
+    static long strangeCounter(long t) {
+        long circle = 3;
+        long sum = 3;
+        while(sum < t) {
+            circle *= 2;
+            sum += circle;
+        }
+        
+        return (sum - t + 1);
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        long t = Convert.ToInt64(Console.ReadLine());
+
+        long result = strangeCounter(t);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+

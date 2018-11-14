@@ -1,0 +1,158 @@
+This problem is a programming version of Problem 23 from projecteuler.net
+
+A perfect number is a number for which the sum of its proper divisors is exactly equal to the number. For example, the sum of the proper divisors of 28 would be 1 + 2 + 4 + 7 + 14 = 28, which means that 28 is a perfect number.
+
+A number  is called deficient if the sum of its proper divisors is less than  and it is called abundant if this sum exceeds .
+
+As 12 is the smallest abundant number, 1 + 2 + 3 + 4 + 6 = 16, the smallest number that can be written as the sum of two abundant numbers is 24. By mathematical analysis, it can be shown that all integers greater than 28123 can be written as the sum of two abundant numbers. However, this upper limit cannot be reduced any further by analysis even though it is known that the greatest number that cannot be expressed as the sum of two abundant numbers is less than this limit.
+
+Given , print YES if it can be expressed as sum of two abundant numbers, else print NO.
+
+Input Format
+
+The first line contains an integer  , i.e., number of test cases. 
+Next  lines will contain an integer .
+
+Constraints
+
+ 
+
+Output Format
+
+Print the values corresponding to each test case.
+
+Sample Input
+
+2
+24
+49
+Sample Output
+
+YES
+NO
+
+
+======================================================================================================================================================
+28123 is Prime
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq; 
+
+class Solution {
+    static int Upper = 28123;
+    static bool[] Seive(List<int> abundants) {
+        var result = new bool[Upper];
+        for(var i=12; i < Upper; i++) {
+            if(result[i]) {
+                continue;
+            }
+            
+            var isAbundant = IsAbundant(i);
+            if(isAbundant) {
+                result[i] = true;
+                for(var k=2*i; k<Upper; k += i) {
+                    result[k] = true;
+                }
+            }
+        }
+        
+        for(var i=12; i < Upper; i++) {
+            if(result[i]) {
+                abundants.Add(i);                
+            }
+        }
+        
+        return result;
+    }
+    
+    static bool IsAbundant(int n) {
+        var n1 = n;
+        var count = 1;
+        var sqrt = Math.Sqrt(n);
+        
+        for(var i = 2; i<=sqrt; i++) {
+            if(n%i != 0) {
+                continue;
+            }
+            
+            var c1 = i;
+            
+            while(n%i == 0) {
+                n /= i;
+                c1 *= i;
+            }
+            
+            count *= (c1 - 1)/(i - 1);
+        }
+        
+        if(n > sqrt) {
+            count *= (n+1);
+        }
+        
+        count -= n1;
+        //Console.WriteLine(n1 + "-" + count);
+        
+        return count > n1;
+    }
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        
+        var t = int.Parse(Console.ReadLine());
+        var abundants = new List<int>();
+        var seive = Seive(abundants);
+        abundants.Sort();
+        
+        //Console.WriteLine(string.Join(",", abundants));
+        
+        for(var i=0; i<t; i++) {
+            var n = int.Parse(Console.ReadLine());
+            if(n < 24) {
+                Console.WriteLine("NO");
+                continue;
+            }
+            
+            if(n > Upper) {
+                Console.WriteLine("YES");
+                continue;
+            }  
+            
+            var j=0;
+            var canSum = false;
+            for(; j < abundants.Count; j++) {
+                var abundant = abundants[j];                
+                if(abundant > n) {
+                    break;
+                }
+                
+                if(seive[n-abundant]) {
+                    Console.WriteLine("YES");
+                    canSum = true;
+                    break;
+                }
+            }
+            
+            if(!canSum) {
+                Console.WriteLine("NO");
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

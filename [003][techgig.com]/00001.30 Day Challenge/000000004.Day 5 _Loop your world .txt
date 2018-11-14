@@ -1,0 +1,82 @@
+ Loop your world (100 Marks)
+For this challenge, you need to take an integer value as input from stdin, calculate its factorial and print the result to the stdout. 1
+
+Input Format
+A single integer value to be taken as input from stdin and stored it in a variable of your choice. 
+
+Constraints
+1 < = n < = 15
+
+Output Format
+Print the value which you will get after calculating the factorial of the input. 
+
+Sample TestCase 1
+Input
+
+5
+
+Output
+
+120
+
+Explanation
+
+For a number, we will calculate its factorial by multiplying the number with the numbers which comes between 1(inclusive) and the number itself.
+For input as 5, its factorial will be 1*2*3*4*5 = 120.
+factorial of n (n!) = 1*2*3*4....n
+
+Time Limit(X):
+    1.00 sec(s) for each input. 
+Memory Limit:
+    512 MB 
+Source Limit:
+    100 KB 
+Allowed Languages:
+    C, C++, C++11, C++14, C#, Java, Java 8, PHP, PHP 7, Python, Python 3, Perl, Ruby, Node Js, Scala, Clojure, Haskell, Lua, Erlang, Swift, VBnet, Js, Objc, Pascal, Go, F#, D, Groovy, Tcl, Ocaml, Smalltalk, Cobol, Racket, Bash, GNU Octave, Rust, Common LISP, R, Julia, Fortran, Ada, Prolog, Icon, Elixir, CoffeeScript, Brainfuck, Pypy, Lolcode, Nim, Picolisp, Pike, Whitespace 
+	
+	
+	
+	
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class CandidateCode {
+    static void Main(String[] args) {
+	//Write code here
+    	int n = int.Parse(Console.ReadLine());
+    	var f = 1;
+    	for(int i=2; i<=n; i++) {
+    	    f *= i;
+    	}
+    	
+    	Console.WriteLine(f);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

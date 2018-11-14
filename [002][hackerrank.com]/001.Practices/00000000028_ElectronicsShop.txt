@@ -1,0 +1,224 @@
+Monica wants to buy a keyboard and a USB drive from her favorite electronics store. The store has several models of each. Monica wants to spend as much as possible for the items, given her budget.
+
+Given the price lists for the store's keyboards and USB drives, and Monica's budget, find and print the amount of money Monica will spend. If she doesn't have enough money to both a keyboard and a USB drive, print -1 instead. She will buy only the two required items.
+
+For example, suppose she has to spend. Three types of keyboards cost . Two USB drives cost . She could purchase a , or a . She chooses the latter. She can't buy more than items so she can't spend exactly .
+
+Function Description
+
+Complete the getMoneySpent function in the editor below. It should return the maximum total price for the two items within Monica's budget, or if she cannot afford both items.
+
+getMoneySpent has the following parameter(s):
+
+    keyboards: an array of integers representing keyboard prices
+    drives: an array of integers representing drive prices
+    b: the units of currency in Monica's budget
+
+Input Format
+
+The first line contains three space-separated integers , , and , her budget, the number of keyboard models and the number of USB drive models.
+The second line contains space-separated integers , the prices of each keyboard model.
+The third line contains space-separated integers , the prices of the USB drives.
+
+Constraints
+
+    The price of each item is in the inclusive range .
+
+Output Format
+
+Print a single integer denoting the amount of money Monica will spend. If she doesn't have enough money to buy one keyboard and one USB drive, print -1 instead.
+
+Sample Input 0
+
+10 2 3
+3 1
+5 2 8
+
+Sample Output 0
+
+9
+
+Explanation 0
+
+She can buy the keyboard and the USB drive for a total cost of .
+
+Sample Input 1
+
+5 1 1
+4
+5
+
+Sample Output 1
+
+-1
+
+Explanation 1
+
+There is no way to buy one keyboard and one USB drive because , so we print .
+
+======================================================================================================================================================
+
+a1 < a3 < a2 
+k-a2 < b3 < k-a1
+
+b1 < b4 < b2
+k-b2 < a4 < k-b1
+
+
+b5 > b3
+a5 > a4 
+
+
+
+
+k=15
+a=1 5 8	9 11
+b=2 5 6 8
+
+4 14 => 5
+7 13 => 8
+=> 9-6
+
+
+=> O(NlogN)
+sort, find max sum
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+
+    /*
+     * Complete the getMoneySpent function below.
+     */
+    static int getMoneySpent(int[] keyboards, int[] drives, int b) {
+        /*
+         * Write your code here.
+         */
+        var sortKeys = keyboards.ToList();
+        sortKeys.Sort();
+        var sortDrives = drives.ToList();
+        sortDrives.Sort();
+        
+        var minKeyboard = sortKeys[0];
+        var minDrive = sortDrives[0];
+        if(minKeyboard + minDrive > b) {
+            return -1;
+        }
+        
+        var m = sortDrives.Count;
+        var k0 = sortKeys[0];
+        var i=0;
+        for(; i<m; i++) {
+            if(sortDrives[i] + k0 > b) {
+                break;
+            }
+        }
+        
+        var n = sortKeys.Count;
+        var max = 0;
+        i--;
+        Console.WriteLine(string.Join(",", sortKeys));
+        Console.WriteLine(string.Join(",", sortDrives));
+        Console.WriteLine(i);
+        
+        for(var j=0; j<n; j++) {
+            var k = sortKeys[j];
+            for(;i>=0 && sortDrives[i] + k > b; i--);
+            
+            if(i < 0) {
+                continue;
+            }
+            
+            max = Math.Max(max, sortDrives[i] + k);
+        }
+        
+        return max;
+    } 
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string[] bnm = Console.ReadLine().Split(' ');
+
+        int b = Convert.ToInt32(bnm[0]);
+
+        int n = Convert.ToInt32(bnm[1]);
+
+        int m = Convert.ToInt32(bnm[2]);
+
+        int[] keyboards = Array.ConvertAll(Console.ReadLine().Split(' '), keyboardsTemp => Convert.ToInt32(keyboardsTemp))
+        ;
+
+        int[] drives = Array.ConvertAll(Console.ReadLine().Split(' '), drivesTemp => Convert.ToInt32(drivesTemp))
+        ;
+        /*
+         * The maximum amount of money she can spend on a keyboard and USB drive, or -1 if she can't purchase both items
+         */
+
+        int moneySpent = getMoneySpent(keyboards, drives, b);
+
+        textWriter.WriteLine(moneySpent);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

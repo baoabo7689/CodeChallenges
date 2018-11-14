@@ -1,0 +1,469 @@
+Check out the resources on the page's right side to learn more about depth-first search. The video tutorial is by Gayle Laakmann McDowell, author of the best-selling interview book Cracking the Coding Interview.
+
+Consider a matrix where each cell contains either a  or a  and any cell containing a  is called a filled cell. Two cells are said to be connected if they are adjacent to each other horizontally, vertically, or diagonally. In the diagram below, the two colored regions show cells connected to the filled cells. Black on white are not connected.
+
+Cells adjacent to filled cells:  image
+
+If one or more filled cells are also connected, they form a region. Note that each cell in a region is connected to at least one other cell in the region but is not necessarily directly connected to all the other cells in the region.
+
+Regions:  image
+
+Given an  matrix, find and print the number of cells in the largest region in the matrix.
+
+Function Description
+
+Complete the function maxRegion in the editor below. It must return an integer value, the size of the largest region.
+
+maxRegion has the following parameter(s):
+
+grid: a two dimensional array of integers
+Input Format
+
+The first line contains an integer, , the number of rows in the matrix, . 
+The second line contains an integer, , the number of columns in the matrix.
+
+Each of the following  lines contains a row of  space-separated integers, .
+
+Constraints
+
+Output Format
+
+Print the number of cells in the largest region in the given matrix.
+
+Sample Input
+
+4
+4
+1 1 0 0
+0 1 1 0
+0 0 1 0
+1 0 0 0
+Sample Output
+
+5
+Explanation
+
+The diagram below depicts two regions of the matrix:
+
+image 
+The first region has five cells and the second region has one cell. We choose the larger region.
+
+
+
+
+======================================================================================================================================================
+
+Console.WriteLine(i + ":" + j);  
+Console.WriteLine(prevId);  
+		
+
+		
+Approach
+Treat the grid as a graph where each cell with a  is connected to another cell with a  as long as they are adjacent horizontally, vertically, or diagonally. Recall that cell  is adjacent to cells  as long as such a cell exists within the confines of the matrix.
+
+Use a standard Depth-First Search (DFS) algorithm but modify it to assign a unique number to each cell identified in a connected component. Because the cells are originally numbered with either a  or a  but the only cells we care about visiting contain a , we just have to mark each cell we visit during our search with some number other than a  (e.g., , , etc.). If you do not wish to modify the values of the original array, you could also maintain another matrix of boolean values tracking whether or not each cell was visited.
+
+Finally, keep a running maximum of the number of connected cells found by each DFS. Once the entire matrix has been searched, print this running maximum.
+
+Reference
+For those getting started with basic search techniques in graphs, there is a nicely visualized explanation of Depth First Search through a Maze on the MSDN website. 
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Node {
+    public int Id;
+    public Node Next;
+    
+    public Area Append(Dictionary<int, Area> dictAreas, int n) {
+        var area = new Area();
+        area.Head = this;
+        area.Tail = this;
+        area.Count = 1;
+        dictAreas.Add(Id, area);     
+        
+        return area;
+    }  
+    
+    public Area Append(int i, int j, Dictionary<int, Area> dictAreas, int m) {
+        var prevId = i*m + j;   
+        var prevArea = dictAreas[prevId];
+        prevArea.Append(this);
+        dictAreas.Add(Id, prevArea);    
+        
+        return prevArea;
+    }  
+    
+     public Area Connect(
+         int i1, int j1,
+         int i2, int j2,
+         Dictionary<int, Area> dictAreas, int m) {
+         var cellId1 = i1*m + j1;   
+         var cellId2 = i2*m + j2;  
+         
+         var area1 = dictAreas[cellId1];
+         area1.Append(this);
+         dictAreas.Add(Id, area1);            
+         
+         var area2 = dictAreas[cellId2];
+         // Console.WriteLine(area1.Id + ":" + area2.Id);
+         if(area1.Id == area2.Id) {
+             return area1;
+         }
+         
+         var node2 = area2.Head;
+         while(node2 != null) {
+             dictAreas[node2.Id] = area1;
+             node2 = node2.Next;
+         }
+         
+         area1.Count += area2.Count;
+         area1.Tail.Next = area2.Head;
+         area1.Tail = area2.Head;
+         return area1;
+    }  
+}
+
+class Area {
+    private static int id=0;
+    public Area() {
+        Id = id++;
+        Count = 0;
+    }
+    
+    public int Id;
+    public int Count; 
+    public Node Head;   
+    public Node Tail;  
+    
+    public void Append(Node node) {
+        Count++;
+        Tail.Next = node;
+        Tail = node;
+    }
+}
+
+class Solution {
+
+    // Complete the maxRegion function below.
+    static int maxRegion(int[][] grid) {
+        var n = grid.Length;
+        var m = grid[0].Length;
+        var max = 0;
+        var dictAreas = new Dictionary<int, Area>();
+        
+        for(var i=0; i<n; i++) {
+            var rowId = i*m;
+            
+            for(var j=0; j<m; j++) {
+                var cellVal = grid[i][j];
+                if(cellVal == 0) {
+                    continue;
+                }
+                                
+                var cellId = rowId + j;
+                // Console.WriteLine("Cell: " + i + ":" + j + ":Max: " + max + ":" + cellId);
+                var node = new Node { Id = cellId };
+                
+                if(i==0 && (j==0 || grid[i][j-1] == 0)) {  
+                    var area = node.Append(dictAreas, m);   
+                    max = Math.Max(max, area.Count);                    
+                    continue;
+                }
+                
+                if(i==0) {   
+                    var prevArea = node.Append(i, j-1, dictAreas, m);  
+                    max = Math.Max(max, prevArea.Count);  
+                    continue;                    
+                }
+                          
+                if(j==0) {
+                    if(grid[i-1][j] == 1) {   
+                        var prevArea = node.Append(i-1, j, dictAreas, m);
+                        max = Math.Max(max, prevArea.Count);  
+                        continue;          
+                    }
+                    
+                    if(m > 1 && grid[i-1][j+1] == 1) {
+                        var prevArea = node.Append(i-1, j + 1, dictAreas, m);
+                        max = Math.Max(max, prevArea.Count);  
+                        continue;  
+                    }
+                    
+                    var area = node.Append(dictAreas, m);   
+                    max = Math.Max(max, area.Count);    
+                    continue; 
+                }
+                
+                if(j==m-1) {
+                    if(grid[i-1][j-1] == 1) {  
+                        var prevArea = node.Append(i-1, j - 1, dictAreas, m);  
+                        max = Math.Max(max, prevArea.Count);  
+                        continue;          
+                    }
+                   
+                    if(grid[i][j-1] == 1 && grid[i-1][j] == 0) {
+                        var prevArea = node.Append(i, j - 1, dictAreas, m);   
+                        max = Math.Max(max, prevArea.Count);  
+                        continue;      
+                    }
+                    
+                    if(grid[i][j-1] == 0 && grid[i-1][j] == 1) {
+                        var prevArea = node.Append(i-1, j, dictAreas, m);   
+                        max = Math.Max(max, prevArea.Count);  
+                        continue;      
+                    }
+                    
+                    if(grid[i][j-1] == 1 && grid[i-1][j] == 1) {  
+                        var prevArea = node.Connect(i, j-1, i-1, j, dictAreas, m);  
+                        max = Math.Max(max, prevArea.Count);  
+                        continue;      
+                    }
+                    
+                    var area = node.Append(dictAreas, m);   
+                    max = Math.Max(max, area.Count);    
+                    continue;
+                }
+                                
+                if(grid[i][j-1] == 1 && grid[i-1][j] == 0 && grid[i-1][j+1] == 0) {
+                    var prevArea = node.Append(i, j - 1, dictAreas, m);   
+                    max = Math.Max(max, prevArea.Count);  
+                    continue;      
+                }
+                    
+                if(grid[i][j-1] == 1 && grid[i-1][j] == 1) {
+                    var prevArea = node.Connect(i, j-1, i-1, j, dictAreas, m);  
+                    max = Math.Max(max, prevArea.Count);  
+                    continue;      
+                }
+               
+                if(grid[i][j-1] == 1 && grid[i-1][j+1] == 1) {
+                    //Console.WriteLine("Test");
+                    var prevArea = node.Connect(i, j-1, i-1, j + 1, dictAreas, m);  
+                    max = Math.Max(max, prevArea.Count);  
+                    continue;      
+                }
+                                 
+                if(grid[i-1][j-1] == 1 && grid[i-1][j+1] == 0) {
+                    var prevArea = node.Append(i-1, j - 1, dictAreas, m);   
+                    max = Math.Max(max, prevArea.Count);  
+                    continue;      
+                }
+                
+                if(grid[i-1][j-1] == 1 && grid[i-1][j+1] == 1) {
+                    var prevArea = node.Connect(i-1, j-1, i-1, j + 1, dictAreas, m);  
+                    max = Math.Max(max, prevArea.Count);  
+                    continue;      
+                }
+                                
+                if(grid[i-1][j] == 1) {
+                    var prevArea = node.Append(i-1, j, dictAreas, m);   
+                    max = Math.Max(max, prevArea.Count);  
+                    continue;      
+                }  
+                
+                if(grid[i-1][j+1] == 1) {
+                    var prevArea = node.Append(i-1, j+1, dictAreas, m);   
+                    max = Math.Max(max, prevArea.Count);  
+                    continue;      
+                }
+                
+                var area3 = node.Append(dictAreas, m);   
+                max = Math.Max(max, area3.Count);                    
+            }
+        }
+        
+        return max;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int n = Convert.ToInt32(Console.ReadLine());
+
+        int m = Convert.ToInt32(Console.ReadLine());
+
+        int[][] grid = new int[n][];
+
+        for (int i = 0; i < n; i++) {
+            grid[i] = Array.ConvertAll(Console.ReadLine().Split(' '), gridTemp => Convert.ToInt32(gridTemp));
+        }
+
+        int res = maxRegion(grid);
+
+        textWriter.WriteLine(res);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+======================================================================================================================================================
+
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+    static void regionCount(
+        int[][] grid, bool[][] checkeds, 
+        ref int count, int i, int j, int n, int m) {
+        if(i<0 || j<0 || n<=i || m<=j || grid[i][j] == 0 || checkeds[i][j]) {
+            return;
+        }
+        
+        Console.WriteLine(i + ":" + j);
+        checkeds[i][j] = true;
+        count++;
+        
+        regionCount(grid, checkeds, ref count, i-1, j-1, n, m);   
+        regionCount(grid, checkeds, ref count, i-1, j, n, m);   
+        regionCount(grid, checkeds, ref count, i-1, j+1, n, m);   
+        regionCount(grid, checkeds, ref count, i, j-1, n, m);   
+        regionCount(grid, checkeds, ref count, i, j+1, n, m);   
+        regionCount(grid, checkeds, ref count, i+1, j-1, n, m);   
+        regionCount(grid, checkeds, ref count, i+1, j, n, m);   
+        regionCount(grid, checkeds, ref count, i+1, j+1, n, m);           
+    }
+    
+    // Complete the maxRegion function below.
+    static int maxRegion(int[][] grid) {
+        var n = grid.Length;
+        var m = grid[0].Length;
+        var max = 0;
+       
+        var checkeds = new bool[n][];
+        for(var i=0; i<n; i++) {
+            checkeds[i] = new bool[m];
+        }
+        
+        for(var i=0; i<n; i++) {
+            for(var j=0; j<m; j++) {
+                if(grid[i][j] == 0 || checkeds[i][j]) {
+                    continue;
+                }
+                
+                Console.WriteLine("New Area");
+                var count = 0;
+                regionCount(grid, checkeds, ref count, i, j, n, m);  
+                max =Math.Max(max, count);
+            }            
+        }        
+        
+        return max;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int n = Convert.ToInt32(Console.ReadLine());
+
+        int m = Convert.ToInt32(Console.ReadLine());
+
+        int[][] grid = new int[n][];
+
+        for (int i = 0; i < n; i++) {
+            grid[i] = Array.ConvertAll(Console.ReadLine().Split(' '), gridTemp => Convert.ToInt32(gridTemp));
+        }
+
+        int res = maxRegion(grid);
+
+        textWriter.WriteLine(res);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

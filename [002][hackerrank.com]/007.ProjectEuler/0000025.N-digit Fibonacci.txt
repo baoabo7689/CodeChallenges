@@ -1,0 +1,113 @@
+The Fibonacci sequence is defined by the recurrence relation:
+
+.
+Hence the first 12 terms will be: 
+The  term, , is the first term to contain three digits. 
+What is the first term in the Fibonacci sequence to contain  digits?
+
+Input Format
+
+The first line contains an integer  , i.e., number of test cases. 
+Next  lines will contain an integer .
+
+Constraints
+
+ 
+
+Output Format
+
+Print the values corresponding to each test case.
+
+Sample Input
+
+2
+3
+4
+Sample Output
+
+12
+17
+
+======================================================================================================================================================
+
+a = (1 + sqrt[5])/2 = (1.618..)
+b = (1 - sqrt[5])/2 = -0.618
+Fib(n) = (a^n - b^n)/sqrt[5]
+
+a*b = -1
+1 2 3 5 8 13 21 34 55 89 144
+
+
+
+= Math.Log(10^[n-1]*Sqrt(5))/Math/Log(a)
+= Loga[10^[n-1]*Sqrt(5)]
+
+
+[a^x - (-1/a)^x]/sqrt[5] = 10^n
+
+t^2 - (-1)^x = t*10^n*sqrt[5]
+
+t^2 - t*10^n*sqrt[5] - (-1)^x = 0
+
+
+x chẵn: 
+t = (10^n*sqrt[5] +- Sqrt[5*100^n + 4])/2 
+x = loga[(10^n*sqrt[5] +- Sqrt[5*100^n + 4])/2]
+
+x lẽ:
+t = (10^n*sqrt[5] +- Sqrt[5*100^n - 4])/2 
+x = loga[(10^n*sqrt[5] +- Sqrt[5*100^n - 4])/2]
+
+
+
+
+x = loga[10^(n-1)*Sqrt[5]]
+
+
+a^x = 10^(n-1)*Sqrt[5]
+f(x) = [10^(n-1)*Sqrt[5] - (-1)^x /(10^(n-1)*Sqrt[5])]/Sqrt[5]
+= [5*10^(2n-2) - (-1)^x]/[5*10^(n-1)]
+=> f(x) có n chữ số
+
+
+https://www.geeksforgeeks.org/program-find-last-digit-nth-fibonnaci-number/
+https://math.stackexchange.com/questions/355552/computing-first-digits-of-fibonacci-numbers
+
+
+Fib(n) = (a^n - b^n)/sqrt[5]
+do b<1 => n càng lớn b^n càng nhỏ => Fib(n) = Ceil(a^n/sqrt[5])
+log(Fib(n)) = Ceil[(n - log5/2)/loga]
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Numerics;
+
+class Solution {
+    static double a = (1 + Math.Sqrt(5)) / 2;
+    
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var t = int.Parse(Console.ReadLine());   
+        for(var i=0; i<t; i++) {
+            var n = int.Parse(Console.ReadLine());   
+            
+            var result = (long) Math.Ceiling((Math.Log(10) * (n - 1) + Math.Log(5) / 2) / Math.Log(a));
+            Console.WriteLine(result);
+        }  
+    }
+}
+
+
+
+
+
+
+
+
+
+
+

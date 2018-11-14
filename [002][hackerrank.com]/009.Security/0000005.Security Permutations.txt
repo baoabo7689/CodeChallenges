@@ -1,0 +1,79 @@
+Consider a function  where  is any set. 
+If  is a bijection, then  is a permutation function of . There is nothing special about the set . It can be replaced by the set  where .
+
+Consider a permutation  given by . This means that ,  and .
+
+In this task, you're given a permutation .
+
+Output  for all .
+
+Constraints
+
+
+Input Format
+
+There are  lines in the input.
+The first line contains a single positive integer .
+The second line contains  space separated integers, the values of , respectively.
+
+Output Format
+
+On separate lines, output the values of , respectively.
+
+Sample Input
+
+3
+2 3 1
+Sample Output
+
+3
+1
+2
+Explanation
+
+ and so on.
+
+
+
+
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var n = int.Parse(Console.ReadLine());
+        var X = Console.ReadLine()
+            .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(s => int.Parse(s))
+            .ToList();
+        
+        for(var i=0; i<n; i++) {
+            Console.WriteLine(X[X[i]-1]); 
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

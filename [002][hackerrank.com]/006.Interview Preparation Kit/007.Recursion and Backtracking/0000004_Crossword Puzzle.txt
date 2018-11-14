@@ -1,0 +1,493 @@
+A  Crossword grid is provided to you, along with a set of words (or names of places) which need to be filled into the grid. Cells are marked either + or -. Cells marked with a - are to be filled with the word list.
+
+The following shows an example crossword from the input  grid and the list of words to fit, :
+
+Input 	   		Output
+
+++++++++++ 		++++++++++
++------+++ 		+POLAND+++
++++-++++++ 		+++H++++++
++++-++++++ 		+++A++++++
++++-----++ 		+++SPAIN++
++++-++-+++ 		+++A++N+++
+++++++-+++ 		++++++D+++
+++++++-+++ 		++++++I+++
+++++++-+++ 		++++++A+++
+++++++++++ 		++++++++++
+POLAND;LHASA;SPAIN;INDIA
+Function Description
+
+Complete the crosswordPuzzle function in the editor below. It should return an array of strings, each representing a row of the finished puzzle.
+
+crosswordPuzzle has the following parameter(s):
+
+crossword: an array of  strings of length  representing the empty grid
+words: a string consisting of semicolon delimited strings to fit into 
+Input Format
+
+Each of the first  lines represents , each of which has  characters, .
+
+The last line contains a string consisting of semicolon delimited  to fit.
+
+Constraints
+
+ 
+ 
+
+Output Format
+
+Position the words appropriately in the  grid, then return your array of strings for printing.
+
+Sample Input 0
+
++-++++++++
++-++++++++
++-++++++++
++-----++++
++-+++-++++
++-+++-++++
++++++-++++
+++------++
++++++-++++
++++++-++++
+LONDON;DELHI;ICELAND;ANKARA
+Sample Output 0
+
++L++++++++
++O++++++++
++N++++++++
++DELHI++++
++O+++C++++
++N+++E++++
++++++L++++
+++ANKARA++
++++++N++++
++++++D++++
+Sample Input 1
+
++-++++++++
++-++++++++
++-------++
++-++++++++
++-++++++++
++------+++
++-+++-++++
++++++-++++
++++++-++++
+++++++++++
+AGRA;NORWAY;ENGLAND;GWALIOR
+Sample Output 1
+
++E++++++++
++N++++++++
++GWALIOR++
++L++++++++
++A++++++++
++NORWAY+++
++D+++G++++
++++++R++++
++++++A++++
+++++++++++
+Sample Input 2
+
+XXXXXX-XXX
+XX------XX
+XXXXXX-XXX
+XXXXXX-XXX
+XXX------X
+XXXXXX-X-X
+XXXXXX-X-X
+XXXXXXXX-X
+XXXXXXXX-X
+XXXXXXXX-X
+ICELAND;MEXICO;PANAMA;ALMATY
+Sample Output 2
+
+XXXXXXIXXX
+XXMEXICOXX
+XXXXXXEXXX
+XXXXXXLXXX
+XXXPANAMAX
+XXXXXXNXLX
+XXXXXXDXMX
+XXXXXXXXAX
+XXXXXXXXTX
+XXXXXXXXYX
+
+======================================================================================================================================================
+
++-++++++++
++-++++++++
++-++++++++
++-----++++
++-+++-++++
++-+++-++++
++++++-++++
+++------++
++++++-++++
++++++-++++
+
+
+
+6LONDON,ANKARA
+5DELHI
+7ICELAND
+3:1:5:True,7:2:6:True
+
+
+
+
+Console.WriteLine(
+    string.Join("\n", dictCandidates.Select(d => d.Key + string.Join(",", d.Value))));
+
+Console.WriteLine(string.Join(",", 
+	quizz.Select(q => q.Row + ":" + q.Column + ":" + q.Length + ":" + q.IsHorizontal)));
+
+
+
+
+
+
+
+
++-++++++++
++-++++++++
++-------++
++-++++++++
++-++++++++
++------+++
++-+++-++++
++++++-++++
++++++-++++
+++++++++++
+AGRA;NORWAY;ENGLAND;GWALIOR
+
+
+
+candidates=		AGRA,NORWAY,ENGLAND,GWALIOR,
+dictLength=		4,6,7
+fillCount= 		21
+
+
+0:1:7:False,
+2:1:7:True,
+5:1:6:True,
+5:5:4:False
+
+
+0:1:7:False, 	2
+2:1:7:True,		3
+5:1:6:True,		1
+5:5:4:False		0
+
++E++++++++
++N++++++++
++GWALIOR++
++L++++++++
++A++++++++
++NORWAY+++
++D+++G++++
++++++R++++
++++++A++++
+++++++++++
+
+
+0,4,4,1
+0
+
+
+
+if(quizz[0].CandidateIndex == 2 &&
+   quizz[1].CandidateIndex == 3 &&
+   quizz[2].CandidateIndex == 1 &&
+   quizz[3].CandidateIndex == 0) {
+	Console.WriteLine("Test");
+}
+
+
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Filling {
+    public int Row;
+    public int Column;
+    public bool IsHorizontal;   
+    public int Length; 
+    public int CandidateIndex = 0;
+    
+    public Filling(int row, int column, bool isHorizontal, int length) {
+        Row = row;
+        Column = column;
+        IsHorizontal = isHorizontal;
+        Length = length;
+    }
+}
+    
+    
+class Solution {
+    static List<string> GetCandidates(string words, Dictionary<int, bool> dictLength) {
+        var rawCandidates = words.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+        var candidates = new List<string>();        
+        foreach(var candidate in rawCandidates) {
+            if(!dictLength.ContainsKey(candidate.Length)) {
+                dictLength.Add(candidate.Length, true);
+            }
+            
+            candidates.Add(candidate);           
+        }
+        
+        candidates.Add("");
+        return candidates;
+    }
+    
+    static List<Filling> GetFilling(
+        string[] crossword, Dictionary<int, bool> dictLength, ref int fillCount) {
+         var quizz = new List<Filling>();
+        
+        for(var i=0; i<crossword.Length; i++) {
+            var line = crossword[i];
+            
+            for(var j=0; j<line.Length; j++) {
+                if(line[j] != '-') {
+                    continue;
+                }
+                
+                if(line[j] == '-') {
+                    fillCount++;
+                }
+                
+                if(j==0 || line[j-1]!='-') {
+                    // Fill By Row
+                    var m = 0;
+                    for(var k=j; k<line.Length && line[k]=='-'; k++,m++);
+                    if(dictLength.ContainsKey(m)) {
+                        quizz.Add(new Filling(i, j, true, m)); 
+                    }
+                }       
+                
+                if(i==0 || crossword[i-1][j]!='-') {
+                    // Fill By Column
+                    var m = 0;
+                    for(var k=i; k<crossword.Length && crossword[k][j]=='-'; k++,m++);
+                    if(dictLength.ContainsKey(m)) {
+                        quizz.Add(new Filling(i, j, false, m)); 
+                    }
+                }       
+            }
+        }
+        
+        return quizz;        
+    }
+    
+    static bool CanFill(
+        Filling q, char[][] resolved, ref int fillCount, List<string> candidates) {
+        if(q.CandidateIndex == candidates.Count-1) {
+            return true;
+        }
+            
+        var candidate = candidates[q.CandidateIndex];
+         if(candidate.Length != q.Length) {
+            return false;
+        }
+        
+        if(q.IsHorizontal) {
+            var row = resolved[q.Row];
+            var startColumn = q.Column;
+            var endColumn = startColumn+q.Length;
+            int m=0;
+            for(var i=q.Column; i<endColumn; i++,m++) {
+                if(row[i] != '-' && row[i] != candidate[m]) {
+                    return false;
+                }
+                
+                if(row[i] != '-' && row[i] == candidate[m]) {
+                    continue;
+                }
+                
+                resolved[q.Row][i] = candidate[m];
+                fillCount++;
+            }
+            
+            return true;
+        }
+        
+        if(!q.IsHorizontal) {
+            var startRow = q.Row;
+            var endRow = startRow+q.Length;
+            int m=0;
+            for(var i=q.Row; i<endRow; i++,m++) {
+                if(resolved[i][q.Column] != '-' && resolved[i][q.Column] != candidate[m]) {
+                    return false;
+                }
+                
+                if(resolved[i][q.Column] != '-' && resolved[i][q.Column] == candidate[m]) {
+                    continue;
+                }
+                
+                resolved[i][q.Column] = candidate[m];
+                fillCount++;
+            }
+            
+            return true;
+        }
+        
+        //Console.WriteLine(fillCount);
+        return true;
+    }
+    
+    static string[] CanFill(
+        string[] crossword, List<string> candidates, List<Filling> quizz, int fillCount) {  
+        var usedIndices = new Dictionary<int, bool>();
+        
+        for(var i=0; i<quizz.Count; i++) {
+            var q = quizz[i];
+            
+            if(q.CandidateIndex == candidates.Count - 1) {
+                continue;
+            }
+            
+            if(usedIndices.ContainsKey(q.CandidateIndex)) {
+                return null;
+            }
+            
+            usedIndices.Add(q.CandidateIndex, true);
+        }
+             
+        var resolved = new char[crossword.Length][];
+        for(var i=0; i<crossword.Length; i++) {
+            var cr = crossword[i];
+            var r = new char[cr.Length];
+            for(var j=0; j<cr.Length; j++) {
+                r[j] = cr[j];
+            }
+            
+            resolved[i] = r;
+        }
+        
+        var fCount = 0;
+        for(var i=0; i<quizz.Count; i++) {
+            var q = quizz[i];
+            var canFill = CanFill(q, resolved, ref fCount, candidates);
+            if(canFill) {
+                continue;
+            }
+            
+            return null;
+        }
+                 
+        //Console.WriteLine(string.Join(",", quizz.Select(q => q.CandidateIndex)));
+        return fillCount==fCount ? 
+            resolved.ToList().Select(r => string.Join("", r)).ToArray() :
+        null;
+    }
+    
+    // Complete the crosswordPuzzle function below.
+    static string[] crosswordPuzzle(string[] crossword, string words) {   
+        var dictLength = new Dictionary<int, bool>();
+        var candidates = GetCandidates(words, dictLength);
+        // Console.WriteLine(string.Join(",", candidates));
+        // Console.WriteLine(string.Join(",", dictLength.Select(d => d.Key)));
+        
+        var fillCount = 0;
+        var quizz = GetFilling(crossword, dictLength, ref fillCount);  
+        //Console.WriteLine(fillCount);
+        
+        string[] resolved = null;
+        while(true) {
+            resolved = CanFill(crossword, candidates, quizz, fillCount);            
+            if(resolved != null) {
+                break;
+            }
+            
+            var i = quizz.Count-1;
+            for(; i>=0; i--) {
+                var q = quizz[i];
+                if(q.CandidateIndex == candidates.Count-1) {
+                    q.CandidateIndex = 0;
+                    continue;
+                }
+                
+                q.CandidateIndex++;
+                break;
+            }
+            
+
+            if(i < 0) {
+                break;
+            }
+        }
+       
+        return resolved;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string[] crossword = new string [10];
+
+        for (int i = 0; i < 10; i++) {
+            string crosswordItem = Console.ReadLine();
+            crossword[i] = crosswordItem;
+        }
+
+        string words = Console.ReadLine();
+
+        string[] result = crosswordPuzzle(crossword, words);
+
+        textWriter.WriteLine(string.Join("\n", result));
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

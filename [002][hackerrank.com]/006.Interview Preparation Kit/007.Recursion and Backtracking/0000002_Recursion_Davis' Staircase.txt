@@ -1,0 +1,129 @@
+Check out the resources on the page's right side to learn more about recursion and memoization. The video tutorial is by Gayle Laakmann McDowell, author of the best-selling interview book Cracking the Coding Interview.
+
+Davis has a number of staircases in his house and he likes to climb each staircase , , or  steps at a time. Being a very precocious child, he wonders how many ways there are to reach the top of the staircase.
+
+Given the respective heights for each of the  staircases in his house, find and print the number of ways he can climb each staircase, module  on a new line.
+
+For example, there is  staircase in the house that is  steps high. Davis can step on the following sequences of steps:
+
+1 1 1 1 1
+1 1 1 2
+1 1 2 1 
+1 2 1 1
+2 1 1 1
+1 2 2
+2 2 1
+2 1 2
+1 1 3
+1 3 1
+3 1 1
+2 3
+3 2
+There are  possible ways he can take these  steps. 
+
+Function Description
+
+Complete the stepPerms function in the editor below. It should recursively calculate and return the integer number of ways Davis can climb the staircase, modulo 10000000007.
+
+stepPerms has the following parameter(s):
+
+n: an integer, the number of stairs in the staircase
+Input Format
+
+The first line contains a single integer, , the number of staircases in his house. 
+Each of the following  lines contains a single integer, , the height of staircase .
+
+Constraints
+
+Subtasks
+
+ for  of the maximum score.
+Output Format
+
+For each staircase, return the number of ways Davis can climb it as an integer.
+
+Sample Input
+
+3
+1
+3
+7
+Sample Output
+
+1
+4
+44
+Explanation
+
+Let's calculate the number of ways of climbing the first two of the Davis'  staircases:
+
+The first staircase only has  step, so there is only one way for him to climb it (i.e., by jumping  step). Thus, we print on a new line.
+The second staircase has  steps and he can climb it in any of the four following ways: 
+Thus, we print  on a new line.
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+using System.Numerics;
+
+class Solution {
+
+    // Complete the stepPerms function below.
+    static int stepPerms(int n) {        
+        var ways = new  BigInteger[Math.Max(n+1, 4)];
+        ways[1] = 1;
+        ways[2] = 2;
+        ways[3] = 4;
+        
+        for(var i=4; i<=n; i++) {
+            ways[i] = ways[i-1] + ways[i-2] + ways[i-3];
+            Console.WriteLine(string.Join(",", ways));
+        }
+        
+        return (int)(ways[n] % 10000000007);
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int s = Convert.ToInt32(Console.ReadLine());
+
+        for (int sItr = 0; sItr < s; sItr++) {
+            int n = Convert.ToInt32(Console.ReadLine());
+
+            int res = stepPerms(n);
+
+            textWriter.WriteLine(res);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,90 @@
+Objective 
+In this challenge, we practice solving problems based on the Central Limit Theorem. Check out the Tutorial tab for learning materials!
+
+Task 
+A large elevator can transport a maximum of  pounds. Suppose a load of cargo containing  boxes must be transported via the elevator. The box weight of this type of cargo follows a distribution with a mean of  pounds and a standard deviation of  pounds. Based on this information, what is the probability that all  boxes can be safely loaded into the freight elevator and transported?
+
+Input Format
+
+There are  lines of input (shown below):
+
+9800
+49
+205
+15
+The first line contains the maximum weight the elevator can transport. The second line contains the number of boxes in the cargo. The third line contains the mean weight of a cargo box, and the fourth line contains its standard deviation.
+
+If you do not wish to read this information from stdin, you can hard-code it into your program.
+
+Output Format
+
+Print the probability that the elevator can successfully transport all  boxes, rounded to a scale of  decimal places (i.e.,  format).
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    public static double Erf(double x)
+    {    
+        var a1 =  0.254829592;
+        var a2 = -0.284496736;
+        var a3 =  1.421413741;
+        var a4 = -1.453152027;
+        var a5 =  1.061405429;
+        var p  =  0.3275911;
+
+        var sign = 1;
+        if (x < 0) {
+            sign = -1;
+        }
+
+        x = Math.Abs(x);
+
+        var t = 1.0/(1.0 + p*x);
+        var y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.Exp(-x*x);
+
+        return sign*y;
+    }    
+    
+    static double P(double x) {
+        double mean = 205;
+        double standardDeviation = 15;
+        var e = 2.71828;
+        double n = 49;
+        
+        var nMean = n*mean;
+        var nStandardDeviation = Math.Sqrt(n) * standardDeviation;
+                
+        mean = nMean;
+        standardDeviation = nStandardDeviation;
+        
+        var result = 0.5*(1 + Erf((x - mean)/(standardDeviation*Math.Sqrt(2))));
+        
+        return result;
+    }
+        
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        Console.WriteLine(P(9800).ToString("0.####")); 
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

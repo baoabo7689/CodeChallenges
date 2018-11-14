@@ -1,0 +1,40 @@
+Here is a sample line of code that can be executed in Python:
+
+print("Hello, World!")
+You can just as easily store a string as a variable and then print it to stdout:
+
+my_string = "Hello, World!"
+print(my_string)
+The above code will print Hello, World! on your screen. Try it yourself in the editor below!
+
+Input Format
+
+You do not need to read any input in this challenge.
+
+Output Format
+
+Print Hello, World! to stdout.
+
+Sample Output 0
+
+Hello, World!
+
+======================================================================================================================================================
+
+Objective 
+This is a simple challenge to help you practice creating variables and printing to stdout. You may also want to complete Solve Me First in Python before attempting this challenge.
+
+Python is an interpreted, dynamic programming language that allows us to execute statements individually and see their results. In other words, you don't have to write and compile an entire program to see the results of your code like you would in some other languages like C++ and Java.
+
+Note: You may also want to check out this Python Style Guide for guidance on variable naming.
+
+
+
+======================================================================================================================================================
+print "Hello HackerRank!!"
+
+
+
+
+
+

@@ -1,0 +1,103 @@
+Objective 
+Today, we're learning about the Array data structure. Check out the Tutorial tab for learning materials and an instructional video!
+
+Task 
+Given an array, , of  integers, print 's elements in reverse order as a single line of space-separated numbers.
+
+Input Format
+
+The first line contains an integer,  (the size of our array). 
+The second line contains  space-separated integers describing array 's elements.
+
+Constraints
+
+, where  is the  integer in the array.
+Output Format
+
+Print the elements of array  in reverse order as a single line of space-separated numbers.
+
+Sample Input
+
+4
+1 4 3 2
+Sample Output
+
+2 3 4 1
+
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+    static void Main(string[] args) {
+        int n = Convert.ToInt32(Console.ReadLine());
+
+        int[] arr = Array.ConvertAll(Console.ReadLine().Split(' '), arrTemp => Convert.ToInt32(arrTemp));
+        Console.WriteLine(string.Join(" ", arr.Reverse())); 
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

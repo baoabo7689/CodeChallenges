@@ -1,0 +1,210 @@
+We define the following:
+
+A subarray of array  of length  is a contiguous segment from  through  where .
+The sum of an array is the sum of its elements.
+Given an  element array of integers, , and an integer, , determine the maximum value of the sum of any of its subarrays modulo . For example, Assume  and . The following table lists all subarrays and their moduli:
+
+		sum	%2
+[1]		1	1
+[2]		2	0
+[3]		3	1
+[1,2]		3	1
+[2,3]		5	1
+[1,2,3]		6	0
+The maximum modulus is .
+
+Function Description
+
+Complete the maximumSum function in the editor below. It should return a long integer that represents the maximum value of .
+
+maximumSum has the following parameter(s):
+
+a: an array of long integers, the array to analyze
+m: a long integer, the modulo divisor
+Input Format
+
+The first line contains an integer , the number of queries to perform.
+
+The next  pairs of lines are as follows:
+
+The first line contains two space-separated integers  and (long), the length of  and the modulo divisor.
+The second line contains  space-separated long integers .
+Constraints
+
+ the sum of  over all test cases 
+Output Format
+
+For each query, return the maximum value of  as a long integer.
+
+Sample Input
+
+1
+5 7
+3 3 9 9 5
+Sample Output
+
+6
+Explanation
+
+The subarrays of array  and their respective sums modulo  are ranked in order of length and sum in the following list:
+
+ and  
+ and  
+ 
+ 
+ 
+ 
+ 
+ 
+The maximum value for  for any subarray is .
+
+======================================================================================================================================================
+
+(s[b] - s[a])%M max 
+
+s[a2] > s[a1] > s[b]
+(s[b] - s[a2])%M  = (M + s[b] - s[a2]) = M + s[b] - s[a1] - k 
+=> max khi k=0, a2=a1 
+
+s[a1] < s[a2] < s[b] => max khi a=a2 
+s[a1] < b < s[a2]
+b-s[a1] vs M + b - s[a2]
+M + s[a1] - s[a2] => max vs a=a2 
+=> first a2 > b or last a1 < b
+
+
+
+
+=> sort prefixSum: 
+
+b1 < b2 < b3
+a1 < a2 > a3
+M + b2 - b3 > M + b1 - b3
+
+
+
+5 7
+3 3 9 9 5
+
+0,3,6,1,3,1
+0,1,2,3,4,5
+
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class PSum {
+    public long val;
+    public int index;
+}
+
+class Solution {
+
+    // Complete the maximumSum function below.
+    static long maximumSum(long[] a, long m) {
+        var n = a.Length;
+        var prefixSum = new List<PSum>();
+        prefixSum.Add(new PSum { val=0, index=0 });
+        
+        long result = 0;
+        for(var i=1; i<=n; i++) {
+            var s = (prefixSum[i-1].val + a[i-1]) % m;
+            result = Math.Max(result, s);
+            prefixSum.Add(new PSum { val=s, index=i });
+        }
+        
+        prefixSum = prefixSum.OrderBy(p => p.val).ToList();
+        //Console.WriteLine(string.Join(",", prefixSum.Select(p=>p.val)));
+        //Console.WriteLine(string.Join(",", prefixSum.Select(p=>p.index)));
+        
+        for(var i=1; i<=n; i++) {
+            if(prefixSum[i].index > prefixSum[i-1].index) {
+                continue;
+            }
+            
+            result = Math.Max(result, m + prefixSum[i-1].val - prefixSum[i].val);
+        }
+        
+        
+        return result;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int q = Convert.ToInt32(Console.ReadLine());
+
+        for (int qItr = 0; qItr < q; qItr++) {
+            string[] nm = Console.ReadLine().Split(' ');
+
+            int n = Convert.ToInt32(nm[0]);
+
+            long m = Convert.ToInt64(nm[1]);
+
+            long[] a = Array.ConvertAll(Console.ReadLine().Split(' '), aTemp => Convert.ToInt64(aTemp))
+            ;
+            long result = maximumSum(a, m);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+

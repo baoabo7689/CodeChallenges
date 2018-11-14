@@ -1,0 +1,126 @@
+You can perform the following operations on the string, :
+
+Capitalize zero or more of 's lowercase letters.
+Delete all of the remaining lowercase letters in .
+Given two strings,  and , determine if it's possible to make  equal to  as described. If so, print YES on a new line. Otherwise, print NO.
+
+For example, given  and , in  we can convert  and delete  to match . If  and , matching is not possible because letters may only be capitalized or discarded, not changed.
+
+Function Description
+
+Complete the function  in the editor below. It must return either  or .
+
+abbreviation has the following parameter(s):
+
+a: the string to modify
+b: the string to match
+Input Format
+
+The first line contains a single integer , the number of queries.
+
+Each of the next  pairs of lines is as follows: 
+- The first line of each query contains a single string, . 
+- The second line of each query contains a single string, .
+
+Constraints
+
+String  consists only of uppercase and lowercase English letters, ascii[A-Za-z].
+String  consists only of uppercase English letters, ascii[A-Z].
+Output Format
+
+For each query, print YES on a new line if it's possible to make string  equal to string . Otherwise, print NO.
+
+Sample Input
+
+1
+daBcd
+ABC
+Sample Output
+
+YES
+Explanation
+
+image
+
+We have  daBcd and  ABC. We perform the following operation:
+
+Capitalize the letters a and c in  so that  dABCd.
+Delete all the remaining lowercase letters in  so that  ABC.
+Because we were able to successfully convert  to , we print YES on a new line.
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the maxSubsetSum function below.
+    static int maxSubsetSum(int[] arr) {
+        var n = arr.Length;
+        if(n == 1) {
+            return arr[0];
+        }
+        
+        var maxes = new int[n];
+        maxes[0] = arr[0] < 0 ? 0 : arr[0];
+        maxes[1] = arr[1] < 0 ? 0 : arr[1];
+        maxes[2] = arr[2] < 0 ? maxes[0] : arr[2] + maxes[0];
+        if(n == 2) {
+            return Math.Max(Math.Max(maxes[0], maxes[1]), maxes[2]);
+        }
+          
+        var result = 0;
+        
+        for(var i=3; i<n; i++) {
+            maxes[i] = Math.Max(
+                maxes[i-2] + (arr[i] < 0 ? 0 : arr[i]),
+                maxes[i-3] + (arr[i] < 0 ? 0 : arr[i]));
+            result = Math.Max(result, maxes[i]);
+        }
+        
+        //Console.WriteLine(string.Join(",", maxes));
+        
+        return result;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int n = Convert.ToInt32(Console.ReadLine());
+
+        int[] arr = Array.ConvertAll(Console.ReadLine().Split(' '), arrTemp => Convert.ToInt32(arrTemp))
+        ;
+        int res = maxSubsetSum(arr);
+
+        textWriter.WriteLine(res);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+

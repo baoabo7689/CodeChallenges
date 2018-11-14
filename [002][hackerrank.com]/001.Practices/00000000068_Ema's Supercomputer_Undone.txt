@@ -1,0 +1,310 @@
+Ema built a quantum computer! Help her test its capabilities by solving the problem below.
+
+Given a grid of size , each cell in the grid is either or .
+
+A valid plus is defined here as the crossing of two segments (horizontal and vertical) of equal lengths. These lengths must be odd, and the middle cell of its horizontal segment must cross the middle cell of its vertical segment.
+
+In the diagram below, the blue pluses are valid and the orange ones are not valid. [pluseses.png]
+
+Find the two largest valid pluses that can be drawn on cells in the grid, and return an integer denoting the maximum product of their areas. In the above diagrams, our largest pluses have areas of and . The product of their areas is .
+
+Note: The two pluses cannot overlap, and the product of their areas should be maximal.
+
+Input Format
+
+The first line contains two space-separated integers, and .
+Each of the next lines contains a string of characters where each character is either G () or B (). These strings represent the rows of the grid. If the character in the line is G, then is a cell. Otherwise it's a cell.
+
+Constraints
+
+
+
+Output Format
+
+Find pluses that can be drawn on cells of the grid, and return an integer denoting the maximum product of their areas.
+
+Sample Input 0
+
+5 6
+GGGGGG
+GBBBGB
+GGGGGG
+GGBBGB
+GGGGGG
+
+Sample Output 0
+
+5
+
+Sample Input 1
+
+6 6
+BGBBGB
+GGGGGG
+BGBBGB
+GGGGGG
+BGBBGB
+BGBBGB
+
+Sample Output 1
+
+25
+
+Explanation
+
+Here are two possible solutions for Sample 1 (left) and Sample 2 (right): [plusss.png]
+
+Explanation Key:
+
+    Green: cell
+    Red: cell
+    Blue: possible .
+
+For the explanation below, we will refer to a plus of length as .
+
+Sample 0
+There is enough good space to color one plus and one plus. , and . The product of their areas is .
+
+Sample 1
+There is enough good space to color two pluses. . The product of the areas of our two pluses is .
+
+
+
+
+======================================================================================================================================================
+GGGGGG
+GBBBGB
+GGGGGG
+GGBBGB
+GGGGGG
+
+
+Left
+0,0,0,0,0,0
+0,-1,-1,-1,4,-1
+0,0,0,0,0,0
+0,0,-1,-1,4,-1
+0,0,0,0,0,0
+
+Right 
+5,5,5,5,5,5
+0,-1,-1,-1,4,-1
+5,5,5,5,5,5
+1,1,-1,-1,4,-1
+5,5,5,5,5,5
+
+
+Top 
+0,0,0,0,0,0
+0,-1,-1,-1,0,-1
+0,1,2,3,0,5
+0,1,-1,-1,0,-1
+0,1,2,3,0,5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the twoPluses function below.
+    static char BadCell = 'B';
+    static char GoodCell = 'G';
+    class CellLength {
+        public int Left {get; set;}
+        public int Right {get; set;}
+        public int Top {get; set;}
+        public int Bottom {get; set;}
+        public char Value {get; set;}
+        
+        public int MaxLength {get; set;}
+    }
+    
+    static int twoPluses(string[] grid) {
+        var n = grid.Length;
+        var m = grid[0].Length;
+        var lengthGrid = new dynamic[n][];
+        for(var i=0; i<n; i++) {
+            var temp = new dynamic[m];
+            for(var j=0; j<m; j++) {
+                if(grid[i][j] == BadCell) {
+                    temp[j] = new CellLength{  Left=-1, Right=-1, Top=-1, Bottom=-1, Value=BadCell };                    
+                } else {                    
+                    temp[j] = new CellLength{  Left=0, Right=m-1, Top=0, Bottom=n-1, Value=GoodCell };
+                }
+            }
+            
+            lengthGrid[i] = temp;
+        }
+        
+        for(var i=0; i<n; i++) {
+            var row = grid[i];
+            for(var j=1; j<m; j++) {
+                if(row[j] == BadCell) {
+                    lengthGrid[i][j].Left = -1;
+                    continue;
+                }
+                
+                if(grid[i][j-1] == BadCell) {
+                    lengthGrid[i][j].Left = j;
+                    continue;
+                }
+                
+                lengthGrid[i][j].Left = lengthGrid[i][j-1].Left;
+            }   
+            
+            for(var j=m-2; j>=0; j--) {
+                if(row[j] == BadCell) {
+                    lengthGrid[i][j].Right = -1;
+                    continue;
+                }
+                
+                if(grid[i][j+1] == BadCell) {
+                    lengthGrid[i][j].Right = j;
+                    continue;
+                }
+                
+                lengthGrid[i][j].Right = lengthGrid[i][j+1].Right;
+            }   
+        }
+     
+        for(var i=0; i<m; i++) {
+            for(var j=1; j<n; j++) {
+                if(grid[j][i] == BadCell) {
+                    lengthGrid[j][i].Top = -1;
+                    continue;
+                }
+                                
+                if(grid[j-1][i] == BadCell) {
+                    lengthGrid[j][i].Top = j;
+                    continue;
+                }
+                
+                lengthGrid[j][i].Top = lengthGrid[j-1][i].Top;
+            }
+            
+            for(var j=n-2; j>=0; j--) {
+                if(grid[j][i] == BadCell) {
+                    lengthGrid[j][i].Bottom = -1;
+                    continue;
+                }
+                
+                if(grid[j+1][i] == BadCell) {
+                    lengthGrid[j][i].Bottom = j;
+                    continue;
+                }
+                
+                lengthGrid[j][i].Bottom = lengthGrid[j+1][i].Bottom;
+            }
+        }
+        
+        var maxLength = 0;
+        var maxLengthCount = 0;
+        
+        for(var i=0; i<n; i++) {
+            for(var j=0; j<m; j++) {
+                var cell = lengthGrid[i][j];
+                if(cell.Value == BadCell) {
+                    continue;                    
+                }
+                
+                var topL = i - cell.Top;
+                var rightL = cell.Right - j;
+                var bottomL = cell.Bottom - i;
+                var leftL = j - cell.Left;
+                var min = Math.Min(topL, rightL);
+                min = Math.Min(min, bottomL);
+                min = Math.Min(min, leftL);
+                
+                cell.MaxLength = min*4 + 1;
+                maxLength = Math.Max(maxLength, cell.MaxLength);
+            }
+        }
+        
+        for(var i=0; i<n; i++) {
+           Console.WriteLine(string.Join(",",  lengthGrid[i].Select(c => c.Top)));
+        }
+        
+        var secondMax = 0;
+        for(var i=0; i<n; i++) {
+            for(var j=0; j<m; j++) {
+                var cell = lengthGrid[i][j];
+                if(cell.Value == BadCell) {
+                    continue;                    
+                }
+                
+               if(cell.MaxLength == maxLength) {
+                   maxLengthCount++;
+                   continue;
+               }
+                
+                secondMax = Math.Max(secondMax, cell.MaxLength);
+            }
+        }
+        
+        if(maxLengthCount >= 2) {
+            return maxLength*maxLength;
+        }
+        
+        return maxLength*secondMax;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string[] nm = Console.ReadLine().Split(' ');
+
+        int n = Convert.ToInt32(nm[0]);
+
+        int m = Convert.ToInt32(nm[1]);
+
+        string[] grid = new string [n];
+
+        for (int i = 0; i < n; i++) {
+            string gridItem = Console.ReadLine();
+            grid[i] = gridItem;
+        }
+
+        int result = twoPluses(grid);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+

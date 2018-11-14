@@ -1,0 +1,148 @@
+A string is said to be a special palindromic string if either of two conditions is met:
+
+All of the characters are the same, e.g. aaa.
+All characters except the middle one are the same, e.g. aadaa.
+A special palindromic substring is any substring of a string which meets one of those criteria. Given a string, determine how many special palindromic substrings can be formed from it.
+
+For example, given the string , we have the following special palindromic substrings: .
+
+Function Description
+
+Complete the substrCount function in the editor below. It should return an integer representing the number of special palindromic substrings that can be formed from the given string.
+
+substrCount has the following parameter(s):
+
+n: an integer, the length of string s
+s: a string
+Input Format
+
+The first line contains an integer, , the length of . 
+The second line contains the string .
+
+Constraints
+
+ 
+Each character of the string is a lowercase alphabet, .
+
+Output Format
+
+Print a single line containing the count of total special palindromic substrings.
+
+Sample Input 0
+
+5
+asasd
+Sample Output 0
+
+7 
+Explanation 0
+
+The special palindromic substrings of  are 
+
+Sample Input 1
+
+7
+abcbaba
+Sample Output 1
+
+10 
+Explanation 1
+
+The special palindromic substrings of  are 
+
+Sample Input 2
+
+4
+aaaa
+Sample Output 2
+
+10
+Explanation 2
+
+The special palindromic substrings of  are 
+
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the substrCount function below.
+    static long substrCount(int n, string s) {
+        var freqs = new List<dynamic>();
+        long result = 0;
+        for(var i=0; i<s.Length;) {
+            var c = s[i];
+            var f = 0;
+            for(var j=i; j<s.Length && s[j] == c; j++, f++, i++);
+            
+            freqs.Add(new { v=c, freq= f});
+            result += f*(f+1)/2;
+        }
+        
+        for(var i=1; i<freqs.Count-1; i++) {
+            if(freqs[i].freq != 1 || freqs[i-1].v != freqs[i+1].v) {
+                continue;
+            }
+            
+            var min = Math.Min(freqs[i-1].freq, freqs[i+1].freq);
+            result += min;
+        }
+        
+        return result;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int n = Convert.ToInt32(Console.ReadLine());
+
+        string s = Console.ReadLine();
+
+        long result = substrCount(n, s);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

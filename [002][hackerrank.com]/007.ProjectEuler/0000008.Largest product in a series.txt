@@ -1,0 +1,112 @@
+Find the greatest product of  consecutive digits in the  digit number.
+
+Input Format
+
+First line contains  that denotes the number of test cases. 
+First line of each test case will contain two integers  & . 
+Second line of each test case will contain a  digit integer.
+
+Constraints
+
+Output Format
+
+Print the required answer for each test case.
+
+Sample Input 0
+
+2
+10 5
+3675356291
+10 5
+2709360626
+Sample Output 0
+
+3150
+0
+Explanation 0
+
+For  and selecting  consequetive digits, we have , , , , and . Where  gives maximum product as 
+For ,  lies in all selection of  consequetive digits hence maximum product remains 
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+class Solution {
+
+    static void Main(String[] args) {
+        int t = Convert.ToInt32(Console.ReadLine());
+        for(int a0 = 0; a0 < t; a0++){
+            string[] tokens_n = Console.ReadLine().Split(' ');
+            int n = Convert.ToInt32(tokens_n[0]);
+            int k = Convert.ToInt32(tokens_n[1]);
+            string num = Console.ReadLine();
+            
+            Console.WriteLine(MaxProduct(num, k));
+        }
+    }
+    
+     static BigInteger MaxProduct(string num, int k) {
+        var zeroIndices = new List<int>();
+        for(var i=0; i<num.Length; i++) {
+           if(num[i] == '0') {
+               zeroIndices.Add(i);
+           }
+        }
+
+        BigInteger result;
+        if(zeroIndices.Any()) {
+            if(zeroIndices[0] != 0) {
+                var v = MaxProductWithoutZero(num.Substring(0, zeroIndices[0]), k);
+                result = result < v ? v : result;
+            }
+
+            if(zeroIndices[zeroIndices.Count-1] != 0) {
+                var v = MaxProductWithoutZero(num.Substring(zeroIndices[zeroIndices.Count-1] + 1), k);
+                result = result < v ? v : result;
+            }
+
+            for(var i=1; i<zeroIndices.Count; i++) {
+                var length = zeroIndices[i] - zeroIndices[i-1];
+                var v = MaxProductWithoutZero(num.Substring(zeroIndices[i-1]+1, length - 1), k);
+                 result = result < v ? v : result;
+           }
+        } else {
+            result = MaxProductWithoutZero(num, k);  
+        }
+            
+         return result;
+     }
+    
+    static BigInteger MaxProductWithoutZero(string num, int k) {
+        //Console.WriteLine(num);
+        if(num.Length < k) {
+            return 0;
+        }
+        
+        BigInteger initProduct = 1;
+        for(var i=0; i<k; i++) {
+            initProduct *= (num[i] - '0');
+        }
+        
+        var result = initProduct;
+        for(var i=k; i<num.Length; i++) {
+            //Console.WriteLine("initProduct: " + initProduct + "-" + num[i-1]);
+            initProduct /= (num[i-k] - '0');
+            initProduct *= (num[i] - '0');
+            result = result < initProduct ? initProduct : result;
+        }
+        
+        return result;
+    }
+    
+}
+

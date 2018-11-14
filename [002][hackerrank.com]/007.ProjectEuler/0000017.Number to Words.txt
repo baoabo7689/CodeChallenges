@@ -1,0 +1,113 @@
+The numbers  to  written out in words are 
+
+First character of each word will be capital letter for example: 
+ is
+
+Given a number, you have to write it in words.
+
+Input Format
+
+The first line contains an integer , i.e., number of test cases. 
+Next  lines will contain an integer .
+
+Constraints
+
+Output Format
+
+Print the values corresponding to each test case.
+
+Sample Input
+
+2
+10
+17
+Sample Output
+
+Ten
+Seventeen
+Explanation
+
+Follow the rules given in statement.
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+     static readonly string[] ones = new string[] { "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" };
+    static readonly string[] teens = new string[] { "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" };
+    static readonly string[] tens = new string[] { "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" };
+    static readonly string[] thousandsGroups = { "", " Thousand", " Million", " Billion" };
+
+    
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        int t= Convert.ToInt32(Console.ReadLine());  
+        var max = Math.Pow(10, 12);
+        
+        for(int a0 = 0; a0 < t; a0++) {
+            long n= long.Parse(Console.ReadLine());
+            if(n == max) {
+                Console.WriteLine("One Trillion");
+                continue;
+            }
+            
+            if(n == 0) {
+                Console.WriteLine("Zero");
+                continue;
+            }         
+            
+            var parts = new long[4];
+            var n1 = n;
+            for(var i=0; i<4; i++) {
+                parts[i] = n1%1000;
+                n1 /= 1000;
+            }
+            
+            //Console.WriteLine(string.Join(",", parts));
+            var nParts = new List<string>();            
+            for(var i=3; i>=0; i--) {
+                var p = parts[i];
+                if(p == 0) {
+                    continue;
+                }
+                                     
+                if(p >= 100) {
+                    nParts.Add(ones[p/100] + " Hundred");
+                }
+                
+                p = p % 100;
+                if(p < 10) {
+                    nParts.Add(ones[p] + thousandsGroups[i]);
+                    continue;
+                } 
+                
+                if(p < 20) {
+                    nParts.Add(teens[p-10] + thousandsGroups[i]);
+                    continue;
+                }
+                               
+                nParts.Add(tens[p/10 - 2] + (p%10 == 0 ? "" : " " + ones[p%10]) + thousandsGroups[i]);  
+            }
+            
+            Console.WriteLine(string.Join(" ", nParts));
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+

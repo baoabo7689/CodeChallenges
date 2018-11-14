@@ -1,0 +1,86 @@
+Now that we know about one-to-one functions, let's talk about onto functions and bijective functions.
+
+A function  is onto if and only if each element in the co-domain  is the image of, at least, one element in the domain . That is:
+
+
+If the function  is both one-to-one and onto then  is a bijection from  to  or, equivalently,  is a bijective function.
+
+In this task, you'll be given an integer  and a function  where . Determine whether the given function is a bijective function or not.
+
+Constraints
+
+
+Input Format
+
+There are  lines in the input. 
+The first line contains a single positive integer . 
+The second line contains  space separated integers, the values of , respectively.
+
+Output Format
+
+On a single line, output "YES" if  is bijective. Otherwise, output "NO".
+
+Sample Input
+
+3
+1 2 3
+Sample Output
+
+YES
+Explanation
+
+Basically, this is the function .
+
+
+
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var n = int.Parse(Console.ReadLine());
+        var X = Console.ReadLine()
+            .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(s => int.Parse(s))
+            .ToList();
+        var g = new int[n+1];
+        var i=0;
+        for(; i<n; i++) {
+            if(g[X[i]] != 0) {
+                Console.WriteLine("NO");
+                break;
+            }
+            
+            g[X[i]] = i+1;        
+        }
+        
+        if(i == n) {
+            Console.WriteLine("YES");            
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

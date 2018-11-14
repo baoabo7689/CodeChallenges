@@ -1,0 +1,266 @@
+In this challenge, there is a connected undirected graph where each of the nodes is a color. Given a color, find the shortest path connecting any two nodes of that color. Each edge has a weight of . If there is not a pair or if the color is not found, print .
+
+For example, given , and  edges  and  and colors for each node are  we can draw the following graph:
+
+image
+
+Each of the nodes is labeled [node]/[color] and is colored appropriately. If we want the shortest path between color , blue, we see there is a direct path between nodes  and . For green, color , we see the path length  from . There is no pair for node  having color , red.
+
+Function Description
+
+Complete the findShortest function in the editor below. It should return an integer representing the length of the shortest path between two nodes of the same color, or  if it is not possible.
+
+findShortest has the following parameter(s):
+
+g_nodes: an integer, the number of nodes
+g_from: an array of integers, the start nodes for each edge
+g_to: an array of integers, the end nodes for each edge
+ids: an array of integers, the color id per node
+val: an integer, the id of the color to match
+Input Format
+
+The first line contains two space-separated integers  and , the number of nodes and edges in the graph. 
+Each of the next  lines contains two space-separated integers  and , the nodes connected by an edge. 
+The next line contains  space-seperated integers, , representing the color id of each node from  to . 
+The last line contains the id of the color to analyze.
+
+Note: The nodes are indexed from  to .
+
+Constraints
+
+ 
+ 
+
+Output Format
+
+Print the single integer representing the smallest path length or .
+
+Sample Input 0
+
+4 3
+1 2
+1 3
+4 2
+1 2 1 1 
+1
+Sample Output 0
+
+1 
+Explanation 0
+
+image
+
+In the above image the distance between the closest nodes having color label  is .
+
+Sample Input 1
+
+4 3
+1 2
+1 3
+4 2
+1 2 3 4
+2
+Sample Output 1
+
+-1 
+Explanation 1
+
+image
+
+Sample Input 2
+
+5 4
+1 2
+1 3
+2 4
+3 5
+1 2 3 3 2
+2
+Sample Output 2
+
+3
+Explanation 2
+
+image
+
+
+======================================================================================================================================================
+
+We can use the brute-force approach to find the answer by using an observation and easy pruning.
+
+For each node of the graph having the color as of the given input, apply the breadth first search on the graph and terminate it when you have found another node of the same color(It will be the closest node for this node).
+
+The answer will be the minimum value from all these bfs calls. If no node pair found or no bfs call occur then answer will be .
+
+As the number of the given color node increases, so does the bfs calls but each bfs call will also terminate early because more number of same color nodes implies earlier discovery of the node so this approach will not exceed the time limit.
+
+
+
+5 4
+1 2
+1 3
+2 4
+3 5
+1 2 3 3 2
+2
+
+
+Console.WriteLine(next + ":" +
+				 usedNodes.ContainsKey(next) + ":" +
+				 nodes.ContainsKey(next) + ":" +
+				 nodes[next].Color);
+				 
+Expected: 2
+1:False:True:-1
+4:False:True:-1
+2:False:True:2
+Min: 2
+Expected: 5
+3:False:True:-1
+1:False:True:-1
+5:False:True:2
+Min: 2
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Node {
+    public int Id;  
+    public int Color = -1;   
+    public List<int> Relations = new List<int>();
+}
+
+class Solution {
+
+    // Complete the findShortest function below.
+    /*
+     * For the unweighted graph, <name>:
+     *
+     * 1. The number of nodes is <name>Nodes.
+     * 2. The number of edges is <name>Edges.
+     * 3. An edge exists between <name>From[i] to <name>To[i].
+     *
+     */
+    static int findShortest(int graphNodes, int[] graphFrom, int[] graphTo, long[] ids, int val) {
+        // solve here
+        if(ids.ToList().Count(id => id==val) < 2) {
+            return -1;
+        }
+        
+       var nodes = new Dictionary<int, Node>();
+        var m = graphFrom.Length;
+        for(var i=0; i<m; i++) {
+            var f = graphFrom[i];
+            var t = graphTo[i];
+            if(!nodes.ContainsKey(f)) {
+                nodes.Add(f, new Node { Id = f });             
+            } 
+            
+            if(!nodes.ContainsKey(t)) {
+                nodes.Add(t, new Node { Id = t });       
+            }
+            
+            nodes[f].Relations.Add(t);   
+            nodes[t].Relations.Add(f);   
+        }
+        
+        var expectedNodes = new List<Node>();
+        for(var i=0; i<ids.Length; i++) {
+            if(ids[i] == val && nodes.ContainsKey(i+1)) {
+                nodes[i+1].Color = val;
+                expectedNodes.Add(nodes[i+1]);
+            }
+        }        
+        
+        var min = graphNodes;
+        foreach(var expectedNode in expectedNodes) {
+            var nexts = expectedNode.Relations; 
+            var length = 1;
+            var usedNodes = new Dictionary<int, bool>();
+            var hasPath = false;
+            
+            //Console.WriteLine("Expected: " + expectedNode.Id);
+            usedNodes.Add(expectedNode.Id, true);
+            while(nexts.Count > 0) {
+                var t = new  List<int>();
+                var i=0;
+                for(; i<nexts.Count; i++) {
+                    var next = nexts[i];                    
+                    if(usedNodes.ContainsKey(next) || !nodes.ContainsKey(next)) {
+                        continue;
+                    }
+                    
+                    if(nodes[next].Color == val) {
+                        hasPath = true;
+                        break;
+                    }       
+                    
+                    for(var j=0; j<nodes[next].Relations.Count; j++) {
+                        t.Add(nodes[next].Relations[j]);                        
+                    }
+                    
+                    usedNodes.Add(next, true);
+                }
+                
+                if(hasPath) {
+                    break;
+                }
+                
+                length++;
+                nexts = t;
+            }
+            
+            min = hasPath ? Math.Min(min, length) : min;
+            //Console.WriteLine("Min: " + min + ":" + hasPath);
+        }               
+        
+        return min;  
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string[] graphNodesEdges = Console.ReadLine().Trim().Split(' ');
+        int graphNodes = Convert.ToInt32(graphNodesEdges[0]);
+        int graphEdges = Convert.ToInt32(graphNodesEdges[1]);
+
+        int[] graphFrom = new int[graphEdges];
+        int[] graphTo = new int[graphEdges];
+
+        for (int i = 0; i < graphEdges; i++) {
+            string[] graphFromTo = Console.ReadLine().Trim().Split(' ');
+            graphFrom[i] = Convert.ToInt32(graphFromTo[0]);
+            graphTo[i] = Convert.ToInt32(graphFromTo[1]);
+        }
+
+        long[] ids = Array.ConvertAll(Console.ReadLine().Trim().Split(' '), idsTemp => Convert.ToInt64(idsTemp))
+        ;
+        int val = Convert.ToInt32(Console.ReadLine().Trim());
+
+        int ans = findShortest(graphNodes, graphFrom, graphTo, ids, val);
+
+        textWriter.WriteLine(ans);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+

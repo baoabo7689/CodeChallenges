@@ -1,0 +1,76 @@
+This problem is a programming version of Problem 16 from projecteuler.net
+
+ and the sum of its digits is .
+
+What is the sum of the digits of the number  ?
+
+Input Format
+
+The first line contains an integer , i.e., number of test cases. 
+Next  lines will contain an integer .
+
+Constraints
+
+Output Format
+
+Print the values corresponding to each test case.
+
+Sample Input
+
+3
+3
+4
+7
+Sample Output
+
+8
+7
+11
+Explanation
+
+, sum of digits is .
+, sum of digits is .
+, sum of digits is .
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Numerics;
+using System.Linq;
+
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        int t= Convert.ToInt32(Console.ReadLine());        
+        for(int a0 = 0; a0 < t; a0++) {
+            int n= Convert.ToInt32(Console.ReadLine());
+            BigInteger p = 1;
+            for(var i=0; i<n; i++) {
+                p*=2;
+            }
+            
+            Console.WriteLine(p.ToString().Sum(c => c-'0'));
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,77 @@
+Before we jump into security concepts, let us familiarize ourselves with the mathematical background required for it.
+
+Set  is a collection of elements. Here,  is one such example. A collection of integers is also a set.
+
+Given two sets,  and , we define a function  that maps every element in  to precisely  element in .
+
+If  and , the function  will return:
+
+,  and .
+
+Let us define a function , where  and . 
+Here,  is defined as the remainder of  when divided by .
+
+Your task is to complete the function that takes the input  and returns 
+
+Constraints
+
+
+======================================================================================================================================================
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the calculate function below.
+    static int calculate(int x) {
+        return x%11;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int x = Convert.ToInt32(Console.ReadLine());
+
+        int result = calculate(x);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

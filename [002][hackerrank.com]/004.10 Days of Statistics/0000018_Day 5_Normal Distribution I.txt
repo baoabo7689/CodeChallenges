@@ -1,0 +1,103 @@
+Objective 
+In this challenge, we learn about normal distributions. Check out the Tutorial tab for learning materials!
+
+Task 
+In a certain plant, the time taken to assemble a car is a random variable, , having a normal distribution with a mean of hours and a standard deviation of  hours. What is the probability that a car can be assembled at this plant in:
+
+Less than  hours?
+Between  and  hours?
+Input Format
+
+There are  lines of input (shown below):
+
+20 2
+19.5
+20 22
+The first line contains  space-separated values denoting the respective mean and standard deviation for . The second line contains the number associated with question . The third line contains  space-separated values describing the respective lower and upper range boundaries for question .
+
+If you do not wish to read this information from stdin, you can hard-code it into your program.
+
+Output Format
+
+There are two lines of output. Your answers must be rounded to a scale of  decimal places (i.e.,  format):
+
+On the first line, print the answer to question  (i.e., the probability that a car can be assembled in less than  hours).
+On the second line, print the answer to question  (i.e., the probability that a car can be assembled in between  to hours).
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    /// <summary>
+/// Returns the value of the gaussian error function at <paramref name="x"/>.
+/// </summary>
+public static double Erf(double x)
+{    
+    var a1 =  0.254829592;
+    var a2 = -0.284496736;
+    var a3 =  1.421413741;
+    var a4 = -1.453152027;
+    var a5 =  1.061405429;
+    var p  =  0.3275911;
+
+    var sign = 1;
+    if (x < 0) {
+        sign = -1;
+    }
+    
+    x = Math.Abs(x);
+
+    var t = 1.0/(1.0 + p*x);
+    var y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.Exp(-x*x);
+
+    return sign*y;
+}    
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        
+        Console.WriteLine(P(19.5).ToString("0.###")); 
+        Console.WriteLine((P(22) - P(20)).ToString("0.###"));         
+    }
+    
+    static double P(double x) {
+        var mean = 20;
+        var standardDeviation = 2;
+        var result = 0.5*(1 + Erf((x - mean)/(standardDeviation*Math.Sqrt(2))));
+        
+        return result;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

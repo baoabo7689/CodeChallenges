@@ -1,0 +1,243 @@
+An English text needs to be encrypted using the following encryption scheme.
+First, the spaces are removed from the text. Let be the length of this text.
+Then, characters are written into a grid, whose rows and columns have the following constraints:
+
+For example, the sentence , after removing spaces is characters long. is between and , so it is written in the form of a grid with 7 rows and 8 columns.
+
+ifmanwas  
+meanttos          
+tayonthe  
+groundgo  
+dwouldha  
+vegivenu  
+sroots
+
+    Ensure that
+    If multiple grids satisfy the above conditions, choose the one with the minimum area, i.e. .
+
+The encoded message is obtained by displaying the characters in a column, inserting a space, and then displaying the next column and inserting a space, and so on. For example, the encoded message for the above rectangle is:
+
+imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau
+
+You will be given a message to encode and print.
+
+Function Description
+
+Complete the encryption function in the editor below. It should return a single string composed as described.
+
+encryption has the following parameter(s):
+
+    s: a string to encrypt
+
+Input Format
+
+One line of text, the string
+
+Constraints
+
+
+is comprised only of characters in the range ascii[a-z].
+
+Output Format
+
+Print the encoded message on one line as described.
+
+Sample Input
+
+haveaniceday
+
+Sample Output 0
+
+hae and via ecy
+
+Explanation 0
+
+, is between and .
+Rewritten with rows and columns:
+
+have
+anic
+eday
+
+Sample Input 1
+
+feedthedog    
+
+Sample Output 1
+
+fto ehg ee dd
+
+Explanation 1
+
+, is between and .
+Rewritten with rows and columns:
+
+feed
+thed
+og
+
+Sample Input 2
+
+chillout
+
+Sample Output 2
+
+clu hlt io
+
+Explanation 2
+
+, is between and .
+Rewritten with columns and rows ( so we have to use .)
+
+chi
+llo
+ut
+
+
+
+
+======================================================================================================================================================
+
+
+floor(rootL) <= row <= root(L) <= column
+
+row = floor(rootL)
+column >= n/row 
+
+n/row <= n/floor(rootL)
+column = ceil(n/floor(rootL))
+
+r*c = ceil(n/floor(rootL))*floor(rootL)
+
+r1*c1
+r1 >= r = floor(rootL)
+c1 >= n/r1 
+
+
+nếu c1 < c = ceil(n/floor(rootL))
+r1 <= c1 < c = ceil(n/floor(rootL))
+c1 >= n/ceil(n/floor(rootL))
+
+
+
+
+
+
+
+row = floor(rootL)
+column = ceil(n/floor(rootL))
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the organizingContainers function below.
+    static string organizingContainers(int[][] container) {
+        var n = container.Length;
+        var counts = new int[n][];
+        var sums = new int[n];
+        
+        for(var i=0; i<n; i++) {
+            var temp = new int[n];
+            var sumI = 0;
+            
+            for(var j=0; j<n; j++) {
+                var t = container[i][j];
+                temp[j] = t;
+                
+                if(j != i) {
+                    sumI += t;
+                }
+            }
+            
+            counts[i] = temp;
+            sums[i] = sumI;
+        }
+        
+        // Console.WriteLine(string.Join("," , sums));
+        
+        for(var i=0; i<n; i++) {            
+           var needToMoveFromI = sums[i];
+            
+           var needToMoveToI = 0;            
+           for(var j=i+1; j<n; j++) {
+               needToMoveToI += counts[j][i];
+           } 
+            
+           // Console.WriteLine(needToMoveFromI + "-" + needToMoveToI);
+           if(needToMoveToI != needToMoveFromI) {
+              return "Impossible";               
+           }
+            
+           var k = i + 1; 
+           for(var j=i+1; j<n; j++) {
+              var t = counts[j][i];
+               
+               for(; k<n && t > 0; k++) {
+                   var rowIK = counts[i][k];
+                   if(rowIK <= t) {
+                       t -= rowIK;
+                       sums[j] -= rowIK; 
+                       
+                       counts[i][k] = 0;
+                       counts[j][k] += rowIK;
+                       
+                       if(k != j) {
+                            sums[j] += rowIK;                       
+                       }
+                           
+                       continue;
+                   }
+                   
+                   counts[i][k] -= t;
+                   counts[j][k] += t;                   
+                   sums[j] -= t; 
+                   if(k != j) {
+                        sums[j] += t;                       
+                   }
+                   
+                   t = 0;
+                   break;
+               }
+           } 
+        }
+        
+        return "Possible";
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int q = Convert.ToInt32(Console.ReadLine());
+
+        for (int qItr = 0; qItr < q; qItr++) {
+            int n = Convert.ToInt32(Console.ReadLine());
+
+            int[][] container = new int[n][];
+
+            for (int i = 0; i < n; i++) {
+                container[i] = Array.ConvertAll(Console.ReadLine().Split(' '), containerTemp => Convert.ToInt32(containerTemp));
+            }
+
+            string result = organizingContainers(container);
+
+            textWriter.WriteLine(result);
+        }
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}

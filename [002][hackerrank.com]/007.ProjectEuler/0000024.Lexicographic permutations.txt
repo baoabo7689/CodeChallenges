@@ -1,0 +1,126 @@
+This problem is a programming version of Problem 24 from projecteuler.net
+
+A permutation is an ordered arrangement of objects. For example,  is one possible permutation of the word . If all of the permutations are listed alphabetically, we call it lexicographic order. The lexicographic permutations of  are: 
+What is the  lexicographic permutation of the word ?
+
+Input Format
+
+The first line contains an integer  , i.e., number of test cases. 
+Next  lines will contain an integer .
+
+Constraints
+
+ 
+
+Output Format
+
+Print the values corresponding to each test case.
+
+Sample Input
+
+2
+1
+2
+Sample Output
+
+abcdefghijklm
+abcdefghijkml
+
+
+======================================================================================================================================================
+private static final long[] FACT = { 1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800 };
+
+a1...a13
+
+a1 [12 số] 
+12! 
+
+[a1+1][12 số] 
+12! 
+
+
+
+
+
+
+
+======================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static long Factorial(int n) {
+        long result = 1;
+        
+        for(var i=2; i<=n; i++) {
+            result *= i;
+        }
+        
+        return result;
+    }
+    
+    
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        var cache = new long[14];        
+        long f = 1;  
+        cache[0] = 1;
+        for(var i=1; i<=13; i++) {
+            f *= i;
+            cache[i] = f;
+        }
+        
+        // Console.WriteLine(string.Join(",", cache));
+        var t = int.Parse(Console.ReadLine());
+        for(var i=0; i<t; i++) {
+            var n = long.Parse(Console.ReadLine()) - 1;
+            
+            var nIndex = new long[13];
+            var usedChars = new bool[13];            
+            var result = "";
+            
+            for(var j=12; j>=0; j--) {
+                var nI = n / cache[j];
+                nIndex[j] = nI;
+                n -= nI * cache[j];
+                
+                var count = 0;
+                var k=0;
+                for(; k<13 && count <= nI; k++) {
+                    if(!usedChars[k]) {
+                        count++;
+                    }
+                }
+                
+                var c = (char)('a' + k - 1);
+                usedChars[k-1] = true;
+                
+                result += c.ToString();
+            }
+            
+            //Console.WriteLine(string.Join(",", nIndex));
+            Console.WriteLine(result);
+        }
+    
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

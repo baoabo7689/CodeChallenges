@@ -1,0 +1,168 @@
+Given the time in numerals we may convert it into words, as shown below:
+
+At , use o' clock. For , use past, and for use to. Note the space between the apostrophe and clock in o' clock. Write a program which prints the time in words for the input given in the format described.
+
+Function Description
+
+Complete the timeInWords function in the editor below. It should return a time string as described.
+
+timeInWords has the following parameter(s):
+
+    h: an integer representing hour of the day
+    m: an integer representing minutes after the hour
+
+Input Format
+
+The first line contains , the hours portion The second line contains , the minutes portion
+
+Constraints
+
+Output Format
+
+Print the time in words as described.
+
+Sample Input 0
+
+5
+47
+
+Sample Output 0
+
+thirteen minutes to six
+
+Sample Input 1
+
+3
+00
+
+Sample Output 1
+
+three o' clock
+
+Sample Input 2
+
+7
+15
+
+Sample Output 2
+
+quarter past seven
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+======================================================================================================================================================
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+    private static string[] hours = {
+        "zero", "one", "two", "three", "four", "five", "six", 
+        "seven", "eight", "nine", "ten", "eleven", "twelve", "one"
+    };
+
+    private static string[] minutes = {
+        "zero", 
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+        "ten",
+        "eleven",
+        "twelve",
+        "thirteen",
+        "fourteen",
+        "fifteen",
+        "sixteen",
+        "seventeen",
+        "eighteen",
+        "nineteen",
+        "twenty",
+        "twenty one",
+        "twenty two",
+        "twenty three",
+        "twenty four",
+        "twenty five",
+        "twenty six",
+        "twenty seven",
+        "twenty eight",
+        "twenty nine"
+    };
+    
+    // Complete the timeInWords function below.
+    static string timeInWords(int h, int m) {
+        var strHour = hours[m <= 30 ? h : h+1];
+        if(m==0) {
+            return strHour + " o' clock";
+        }
+        
+        if(m == 30) {
+            return "half past " + strHour;
+        }
+        
+        if(m == 15) {
+            return "quarter past " + strHour;
+        }        
+        
+        if(m == 45) {
+            return "quarter to " + strHour;
+        }
+        
+        var strMid = 1<=m && m<= 30 ? "past" : "to";
+        m = 1<=m && m<= 30 ? m : 60-m;
+        var strMinute = minutes[m];          
+        
+        return strMinute + (m > 1 ? " minutes " :  " minute ") + strMid + " " + strHour;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int h = Convert.ToInt32(Console.ReadLine());
+
+        int m = Convert.ToInt32(Console.ReadLine());
+
+        string result = timeInWords(h, m);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
