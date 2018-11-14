@@ -1,0 +1,2312 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="EwX3w4FW7ovlDv9zoOaGM6ELrYsm7NsC-HcoDB5Fh64" />
+
+    <title>A solution to Codility Kalium - Advanced Web Machinery</title>
+    <meta name="description" content="This is the analysis of my solution to the Codility Kalium 2015 challenge">
+
+    
+    <meta name="author" content="Tamás Sallai">
+    <meta property="og:title" content="A solution to Codility Kalium"/>
+    <meta property="og:description" content="This is the analysis of my solution to the Codility Kalium 2015 challenge"/>
+    <meta property="og:image" content="https://advancedweb.hu/assets/post-images/a_solution_to_codility_kalium-a70149ebe6e908433d2773a03bb31241440f811b839bb975f6f2c5b18f8ffaf7.png" />
+
+      <!-- Twitter cards -->
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@advancedwebhu" />
+      <meta name="twitter:title" content="A solution to Codility Kalium" />
+      <meta name="twitter:description" content="This is the analysis of my solution to the Codility Kalium 2015 challenge" />
+      <meta name="twitter:image" content="https://advancedweb.hu/assets/post-images/a_solution_to_codility_kalium-a70149ebe6e908433d2773a03bb31241440f811b839bb975f6f2c5b18f8ffaf7.png" />
+      <meta name="twitter:url" content="https://advancedweb.hu/2015/08/18/a_solution_to_codility_kalium/" />
+      <!-- Till -->
+    
+
+    <link rel="icon" type="image/png" href="/assets/favicon/favicon-16x16-349ebba7b02f24004cc3c1039804e8dd0d9ae5b87ff4da781862b40e71fa8ff3.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96-f822fe092a8fabdb9ff1938f280f68c07edf6ce298494a986f2630b3b2feb19b.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/assets/favicon/favicon-192x192-553fe9c087c9aac197f5bac0ac80752107560c6a194a09c46c083bdbf5caa72a.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/assets/favicon/favicon-32x32-ac789a2030223080114fb4661639a0f7ad407efe7081a73975ca710424410368.png" sizes="32x32">
+
+    <!-- Enable responsive viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta property="fb:app_id" content="317666098421059"/>
+
+    <link type="text/css" rel="stylesheet" href="/assets/custom-51119b0be2045d87a8c25b19197249ca96efe52ee61c9a9fc7504127b419bfa4.css">
+    <!-- Google Webfonts -->
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600%7CPT+Serif:400,400italic' rel='stylesheet' type='text/css'>
+
+
+    <!-- atom & rss feed -->
+    <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed">
+    <link href="/rss.xml" type="application/rss+xml" rel="alternate" title="Sitewide RSS Feed">
+
+  </head>
+
+  <body>
+      <script>
+          window.fbAsyncInit = function() {
+              FB.init({
+                  appId      : '317666098421059',
+                  xfbml      : true,
+                  version    : 'v2.2'
+              });
+          };
+
+          (function(d, s, id){
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) {return;}
+              js = d.createElement(s); js.id = id;
+              js.src = "//connect.facebook.net/en_US/sdk.js";
+              fjs.parentNode.insertBefore(js, fjs);
+          }(document, 'script', 'facebook-jssdk'));
+      </script>
+    <header>
+        <div class="widewrapper masthead">
+            <div class="container">
+                <a href="/" id="logo">
+                    <img src="/assets/awm-logo-271ddd08c953e26d9668b2b69344dda78ba9fef2fa52f43bd1491f8ff02a97ed.png" alt=logo width="207" height="46" alt="awm-logo.png">
+                </a>
+		
+                <div id="mobile-nav-toggle" class="pull-right">
+                    <a href="#" data-toggle="collapse" data-target=".tales-nav .navbar-collapse">
+                        <i class="fa fa-bars"></i>
+                    </a>
+                </div>
+                <a class="pull-right top-rss-icon" href="/rss.xml">
+                    <img src="/assets/rss-e2175f18f7e57be27a731542469c5c396ec8da59b3b5cb848852de6315032a94.png" width="18" height="18" alt="rss.png">
+                </a>
+                <nav class="pull-right tales-nav">
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav nav-pills navbar-nav">
+                            
+                            
+                            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+            
+			
+			
+            
+            
+	        
+	            <li class="active"><a href="/" class="active">Blog</a></li>
+	        
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+                            
+                            
+                            
+
+
+  
+    
+      
+    
+  
+    
+      
+            
+			
+			
+            
+            
+	        
+      	    <li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+                            
+                            
+                            
+
+
+  
+    
+      
+            
+			
+			
+            
+            
+	        
+      	    <li><a href="/aboutus.html">About Us</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+            
+			
+			
+            
+            
+	        
+      	    <li><a href="/guides.html">Guides</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+            
+			
+			
+            
+            
+	        
+      	    <li><a href="/screencasts.html">Screencasts</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+
+                            <li>
+                                <a href="/2017/08/15/introducing_js_tips/">JS Tips</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>        
+
+
+            </div>
+        </div>
+    </header>
+
+
+    <div class="widewrapper main">
+        
+      <div class="container">
+        <div class="row">
+        	<div class="col-md-8 blog-main">
+                
+
+
+<script>
+    var currentPostUrl='https://advancedweb.hu/2015/08/18/a_solution_to_codility_kalium/';
+		var isBlogPost = true;
+</script>
+<article class="blog-post">
+  <header>
+      <h1>A solution to Codility Kalium</h1>
+		  
+			<h1><small class="page-tagline">This is the analysis of my solution to the Codility Kalium 2015 challenge</small></h1>
+		  
+      <div class="lead-image ">
+        <div class="image-foreground">
+            
+            <div class="image-background" style="background-image:url(/assets/post-images/a_solution_to_codility_kalium-a70149ebe6e908433d2773a03bb31241440f811b839bb975f6f2c5b18f8ffaf7.png)"></div>
+            
+        </div>
+
+          <div class="meta clearfix">
+
+              <div class="author">
+                  <i class="fa fa-user"></i>
+                  <a class="data" href="/portfolio-sashee.html">Tamás Sallai</a>
+              </div>
+          </div>
+      </div>
+      <div class="clearfix"></div>
+  </header>
+    
+	
+<aside class="socials-promo">
+    <div class="socialbox1">
+		<!-- Sharingbutton Facebook -->
+<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https://advancedweb.hu/2015/08/18/a_solution_to_codility_kalium/" target="_blank" aria-label="">
+  <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/></svg>
+    </div>
+  </div>
+</a>
+
+<!-- Sharingbutton Twitter -->
+<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=A solution to Codility Kalium @advancedwebhu&amp;url=https://advancedweb.hu/2015/08/18/a_solution_to_codility_kalium/" target="_blank" aria-label="">
+  <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.44 4.83c-.8.37-1.5.38-2.22.02.93-.56.98-.96 1.32-2.02-.88.52-1.86.9-2.9 1.1-.82-.88-2-1.43-3.3-1.43-2.5 0-4.55 2.04-4.55 4.54 0 .36.03.7.1 1.04-3.77-.2-7.12-2-9.36-4.75-.4.67-.6 1.45-.6 2.3 0 1.56.8 2.95 2 3.77-.74-.03-1.44-.23-2.05-.57v.06c0 2.2 1.56 4.03 3.64 4.44-.67.2-1.37.2-2.06.08.58 1.8 2.26 3.12 4.25 3.16C5.78 18.1 3.37 18.74 1 18.46c2 1.3 4.4 2.04 6.97 2.04 8.35 0 12.92-6.92 12.92-12.93 0-.2 0-.4-.02-.6.9-.63 1.96-1.22 2.56-2.14z"/></svg>
+    </div>
+  </div>
+</a>
+
+<!-- Sharingbutton Google+ -->
+<a class="resp-sharing-button__link" href="https://plus.google.com/share?url=https://advancedweb.hu/2015/08/18/a_solution_to_codility_kalium/" target="_blank" aria-label="">
+  <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.37 12.93c-.73-.52-1.4-1.27-1.4-1.5 0-.43.03-.63.98-1.37 1.23-.97 1.9-2.23 1.9-3.57 0-1.22-.36-2.3-1-3.05h.5c.1 0 .2-.04.28-.1l1.36-.98c.16-.12.23-.34.17-.54-.07-.2-.25-.33-.46-.33H7.6c-.66 0-1.34.12-2 .35-2.23.76-3.78 2.66-3.78 4.6 0 2.76 2.13 4.85 5 4.9-.07.23-.1.45-.1.66 0 .43.1.83.33 1.22h-.08c-2.72 0-5.17 1.34-6.1 3.32-.25.52-.37 1.04-.37 1.56 0 .5.13.98.38 1.44.6 1.04 1.84 1.86 3.55 2.28.87.23 1.82.34 2.8.34.88 0 1.7-.1 2.5-.34 2.4-.7 3.97-2.48 3.97-4.54 0-1.97-.63-3.15-2.33-4.35zm-7.7 4.5c0-1.42 1.8-2.68 3.9-2.68h.05c.45 0 .9.07 1.3.2l.42.28c.96.66 1.6 1.1 1.77 1.8.05.16.07.33.07.5 0 1.8-1.33 2.7-3.96 2.7-1.98 0-3.54-1.23-3.54-2.8zM5.54 3.9c.33-.38.75-.58 1.23-.58h.05c1.35.05 2.64 1.55 2.88 3.35.14 1.02-.08 1.97-.6 2.55-.32.37-.74.56-1.23.56h-.03c-1.32-.04-2.63-1.6-2.87-3.4-.13-1 .08-1.92.58-2.5zM23.5 9.5h-3v-3h-2v3h-3v2h3v3h2v-3h3"/></svg>
+    </div>
+  </div>
+</a>
+
+<!-- Sharingbutton Reddit -->
+<a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https://advancedweb.hu/2015/08/18/a_solution_to_codility_kalium/" target="_blank" aria-label="">
+  <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M24 11.5c0-1.65-1.35-3-3-3-.96 0-1.86.48-2.42 1.24-1.64-1-3.75-1.64-6.07-1.72.08-1.1.4-3.05 1.52-3.7.72-.4 1.73-.24 3 .5C17.2 6.3 18.46 7.5 20 7.5c1.65 0 3-1.35 3-3s-1.35-3-3-3c-1.38 0-2.54.94-2.88 2.22-1.43-.72-2.64-.8-3.6-.25-1.64.94-1.95 3.47-2 4.55-2.33.08-4.45.7-6.1 1.72C4.86 8.98 3.96 8.5 3 8.5c-1.65 0-3 1.35-3 3 0 1.32.84 2.44 2.05 2.84-.03.22-.05.44-.05.66 0 3.86 4.5 7 10 7s10-3.14 10-7c0-.22-.02-.44-.05-.66 1.2-.4 2.05-1.54 2.05-2.84zM2.3 13.37C1.5 13.07 1 12.35 1 11.5c0-1.1.9-2 2-2 .64 0 1.22.32 1.6.82-1.1.85-1.92 1.9-2.3 3.05zm3.7.13c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9.8 4.8c-1.08.63-2.42.96-3.8.96-1.4 0-2.74-.34-3.8-.95-.24-.13-.32-.44-.2-.68.15-.24.46-.32.7-.18 1.83 1.06 4.76 1.06 6.6 0 .23-.13.53-.05.67.2.14.23.06.54-.18.67zm.2-2.8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm5.7-2.13c-.38-1.16-1.2-2.2-2.3-3.05.38-.5.97-.82 1.6-.82 1.1 0 2 .9 2 2 0 .84-.53 1.57-1.3 1.87z"/></svg>
+    </div>
+  </div>
+</a>
+
+<!-- Sharingbutton Hacker News -->
+<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https://advancedweb.hu/2015/08/18/a_solution_to_codility_kalium/&amp;t=A solution to Codility Kalium" target="_blank" aria-label="">
+  <div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><path fill-rule="evenodd" d="M60.94 82.314L17 0h20.08l25.85 52.093c.397.927.86 1.888 1.39 2.883.53.994.995 2.02 1.393 3.08.265.4.463.764.596 1.095.13.334.262.63.395.898.662 1.325 1.26 2.618 1.79 3.877.53 1.26.993 2.42 1.39 3.48 1.06-2.254 2.22-4.673 3.48-7.258 1.26-2.585 2.552-5.27 3.877-8.052L103.49 0h18.69L77.84 83.308v53.087h-16.9v-54.08z"></path></svg>
+    </div>
+  </div>
+</a>
+    </div>
+</aside>
+
+
+  <div class="body">
+      
+<h2 id="codility-challenge">Codility challenge</h2>
+
+<p>I recently stumbled on <a href="https://codility.com/">Codility</a> and it’s latest open challenge, <a href="https://codility.com/programmers/challenges/kalium2015">Kalium</a>.
+At first glance, it is a very simple problem. It turned out that my initial intuition to approach
+this problem was plain wrong and it took me about two weeks to come up with a <a href="https://codility.com/cert/view/certX3YFTV-SWKPV7XDFDAA5HFC">proper solution</a>.
+In this post I give a detailed overview and my way of thinking behind it.</p>
+
+<p>The challenge in a nutshell is that given a database table with segments on the number line,
+write an SQL select that results the covered length. For example, for the following data:</p>
+
+<p><img src="/assets/posts/a_solution_to_codility_kalium/mathml_1-fc703b9d94697a0ab88e95e4753282304205ea026ece8d4fd6fe0a0c24f75299.png" class="img-responsive img-center img-bordered" width="250" height="161" alt="posts/a_solution_to_codility_kalium/mathml_1.png" /></p>
+
+<p>The solution would be <strong>3</strong>, because the segments are overlapping, and the covered length is <em>0-3</em>. If
+one of it would reach to 4, that would modify the solution to 4.</p>
+
+<h2 id="the-first-attempt">The first attempt</h2>
+
+<p>My first intuition was to simply sum up all the lengths and then subtract all common intervals. The idea
+might came from how I’d approach this in an imperative language, which SQL is obviously not. The summing
+part is pretty easy, just a SUM of the difference of the <em>r</em> and <em>l</em>, as they are ordered this way.
+Getting the intersections is a bit trickier, but not much. The table can be joined with itself on a condition
+that the joined segments are right to the original one (this sets up an ordering between the segments,
+so there will be no repetition in the result). The intersection’s length is also easily calculated, then summed,
+finally the <a href="https://codility.com/cert/view/certBZQKT6-X9FSW2JSS4K455H2/details">solution</a> is ready.</p>
+
+<p>The only problem is that it is wrong. Let’s see the following example:</p>
+
+<p><img src="/assets/posts/a_solution_to_codility_kalium/wrong_1-ceb4e1e9ff804d41af92129282ab4c2b1955638370af1e08e80139e587c675e1.png" alt="The first attempt" class="img-responsive" width="450" height="130" /></p>
+
+<p>For these segments, we have a total length of 3+2+1=6, and since the join processes all pairs of segments
+, for red-green, it subtracts 2, for red-gold 1, and for green-gold another one, totaling 4, which
+yields the final result of 2, which is clearly wrong.</p>
+
+<p>The problem is that we subtracted the gold segment twice. To fix this, we could introduce a 3-way join
+that adds back all these mistakenly subtracted parts. This would fix this scenario, but if there was
+a 4-level stack of intervals, it adds back the same interval multiple times, which is also bad. The
+thinking goes on, we can subtract the all intervals common in 4 segments, add back all 5, subtract all 6,
+but it will never yield to a general solution.</p>
+
+<h2 id="the-second-attempt">The second attempt</h2>
+
+<p>The main idea is that the problem would be easy if all segments are either fully cover each other or
+disjoint. If we could transform the original data to this form, then a <em>SELECT DISTINCT</em> and a simple
+summing would yield the correct result. The good news is that it is not even hard.</p>
+
+<p>First, let’s introduce a notion of <em>point of interest</em>: Let’s call it a number if it is either the left
+or the right of a segment.</p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SELECT</span>    <span class="n">l</span> <span class="k">AS</span> <span class="n">x</span>
+<span class="k">FROM</span>      <span class="n">segments</span>
+<span class="k">UNION</span>
+<span class="k">SELECT</span>    <span class="n">r</span> <span class="k">AS</span> <span class="n">x</span>
+<span class="k">FROM</span>      <span class="n">segments</span></code></pre></figure>
+
+<p>Then the first thing is to define the right points of the new segments. This is a simple join on the pois,
+where the new right is less than equal to the original one (so it will include the original right too)
+and greater than the left:</p>
+
+<p><img src="/assets/posts/a_solution_to_codility_kalium/good_1-afbee27964ff8968f2b07d9c1daaf218d50e175a21fe32642bd367910c921520.png" alt="Defining the rights" class="img-responsive" width="450" height="130" /></p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SELECT</span>    <span class="n">x</span> <span class="k">AS</span> <span class="n">r</span>
+<span class="k">FROM</span>      <span class="n">segments</span>
+<span class="k">JOIN</span> <span class="p">(</span> <span class="k">SELECT</span>   <span class="n">l</span> <span class="k">AS</span> <span class="n">x</span>
+       <span class="k">FROM</span>     <span class="n">segments</span>
+       <span class="k">UNION</span>
+       <span class="k">SELECT</span>   <span class="n">r</span> <span class="k">AS</span> <span class="n">x</span>
+       <span class="k">FROM</span>     <span class="n">segments</span>
+     <span class="p">)</span> <span class="k">AS</span> <span class="n">pois</span> <span class="k">ON</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">l</span> <span class="k">AND</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">r</span></code></pre></figure>
+
+<p>Then when we have all the rights, the lefts will be the greatest poi that is less than the right:</p>
+
+<p><img src="/assets/posts/a_solution_to_codility_kalium/good_2-b287fd30bb9d271497229e7d237088720facf34ba1025095b68c3b2c11b722ba.png" alt="Defining the lefts" class="img-responsive" width="450" height="130" /></p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SELECT</span>    <span class="k">MAX</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">FROM</span>      <span class="p">(</span> <span class="k">SELECT</span>    <span class="n">l</span> <span class="k">AS</span> <span class="n">x</span>
+          <span class="k">FROM</span>      <span class="n">segments</span>
+          <span class="k">UNION</span>
+          <span class="k">SELECT</span>    <span class="n">r</span> <span class="k">AS</span> <span class="n">x</span>
+          <span class="k">FROM</span>      <span class="n">segments</span>
+        <span class="p">)</span> <span class="k">AS</span> <span class="n">pois</span>
+<span class="k">WHERE</span>     <span class="n">x</span> <span class="o">&lt;</span> <span class="n">r</span>
+                      </code></pre></figure>
+
+<p>Now that we have the new intervals, a simple <em>SELECT DISTINCT</em> and a <em>SUM</em> is all is needed. To handle the
+edge case where there is no segments at all, an <em>Ifnull</em> is needed.</p>
+
+<p>The complete source for the <a href="https://codility.com/cert/view/certX3YFTV-SWKPV7XDFDAA5HFC/details">solution</a>:</p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SELECT</span>  <span class="n">Ifnull</span><span class="p">(</span><span class="k">SUM</span><span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">l</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="k">FROM</span>    <span class="p">(</span> <span class="k">SELECT</span> <span class="k">DISTINCT</span>
+                    <span class="n">r</span> <span class="p">,</span>
+                    <span class="p">(</span> <span class="k">SELECT</span>    <span class="k">MAX</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                      <span class="k">FROM</span>      <span class="p">(</span> <span class="k">SELECT</span>    <span class="n">l</span> <span class="k">AS</span> <span class="n">x</span>
+                                  <span class="k">FROM</span>      <span class="n">segments</span>
+                                  <span class="k">UNION</span>
+                                  <span class="k">SELECT</span>    <span class="n">r</span> <span class="k">AS</span> <span class="n">x</span>
+                                  <span class="k">FROM</span>      <span class="n">segments</span>
+                                <span class="p">)</span> <span class="k">AS</span> <span class="n">pois</span>
+                      <span class="k">WHERE</span>     <span class="n">x</span> <span class="o">&lt;</span> <span class="n">r</span>
+                    <span class="p">)</span> <span class="k">AS</span> <span class="n">l</span>
+          <span class="k">FROM</span>      <span class="p">(</span> <span class="k">SELECT</span>    <span class="n">x</span> <span class="k">AS</span> <span class="n">r</span>
+                      <span class="k">FROM</span>      <span class="n">segments</span>
+                                <span class="k">JOIN</span> <span class="p">(</span> <span class="k">SELECT</span>   <span class="n">l</span> <span class="k">AS</span> <span class="n">x</span>
+                                       <span class="k">FROM</span>     <span class="n">segments</span>
+                                       <span class="k">UNION</span>
+                                       <span class="k">SELECT</span>   <span class="n">r</span> <span class="k">AS</span> <span class="n">x</span>
+                                       <span class="k">FROM</span>     <span class="n">segments</span>
+                                     <span class="p">)</span> <span class="k">AS</span> <span class="n">pois</span> <span class="k">ON</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">l</span>
+                                                  <span class="k">AND</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">r</span>
+                    <span class="p">)</span> <span class="k">AS</span> <span class="n">rights</span>
+        <span class="p">)</span> <span class="k">AS</span> <span class="n">chopped_segments</span></code></pre></figure>
+
+<p>(This is a refactored version, for the original blunt one, <a href="https://codility.com/cert/view/certC2WKBU-6VDETG2G95EGJVNS/details">check this</a>)</p>
+
+<p>This passes all the required tests and scores 100% in the challenge.</p>
+
+  </div>
+</article>
+
+<aside class="social-icons clearfix">
+    
+</aside>
+
+<aside class="tags-and-categories clearfix">
+  
+
+  
+    
+    <ul class="tags">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Codility-ref">Codility <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#SQL-ref">SQL <span>1</span></a></li>
+    
+  
+
+
+
+    </ul><i class="fa fa-tag"></i>
+   
+</aside>
+
+<div class="date">
+	<i class="fa fa-calendar"></i>
+	<span class="data">18 August 2015</span>
+</div>
+
+<aside class="newsletter-promo">
+	You won't miss out future posts by subscribing to our <a href="#nl-container">Newsletter</a> and <a href="/rss.xml">RSS feed</a>!
+</aside>
+
+<aside>
+  <ul class="pagination">
+    
+      <li class="next"><a href="/2015/08/26/scott-detailed-failure-reports/" title="Scott: detailed failure reports and hassle free assertions for Java tests">&laquo; Next</a></li>
+    
+
+    
+      <li class="prev"><a href="/2015/08/04/isolating_scripts_on_a_page/" title="Isolating scripts on a page">Previous &raquo;</a></li>
+    
+  </ul>
+</aside>
+
+<aside class="comments" id="comments">
+    <hr>
+		<h2><i class="fa fa-comments"></i></h2>
+    
+
+
+  <div class="fb-comments" data-href="https://advancedweb.hu/2015/08/18/a_solution_to_codility_kalium" data-width="100%" data-numposts="5" data-colorscheme="light"></div>
+
+
+
+   
+</aside>
+
+<aside>
+<h2>Related posts</h2>
+
+<ul class="posts tales-list">
+  
+    <li>
+        <a href="/2015/10/27/eclipse_tdd/">Walkthrough for a TDD Kata in Eclipse</a> 
+        <span>27 Oct 2015</span>
+    </li>
+  
+    <li>
+        <a href="/2018/02/27/21_first_impressions_typescript/">What to expect when you decide to migrate from Javascript to Typescript</a> 
+        <span>27 Feb 2018</span>
+    </li>
+  
+    <li>
+        <a href="/2017/03/01/jvm_optimistic_optimizations/">Profile-based optimization techniques in the JVM</a> 
+        <span>01 Mar 2017</span>
+    </li>
+  
+    <li>
+        <a href="/2018/02/06/debug/">Effective debugging with breakpoints</a> 
+        <span>06 Feb 2018</span>
+    </li>
+  
+    <li>
+        <a href="/2016/08/09/parallel-processing-in-js/">Parallel Processing in JS</a> 
+        <span>09 Aug 2016</span>
+    </li>
+  
+    <li>
+        <a href="/2016/05/27/jvm_jit_optimization_techniques/">JVM JIT optimization techniques</a> 
+        <span>27 May 2016</span>
+    </li>
+  
+    <li>
+        <a href="/2017/08/22/git-commit/">Git: A guide to create self-reviewed merge requests</a> 
+        <span>22 Aug 2017</span>
+    </li>
+  
+    <li>
+        <a href="/2015/06/11/vim-scala/">Scala development in Vim</a> 
+        <span>11 Jun 2015</span>
+    </li>
+  
+    <li>
+        <a href="/2018/03/13/dos_donts_collection_processing/">Best practices on how to work with collections in Javascript</a> 
+        <span>13 Mar 2018</span>
+    </li>
+  
+    <li>
+        <a href="/2016/09/14/one_year_with_vim/">One year with Vim</a> 
+        <span>14 Sep 2016</span>
+    </li>
+  
+</ul>
+<a class="more-link" href="/archive.html">All posts &raquo;</a>
+</aside>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "BlogPosting",
+  "headline": "A solution to Codility Kalium",
+  "inLanguage":"en",
+  "author":{
+    "@type":"Person",
+    "name":"Tamás Sallai"
+  },
+  "datePublished":"2015-08-18 00:00:00 +0000",
+  "dateCreated":"2015-08-18 00:00:00 +0000",
+  "about":"I recently stumbled on Codility and it’s latest open challenge, Kalium.
+At first glance, it is a very simple problem. It turned out that my initial intuition to approach
+this problem was plain wrong and it took me about two weeks to come up with a proper solution.
+In this post I give a detailed overview and my way of thinking behind it.",
+  "articleBody":"Codility challenge
+
+I recently stumbled on Codility and it’s latest open challenge, Kalium.
+At first glance, it is a very simple problem. It turned out that my initial intuition to approach
+this problem was plain wrong and it took me about two weeks to come up with a proper solution.
+In this post I give a detailed overview and my way of thinking behind it.
+
+The challenge in a nutshell is that given a database table with segments on the number line,
+write an SQL select that results the covered length. For example, for the following data:
+
+
+
+The solution would be 3, because the segments are overlapping, and the covered length is 0-3. If
+one of it would reach to 4, that would modify the solution to 4.
+
+The first attempt
+
+My first intuition was to simply sum up all the lengths and then subtract all common intervals. The idea
+might came from how I’d approach this in an imperative language, which SQL is obviously not. The summing
+part is pretty easy, just a SUM of the difference of the r and l, as they are ordered this way.
+Getting the intersections is a bit trickier, but not much. The table can be joined with itself on a condition
+that the joined segments are right to the original one (this sets up an ordering between the segments,
+so there will be no repetition in the result). The intersection’s length is also easily calculated, then summed,
+finally the solution is ready.
+
+The only problem is that it is wrong. Let’s see the following example:
+
+
+
+For these segments, we have a total length of 3+2+1=6, and since the join processes all pairs of segments
+, for red-green, it subtracts 2, for red-gold 1, and for green-gold another one, totaling 4, which
+yields the final result of 2, which is clearly wrong.
+
+The problem is that we subtracted the gold segment twice. To fix this, we could introduce a 3-way join
+that adds back all these mistakenly subtracted parts. This would fix this scenario, but if there was
+a 4-level stack of intervals, it adds back the same interval multiple times, which is also bad. The
+thinking goes on, we can subtract the all intervals common in 4 segments, add back all 5, subtract all 6,
+but it will never yield to a general solution.
+
+The second attempt
+
+The main idea is that the problem would be easy if all segments are either fully cover each other or
+disjoint. If we could transform the original data to this form, then a SELECT DISTINCT and a simple
+summing would yield the correct result. The good news is that it is not even hard.
+
+First, let’s introduce a notion of point of interest: Let’s call it a number if it is either the left
+or the right of a segment.
+
+SELECT    l AS x
+FROM      segments
+UNION
+SELECT    r AS x
+FROM      segments
+
+Then the first thing is to define the right points of the new segments. This is a simple join on the pois,
+where the new right is less than equal to the original one (so it will include the original right too)
+and greater than the left:
+
+
+
+SELECT    x AS r
+FROM      segments
+JOIN ( SELECT   l AS x
+       FROM     segments
+       UNION
+       SELECT   r AS x
+       FROM     segments
+     ) AS pois ON x &gt; l AND x &lt;= r
+
+Then when we have all the rights, the lefts will be the greatest poi that is less than the right:
+
+
+
+SELECT    MAX(x)
+FROM      ( SELECT    l AS x
+          FROM      segments
+          UNION
+          SELECT    r AS x
+          FROM      segments
+        ) AS pois
+WHERE     x &lt; r
+                      
+
+Now that we have the new intervals, a simple SELECT DISTINCT and a SUM is all is needed. To handle the
+edge case where there is no segments at all, an Ifnull is needed.
+
+The complete source for the solution:
+
+SELECT  Ifnull(SUM(r - l), 0)
+FROM    ( SELECT DISTINCT
+                    r ,
+                    ( SELECT    MAX(x)
+                      FROM      ( SELECT    l AS x
+                                  FROM      segments
+                                  UNION
+                                  SELECT    r AS x
+                                  FROM      segments
+                                ) AS pois
+                      WHERE     x &lt; r
+                    ) AS l
+          FROM      ( SELECT    x AS r
+                      FROM      segments
+                                JOIN ( SELECT   l AS x
+                                       FROM     segments
+                                       UNION
+                                       SELECT   r AS x
+                                       FROM     segments
+                                     ) AS pois ON x &gt; l
+                                                  AND x &lt;= r
+                    ) AS rights
+        ) AS chopped_segments
+
+(This is a refactored version, for the original blunt one, check this)
+
+This passes all the required tests and scores 100% in the challenge.
+",
+  "wordCount":754,
+  
+    "keywords":[
+       
+           "Codility"
+           
+            ,
+           
+       
+           "SQL"
+           
+       
+    ],
+  
+  
+  "thumbnailUrl":"/assets/post-images/a_solution_to_codility_kalium-a70149ebe6e908433d2773a03bb31241440f811b839bb975f6f2c5b18f8ffaf7.png"
+  
+
+}
+</script>
+
+
+        	</div>
+        	<aside class="col-md-4 blog-aside">
+
+			<div class="aside-widget">
+			    <header style="margin-bottom:10px;">
+			    <h3>Some of our other projects</h3>
+			    </header>
+
+				<a href="https://weeklyjstips.com " onclick="_gaq.push(['_set','hitCallback',function(){document.location='https://weeklyjstips.com ';}]);_gaq.push(['_trackEvent','outbound','click','https://weeklyjstips.com ']);return false;">
+					<div style="
+						height:120px;
+						margin-bottom:10px;
+						background-image:url(/assets/banner-js-tips-09da9e70137fb54203449feb51ba19cc5728ac0565bfd64fc9dbd0d63facf85e.png);
+						background-position:center;
+						background-repeat:no-repeat;
+						background-size: contain;
+						"></div>
+					</a>
+				</a>
+
+				<a href="https://github.com/dodie/vim-disapprove-deep-indentation " onclick="_gaq.push(['_set','hitCallback',function(){document.location='https://github.com/dodie/vim-disapprove-deep-indentation ';}]);_gaq.push(['_trackEvent','outbound','click','https://github.com/dodie/vim-disapprove-deep-indentation ']);return false;">
+					<div style="
+						height:120px;
+						margin-bottom:10px;
+						background-image:url(/assets/banner-vim-disapprove-77184491c21b0a08a7ffd46179887b6026831f2ca9b0b624d7d2ada11b3bec47.png);
+						background-position:center;
+						background-repeat:no-repeat;
+						background-size: contain;
+						"></div>
+				</a>
+
+<div class="aside-widget aside-recent-posts" id="nl-container">
+    <header>
+	<h3>Newsletter</h3>
+    </header>
+	<!-- Begin MailChimp Signup Form -->
+	<div id="mc_embed_signup" class="signup-panel">
+		<form action="//advancedweb.us12.list-manage.com/subscribe/post?u=8080dcb0dc72a4c9e510d76d9&amp;id=48c40bace8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		    <div id="mc_embed_signup_scroll">
+			<p>Get early access, prompt notifications and future exclusive content by signing up to our newsletter!</p>
+		<div class="mc-field-group form-group">
+			<label for="mce-EMAIL">Email Address </label>
+			<input type="email" value="" name="EMAIL" class="required email form-control" id="mce-EMAIL">
+		</div>
+			<div id="mce-responses" class="clear">
+				<div class="response" id="mce-error-response" style="display:none"></div>
+				<div class="response" id="mce-success-response" style="display:none"></div>
+			</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		    <div style="position: absolute; left: -5000px;"><input type="text" name="b_8080dcb0dc72a4c9e510d76d9_48c40bace8" tabindex="-1" value=""></div>
+		    <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button btn btn-tales-one"></div>
+		    </div>
+		</form>
+	</div>
+
+	<!--End mc_embed_signup-->
+</div>
+
+
+                <div class="aside-widget aside-recent-posts">
+                    <header>
+                        <h3><a href="/archive.html">Recent posts</a></h3>
+                    </header>
+                    <div class="body">
+            		    <ul class="tales-list">
+            			
+            			    <li>
+            				<a href="/2018/07/03/supervisor_docker/">Supervisor with Docker: Lessons learned</a><br/>
+            				<span>03 Jul 2018</span>
+            			    </li>
+            			
+            			    <li>
+            				<a href="/2018/06/26/letsencrypt_hook_use_cases/">Let's Encrypt hooks use cases</a><br/>
+            				<span>26 Jun 2018</span>
+            			    </li>
+            			
+            			    <li>
+            				<a href="/2018/06/12/vim-system-clipboard/">Working with the system clipboard in Vim</a><br/>
+            				<span>12 Jun 2018</span>
+            			    </li>
+            			
+            			    <li>
+            				<a href="/2018/06/05/letsencrypt_webroot_vs_standalone/">When to use Let's Encrypt's webroot and standalone authorization</a><br/>
+            				<span>05 Jun 2018</span>
+            			    </li>
+            			
+            			    <li>
+            				<a href="/2018/05/29/letsencrypt_tips/">Let's Encrypt tips</a><br/>
+            				<span>29 May 2018</span>
+            			    </li>
+            			
+            		    </ul>
+    		            <a class="more-link" href="/archive.html">All posts &raquo;</a>
+                    </div>
+                </div>
+                <div class="aside-widget">
+                    <header>
+                        <h3><a href="/tags.html">Tags</a></h3>
+                    </header>
+                    <div class="body">
+            		    <ul class="tags clearfix">
+            			 
+            			 
+
+
+  
+     
+    	<li><a href="/tags.html#Javascript-ref">Javascript <span>30</span></a></li>
+     
+    	<li><a href="/tags.html#Java-ref">Java <span>21</span></a></li>
+     
+    	<li><a href="/tags.html#Test-ref">Test <span>12</span></a></li>
+     
+    	<li><a href="/tags.html#Vim-ref">Vim <span>11</span></a></li>
+     
+    	<li><a href="/tags.html#Webdev-ref">Webdev <span>9</span></a></li>
+     
+    	<li><a href="/tags.html#Maven-ref">Maven <span>9</span></a></li>
+     
+    	<li><a href="/tags.html#Linux-ref">Linux <span>7</span></a></li>
+     
+    	<li><a href="/tags.html#Docker-ref">Docker <span>7</span></a></li>
+     
+    	<li><a href="/tags.html#Integration-test-ref">Integration-test <span>7</span></a></li>
+     
+    	<li><a href="/tags.html#Eclipse-ref">Eclipse <span>6</span></a></li>
+    
+  
+
+
+
+            		    </ul>
+                        <a class="more-link" href="/tags.html">All tags &raquo;</a>
+                    </div>
+                </div>
+
+        	    <div class="aside-widget">
+                    <header>
+                        <h3><a href="/archive.html">Archive</a></h3>
+                    </header>
+                    <div class="body clearfix">
+    			     
+    			     
+
+
+<ul class="tales-list">
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+	<li><a href="/archive.html#2018-ref">2018 (17)</a></li>
+	
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+	<li><a href="/archive.html#2017-ref">2017 (25)</a></li>
+	
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+	<li><a href="/archive.html#2016-ref">2016 (24)</a></li>
+	
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+	<li><a href="/archive.html#2015-ref">2015 (28)</a></li>
+	
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+  
+    
+    
+    
+    
+    
+
+    
+	<li><a href="/archive.html#2014-ref">2014 (7)</a></li>
+	
+    
+  
+</ul>
+
+
+			    <a class="more-link" href="/archive.html">All posts &raquo;</a>
+                    </div>
+                </div>
+            </aside>
+         </div>
+      </div>
+    
+    </div>
+
+    <footer>
+        <div class="widewrapper footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 footer-widget">
+                        <h3>Statistics</h3>
+                        <span>To make sure we don't lose counts:</span>
+                        <div class="stats">
+                            <div class="line">
+                                <span class="counter">101</span>
+                                <span class="caption">Posts</span>
+                            </div>
+                            <div class="line">
+                                <span class="counter">2</span>
+                                <span class="caption">Authors</span>
+                            </div>
+                        </div>
+                    </div>
+		    <div class="col-md-4 footer-widget">
+			<h3>Feeds</h3>
+			<ul class="tales-list">
+				<li><a href="/rss.xml">RSS</a></li>
+				<li><a href="/atom.xml">Atom</a></li>
+			</ul>
+	            </div>
+		    <div class="col-md-4 footer-widget">
+			<h3>Favourites</h3>
+			<ul class="tales-list">
+				
+				
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+						 
+						<li><a href="/2018/03/13/dos_donts_collection_processing/">Best practices on how to work with collections in Javascript</a></li>
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+						 
+						<li><a href="/2017/02/07/treeshaking/">Why Webpack 2's Tree Shaking is not as effective as you think</a></li>
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+						 
+						<li><a href="/2016/05/27/jvm_jit_optimization_techniques/">JVM JIT optimization techniques</a></li>
+					
+				
+					
+						 
+						<li><a href="/2016/05/17/more-readable-js-without-vars/">More readable Javascript without variables</a></li>
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+						 
+						<li><a href="/2015/12/08/react_basics/">React basics</a></li>
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+					
+				
+			</ul>
+	            </div>
+                </div>
+            </div>
+        </div>
+        <div class="widewrapper copyright">
+            <div class="container">
+		&copy; 2018 Advanced Web Machinery
+            </div>
+        </div>
+ 		</footer>
+
+
+		<!-- Signup popup -->
+
+		<div class="signup-popup">
+			<h4>Interesting article?</h4>
+			<h4>Get hand-crafted emails on new content!</h4>
+			<div class="initial-block">
+				<!-- Begin MailChimp Signup Form -->
+				<div id="mc_embed_signup" class="signup-panel">
+					<form action="//advancedweb.us12.list-manage.com/subscribe/post?u=8080dcb0dc72a4c9e510d76d9&amp;id=48c40bace8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+							<div id="mc_embed_signup_scroll">
+					<div class="mc-field-group form-group">
+						<input type="email" value="" placeholder="Email Address" name="EMAIL" class="required email form-control" id="mce-EMAIL">
+					</div>
+						<div id="mce-responses" class="clear">
+							<div class="response" id="mce-error-response" style="display:none"></div>
+							<div class="response" id="mce-success-response" style="display:none"></div>
+						</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+							<div style="position: absolute; left: -5000px;"><input type="text" name="b_8080dcb0dc72a4c9e510d76d9_48c40bace8" tabindex="-1" value=""></div>
+							<div class="clear"><input type="submit" value="Keep me posted!" name="subscribe" id="mc-embedded-subscribe" class="button btn btn-tales-one btn-block"></div>
+							</div>
+					</form>
+				</div>
+
+				<!--End mc_embed_signup-->
+				<button class="nothanks-button btn button btn-block">No thanks</button>
+			</div>
+			<div style="display:none;" class="signup-block">
+			</div>
+		</div>
+
+		<!-- Signup popup end -->
+
+    
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-17175113-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+      <script type="text/javascript" src="/assets/app-0909cc975369dbd8df9283d01aa7a2485a09fe9228c8a2cb27f6155671e17f7d.js"></script>
+    <script>
+      var allPostsUrl = [];
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/07/03/supervisor_docker/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/06/26/letsencrypt_hook_use_cases/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/06/12/vim-system-clipboard/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/06/05/letsencrypt_webroot_vs_standalone/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/05/29/letsencrypt_tips/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/05/22/letsencrypt_overview/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/05/15/vim-navigation/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/05/08/vim-last-position-jump/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/03/27/tdd-refactor-cycles/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/03/20/maven-skip-tests/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/03/13/dos_donts_collection_processing/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/03/06/dependency-injection-boundaries/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/02/27/21_first_impressions_typescript/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/02/20/scott-cucumber/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/02/08/array_extras_course/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/02/06/debug/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2018/01/02/domain_specific_collection_pipeline/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/12/19/functional_composition/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/12/12/chaining/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/12/05/array_extras/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/11/28/print-debugging/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/11/21/a_detailed_case_study_against_for/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/11/14/intro_to_collection_pipelines/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/11/07/manual-end-to-end-verification/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/11/06/problem-solving-techniques/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/10/31/2_babel_errors/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/10/03/immutablejs_generators/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/09/26/generators_js/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/09/19/vim-persistent-undo/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/09/12/vim-using-undo-branches/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/09/05/iterables_js/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/08/29/iterators_js/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/08/22/git-commit/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/08/15/introducing_js_tips/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/07/25/git-author/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/06/13/magento-theme/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/03/01/jvm_optimistic_optimizations/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/02/07/treeshaking/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/01/31/browserify/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/01/24/vim-copypaste/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/01/17/jspm/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2017/01/10/vim-scala-ag-ctags/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/12/21/bower/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/11/22/frontend-dependencies-without-tools/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/11/08/cucumber_mistakes/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/09/14/one_year_with_vim/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/08/24/xmonad_experiences/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/08/09/parallel-processing-in-js/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/06/28/jvm_jit_optimization_techniques_part_2/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/06/14/simulating-movement-with-es6-generators/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/05/31/infinite-collections-with-es6-generators/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/05/27/jvm_jit_optimization_techniques/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/05/17/more-readable-js-without-vars/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/05/10/lets-encrypt/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/05/03/java_variance/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/04/19/proper-random-numbers-in-javascript/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/04/13/a-brief-overview-of-hack-summit-2016-3/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/04/05/dealing-with-async-in-react/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/03/29/selenium-tes-logs/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/03/22/a-brief-overview-of-hack-summit-2016-2/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/03/08/a-brief-overview-of-hack-summit-2016-1/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/03/01/opencv_ubuntu/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/02/02/the-first-steps-from-grunt-to-webpack/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/01/28/git_for_everything/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/01/12/custom_css_animations_in_react/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2016/01/05/global-listener-patterns-in-react/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/12/29/unbroken_window/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/12/08/react_basics/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/11/24/a_tale_of_two_development_competitions/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/11/11/productivity_powertools_for_linux/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/11/03/eclipse_maven/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/10/27/eclipse_tdd/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/10/15/some_thoughts_on_managing_small_development_teams/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/09/29/static_http_preview_server_using_docker/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/09/17/eclipse_tests_with_moreunit/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/09/01/revisiting_webapp_performance_on_http_2/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/08/26/scott-detailed-failure-reports/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/08/18/a_solution_to_codility_kalium/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/08/04/isolating_scripts_on_a_page/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/07/28/a_simple_proxy_to_circumvent_the_sop/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/07/21/testing-java-with-spock/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/06/23/historical-monitoring-on-aws/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/06/11/vim-scala/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/05/26/accessing-google-drive-in-javascript/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/05/12/using-google-auth-in-javascript/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/04/28/animated-failure-reports-with-selenium-and-cucumber/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/04/14/deploying-docker-images-via-ssh/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/03/31/why-you-should-care-about-vim/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/03/17/mathjax-processing-on-the-server-side/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/03/03/quick-and-dirty-way-to-build-phantomjs2-from-source/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/02/17/log-review-guided-by-tests/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/02/03/detecting-possibly-duplicate-strings/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/01/20/testing-for-undesired-log-output/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2015/01/06/efficient-sqlite-backup-on-android/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2014/12/23/attached-tests-with-maven/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2014/12/09/practical_measurement_of_the_android_backup_manager/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2014/11/25/running_lp_optimisation_from_javascript/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2014/11/11/running_lp_and_ip_optimisation_from_java/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2014/10/28/plotting_charts_with_svg/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2014/10/14/integrating_facebook_comments_sum/');
+      
+          allPostsUrl.push('https://advancedweb.hu/2014/09/30/integrating-facebook-comments/');
+      
+    </script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  </body>
+</html>
+

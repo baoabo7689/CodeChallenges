@@ -1,0 +1,450 @@
+
+
+An array A of points in a 2D plane is given. These points represent a polygon: every two consecutive points describe an edge of the polygon, and there is an edge connecting the last point and the first point in the array.
+
+A set of points in a 2D plane, whose boundary is a straight line, is called a semiplane. More precisely, any set of the form {(x, y) : ax + by ≥ c} is a semiplane. The semiplane contains its boundary.
+
+A polygon is convex if and only if, no line segment between two points on the boundary ever goes outside the polygon.
+
+For example, the polygon consisting of vertices whose Cartesian coordinates are consecutively:
+  (-1, 3)   (3, 1)   (0, -1)   (-2, 1)
+
+is convex.
+
+The convex hull of a finite set of points in a 2D plane is the smallest convex polygon that contains all points in this set. For example, the convex hull of a set consisting of seven points whose Cartesian coordinates are:
+  (-1, 3)   (1, 2)   (3, 1)   (1, 1)   (0, -1)   (-2, 1)  (-1, 2)
+
+is a polygon that has five vertices. When traversed clockwise, its vertices are:
+  (-1, 3)   (1, 2)   (3, 1)   (0, -1)   (-2, 1)
+
+If a polygon is concave (that is, it is not convex), it has a vertex which does not lie on its convex hull border. Your assignment is to find such a vertex.
+
+Assume that the following declarations are given:
+
+    // Point2D obj is an Object with attributes
+    // obj.x - type: int
+    // obj.y - type: int
+
+Write a function:
+
+    function solution(A);
+
+that, given a non-empty zero-indexed array A consisting of N elements describing a polygon, returns −1 if the polygon is convex. Otherwise, the function should return the index of any point that doesn't belong to the convex hull border. Note that consecutive edges of the polygon may be collinear (that is, the polygon might have 180−degrees angles).
+
+To access the coordinates of the K-th point (where 0 ≤ K < N), use the following syntax:
+
+        A[K].x to access the x-coordinate,
+        A[K].y to access the y-coordinate.
+
+For example, given array A such that:
+  A[0].x = -1  A[0].y =  3
+  A[1].x =  1  A[1].y =  2
+  A[2].x =  3  A[2].y =  1
+  A[3].x =  0  A[3].y = -1
+  A[4].x = -2  A[4].y =  1
+
+the function should return −1, as explained in the example above.
+
+However, given array A such that:
+  A[0].x = -1  A[0].y =  3
+  A[1].x =  1  A[1].y =  2
+  A[2].x =  1  A[2].y =  1
+  A[3].x =  3  A[3].y =  1
+  A[4].x =  0  A[4].y = -1
+  A[5].x = -2  A[5].y =  1
+  A[6].x = -1  A[6].y =  2
+
+the function should return either 2 or 6. These are the indices of the polygon lying strictly in its convex hull (that is, not on the convex hull border).
+
+Assume that:
+
+        N is an integer within the range [3..10,000];
+        the coordinates of each point in array A are integers within the range [−1,000,000,000..1,000,000,000];
+        no two edges of the polygon A intersect, other than meeting at their endpoints;
+        array A does not contain duplicate points.
+
+Complexity:
+
+        expected worst-case time complexity is O(N);
+        expected worst-case space complexity is O(N), beyond input storage (not counting the storage required for input arguments).
+
+Elements of input arrays can be modified.
+Copyright 2009–2017 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+======================================================================================================================================================
+
+ 
+======================================================================================================================================================
+Wrong: must correct coditions
+
+function solution(A) {
+	var N = A.length;
+	
+	var xMin = A[0].x;
+	var xMax = xMin;
+	
+	var yMin =  A[0].y;
+	var yMax = yMin;
+	
+	for(var i=1; i<N; i++) {
+		var a = A[i];
+		if(a.x < xMin) {
+			xMin = a.x;
+		} else if(xMax < a.x) {
+			xMax = a.x;
+		}
+		
+		if(a.y < yMin) {
+			yMin = a.y;
+		} else if(yMax < a.y) {
+			yMax = a.y;
+		}
+	}
+	
+	//console.log(xMin);
+	//console.log(xMax);
+	//console.log(yMin);
+	//console.log(yMax);
+	
+	A.push(A[0]);
+	A.push(A[1]);
+	for(var i=0; i<N ;i++) {
+		var a1 = A[i];
+		var a2 = A[i+1];
+		var a3 = A[i+2];
+		
+		if(a1.x <= a2.x && a2.x >= a3.x) {
+			
+			return i+1;
+		}
+		
+		if(a1.x >= a2.x && a2.x <= a3.x && a2.x != xMin) {
+			
+			return i+1;
+		}
+				
+		if(a1.y <= a2.y && a2.y >= a3.y && a2.y != yMax) {
+			
+			return i+1;
+		}
+		
+		if(a1.y >= a2.y && a2.y <= a3.y && a2.y != yMin) {
+			
+			return i+1;
+		}		
+	}
+	
+	return -1;
+}
+
+
+ [[-1, 3], [1, 2], [1, 1], [3, 1], [0, -1], [-2, 1], [-1, 2]]
+
+
+
+======================================================================================================================================================
+Wrong answer and too complicated
+
+function solution(A) {
+	var N = A.length;
+	
+	var yLines = [];
+	var existsY = [];
+	var distinctY = [];
+	
+	var xMin = A[0].x;
+	var xMax = xMin;
+	var yMin =  A[0].y;
+	var yMax = yMin;
+	
+	var pointIndexes = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var x = a.x;
+		var y = a.y;
+		
+		pointIndexes[x + "_" + y] = i;
+		if(x < xMin) {
+			xMin = x;
+		} else if(xMax < x) {
+			xMax = x;
+		}
+				
+		if(existsY[y]) {
+			continue;
+		}
+				
+		if(y < yMin) {
+			yMin = y;
+		} else if(yMax < y) {
+			yMax = y;
+		}
+		
+		distinctY.push(y);
+		yLines[y] = {xMin: undefined, xMax: undefined, xList: []};
+	}
+		
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var y = a.y;
+		var x = a.x;
+		yLines[y].xList.push(x);		
+	}
+	
+	var border = [];
+	for(var i=0; i<distinctY.length; i++) {
+		var y = distinctY[i];
+		var yLine = yLines[y];
+		yLine.xMin = minA(yLine.xList);
+		yLine.xMax = maxA(yLine.xList);
+		border[yLine.xMin + "_" + y] = true;
+		border[yLine.xMax + "_" + y] = true;
+	}
+			
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var x = a.x;
+		var y = a.y;
+		
+		if(!border[x + "_" + y]) {
+			return i;
+		}
+	}
+	
+	A.unshift(A[N-1]);
+	A.push(A[1]);
+	for(var i=0; i<N; i++) {
+		var a = A[i+1];
+		var x = a.x;
+		var y = a.y;
+		var yLine = yLines[y];
+				
+		var a1 = A[i];
+		var a2 = A[i+1];
+		var a3 = A[i+2];
+		
+		
+		if(x === yLine.xMin && a1.x <= x && x > a3.x) {
+			return i+1;
+		}
+				
+		if(x === yLine.xMax && a1.x >= x && x <a3.x) {
+			return i+1;			
+		}
+	}
+
+	return -1;
+}
+
+function minA(A) {
+	var N = A.length;
+	if(N === 0) {
+		return undefined;
+	}
+	
+	var min = A[0];
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		if(a < min) {
+			min = a;
+		}
+	}	
+	
+	return min;
+}
+
+function maxA(A) {
+	var N = A.length;
+	if(N === 0) {
+		return undefined;
+	}
+	
+	var max = A[0];
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		if(max < a) {
+			max = a;
+		}
+	}	
+	
+	return max;
+}
+
+var p = [1];
+p = p.concat([2,3]);
+console.log(p);
+
+
+======================================================================================================================================================
+
+
+function solution(A) {
+	var result = removeCollinear(A);
+	console.log(result);
+	return -1;
+}
+
+function removeCollinear(A) {
+	var N = A.length;
+	A.push(A[0]);
+	
+	var result = [];
+	for(var i=0; i<N; i++) {
+		var a1 = A[i];
+		for(var j=i + 1; j<N; j++) {
+			if(!isCollinear(a1, A[j], A[j+1])) {
+				break;
+			}		
+		}
+		
+		result.push(A[i]);
+		i=j - 1;		
+	}
+	
+	if(result.length <= 2) {
+		return result;
+	}
+	
+	if(isCollinear(result[result.length-1], result[0], result[1])) {
+		result = result.slice(1);
+	}
+	
+	return result;
+}
+
+function isCollinear(prev, a, next) {
+	return (prev.x === a.x && a.x === next.x) || (prev.y === a.y && a.y === next.y);
+}
+
+var arrayA = [
+	{x: 0, y: -2},
+	{x: -2, y: -2},
+	{x: -1, y: -1},
+	{x: -1, y: 0},
+	{x: -1, y: 1},
+	{x: 0, y: 2},
+	{x: 1, y: 2},
+	{x: 2, y: 2},
+	{x: 3, y: 1},
+	{x: 3, y: 0},
+	{x: 3, y: -2}
+];
+
+var arrayA = [
+	{x: 0, y: -2},
+	{x: -2, y: -2},
+	{x: -1, y: -1},
+	{x: -1, y: 0},
+	{x: -1, y: 1},
+	{x: 0, y: 2},
+	{x: 1, y: 2},
+	{x: 2, y: 2},
+	{x: 3, y: 1},
+	{x: 3, y: 0}
+];
+
+solution(arrayA);
+
+======================================================================================================================================================
+
+function removeCollinear(A) {
+	var N = A.length;
+	A.push(A[0]);
+	
+	var result = [];
+	for(var i=0; i<N; i++) {
+		var a1 = A[i];
+		for(var j=i + 1; j<N; j++) {
+			if(!isCollinear(a1, A[j], A[j+1])) {
+				break;
+			}		
+		}
+		
+		result.push(A[i]);
+		i=j - 1;		
+	}
+	
+	if(result.length <= 2) {
+		return result;
+	}
+	
+	if(isCollinear(result[result.length-1], result[0], result[1])) {
+		result = result.slice(1);
+	}
+	
+	return result;
+}
+
+function isCollinear(prev, a, next) {
+	return (prev.x === a.x && a.x === next.x) || (prev.y === a.y && a.y === next.y);
+}
+
+function preparePolygon(A) {
+	var result = [A[A.length - 1]];
+	result = result.concat(A);
+	result.push(result[1]);
+	
+	return result;
+}
+
+function solution(A) {
+	var result = removeCollinear(A);
+	if(result.length < 3) {
+		return -1;
+	}
+	
+	A = preparePolygon(result);
+	console.log(A);
+	return -1;
+}
+
+
+
+
+
+function isClockwise(a1, a2, a3) {	
+	var k1 = (a2.y - a1.y) / (a2.x - a1.x);
+	var k2 = (a3.y - a2.y) / (a3.x - a2.x);
+	
+	return k1 > k2;	
+}
+
+isClockwise({x: 1, y:1}, {x:2, y:2}, {x:4, y:3});
+
+isClockwise({x: 1, y:1}, {x:2, y:2}, {x:0, y:1});
+
+isClockwise({x: 1, y:1}, {x:2, y:2}, {x:0, y:1});
+isClockwise({x: 1, y:1}, {x:2, y:2}, {x:-1, y:0});
+
+
+1/1 -2/-1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

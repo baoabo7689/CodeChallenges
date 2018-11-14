@@ -1,0 +1,512 @@
+
+SqlSegmentsSum
+Compute the total length covered by 1-dimensional segments.
+
+
+
+You are given a table segments with the following structure:
+  create table segments (
+      l integer not null,
+      r integer not null,
+      check(l <= r),
+      unique(l,r)
+  );
+
+Each record in this table represents a contiguous segment of a line, from l to r inclusive. Its length equals r − l.
+
+Consider the parts of a line covered by the segments. Write an SQL query that returns the total length of all the parts of the line covered by the segments specified in the table segments. Please note that any parts of the line that are covered by several overlapping segments should be counted only once.
+
+For example, given:
+  l | r
+  --+--
+  1 | 5
+  2 | 3
+  4 | 6
+
+your query should return 5, as the segments cover the part of the line from 1 to 6.
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+
+
+======================================================================================================================================================
+Sort By Left
+Current Row: 
+	If: không có prev sum(RB - LB)
+	If: RB <= RA: 0 sum 
+	If: LB <= RA && RA<RB: sum (RB - RA)
+	If: RA<LB: sum(RB - LB)
+	
+https://blog.expensify.com/2015/09/25/the-simplest-sqlite-common-table-expression-tutorial/
+
+WITH fooCTE AS (SELECT * FROM foo)
+SELECT * FROM fooCTE;
+
+WITH aCTE AS (SELECT 'a'), 
+bCTE AS (SELECT 'b')
+SELECT * FROM aCTE, bCTE;
+
+
+TOP 1 = LIMIT 1
+https://advancedweb.hu/2015/08/18/a_solution_to_codility_kalium/
+
+
+	
+======================================================================================================================================================
+
+
+select sum(segLength)
+from
+(
+	select sgA.r - sgA.l as segLength
+	from segments sgA
+	where not exists(
+		select *
+		from segments sgB
+		where sgB.l < sgA.l)
+		
+	union all	
+	select sgX.segLength
+	from (
+		select sgA.l, sgA.r, sgA.r - sgB.r as segLength
+		from segments sgA join segments sgB
+		on sgB.l <= sgA.l and sgB.r <= sgA.r and sgA.l < sgB.r and (sgB.l <> sgA.l or sgB.r <> sgA.r)	
+	) sgX
+	where not exists (
+		select *
+		from (
+			select sgA.l, sgA.r, sgA.r - sgB.r as segLength
+			from segments sgA join segments sgB
+			on sgB.l <= sgA.l and sgB.r <= sgA.r and sgA.l < sgB.r and (sgB.l <> sgA.l or sgB.r <> sgA.r)			
+		) temp
+		where temp.l == sgX.l and temp.r == sgX.r and temp.segLength < sgX.segLength
+	)
+)
+
+
+
+
+select sum(segLength)
+from
+(	
+	select sgX.segLength
+	from (
+		select sgA.l, sgA.r, sgA.r - sgB.r as segLength
+		from segments sgA join segments sgB
+		on sgB.l <= sgA.l and sgB.r <= sgA.r and sgA.l < sgB.r and (sgB.l <> sgA.l or sgB.r <> sgA.r)	
+	) sgX
+	where not exists (
+		select *
+		from (
+			select sgA.l, sgA.r, sgA.r - sgB.r as segLength
+			from segments sgA join segments sgB
+			on sgB.l <= sgA.l and sgB.r <= sgA.r and sgA.l < sgB.r and (sgB.l <> sgA.l or sgB.r <> sgA.r)			
+		) temp
+		where temp.l == sgX.l and temp.r == sgX.r and temp.segLength < sgX.segLength
+	)
+)
+
+
+
+
+1 5 null 
+2 3 null 
+4 6 1 
+4 6 3
+
+[0,10],[20,30]
+
+0 10 null 
+20 30 
+
+
+
+select sgA.r - sgA.l as segLength
+from segments sgA 
+where not exists (
+	select 1
+	from segments sgB 
+	where sgB.l <= sgA.l and sgB.r <= sgA.r and sgA.l < sgB.r and (sgB.l <> sgA.l or sgB.r <> sgA.r)	
+)
+
+
+
+union all
+select sgX.segLength
+from (
+	select sgA.l, sgA.r, sgA.r - sgB.r as segLength
+	from segments sgA join segments sgB
+	on sgB.r >= sgA.r and sgB.l >= sgA.l and sgA.r > sgB.l and (sgB.l <> sgA.l or sgB.r <> sgA.r)	
+) sgX
+where not exists (
+	select 1
+	from (
+		select sgA.l, sgA.r, sgA.r - sgB.r as segLength
+		from segments sgA join segments sgB
+		on sgB.r >= sgA.r and sgB.l >= sgA.l and sgA.r > sgB.l and (sgB.l <> sgA.l or sgB.r <> sgA.r)			
+	) temp
+	where temp.l == sgX.l and temp.r == sgX.r and temp.segLength < sgX.segLength
+)
+	
+
+
+select sum(segLength)
+from
+(
+	select sgX.segLength
+	from (
+		select sgA.l, sgA.r, sgA.r - sgB.r as segLength
+		from segments sgA join segments sgB
+		on sgB.l <= sgA.l and sgB.r <= sgA.r and sgA.l < sgB.r and (sgB.l <> sgA.l or sgB.r <> sgA.r)	
+	) sgX
+	where not exists (
+		select 1
+		from (
+			select sgA.l, sgA.r, sgA.r - sgB.r as segLength
+			from segments sgA join segments sgB
+			on sgB.l <= sgA.l and sgB.r <= sgA.r and sgA.l < sgB.r and (sgB.l <> sgA.l or sgB.r <> sgA.r)			
+		) temp
+		where temp.l == sgX.l and temp.r == sgX.r and temp.segLength < sgX.segLength
+	)
+	
+	union all
+	select sgA.r - sgA.l as segLength
+	from segments sgA 
+	where not exists (
+		select 1
+		from segments sgB 
+		where (sgB.l <= sgA.l and sgA.l <= sgB.r and sgB.r <= sgA.r and (sgB.l <> sgA.l or sgB.r <> sgA.r)) or 
+			  (sgB.r >= sgA.r and sgA.r >= sgB.l and (sgB.l <> sgA.l or sgB.r <> sgA.r))
+	) and exists (
+		select 1
+		from segments sgB 
+		where sgB.l > sgA.l
+	) 
+)
+
+[(0,1),(0,2),(4,6),(8,11)]
+
+
+insert into segments values(0, 10);
+insert into segments values(20, 30);
+
+
+
+select sum(segLength)
+from
+(
+	select sgA.r - sgA.l as segLength
+	from segments sgA
+	where not exists(
+		select 1
+		from segments sgB
+		where ((sgB.l <= sgA.l and sgA.l <= sgB.r) or (sgB.l <= sgA.r and sgA.r <= sgB.r)) and (sgB.l <> sgA.l or sgB.r <> sgA.r)
+	)
+	
+	union all 
+	select sgE.segLength
+	from 
+	(
+		select sgA.l, sgA.r, sgA.r - sgC.r as segLength
+		from segments sgA join segments sgC
+		on exists(
+			select 1
+			from segments sgB
+			where ((sgB.l <= sgA.l and sgA.l <= sgB.r) or (sgB.l <= sgA.r and sgA.r <= sgB.r)) and (sgB.l <> sgA.l or sgB.r <> sgA.r)
+		) and not exists (
+			select 1 
+			from segments sgD
+			where sgD.l <= sgC.l and sgC.r <= sgD.r and (sgD.l <> sgC.l and sgD.r <> sgC.r)
+		) 
+		and sgA.l <= sgC.r and sgC.r <= sgA.r and (sgA.l <> sgC.l or sgA.r <> sgC.r) 
+	) sgE
+	where not exists (
+		select sgA.l, sgA.r, sgA.r - sgC.r as segLength
+		from segments sgA join segments sgC
+		on exists(
+			select 1
+			from segments sgB
+			where ((sgB.l <= sgA.l and sgA.l <= sgB.r) or (sgB.l <= sgA.r and sgA.r <= sgB.r)) and (sgB.l <> sgA.l or sgB.r <> sgA.r)
+		) and not exists (
+			select 1 
+			from segments sgD
+			where sgD.l <= sgC.l and sgC.r <= sgD.r and (sgD.l <> sgC.l and sgD.r <> sgC.r)
+		) 
+		and sgA.l <= sgC.r and sgC.r <= sgA.r and (sgA.l <> sgC.l or sgA.r <> sgC.r) 
+		where sgA.l = sgE.l and sgA.r = sgE.r and sgE.segLength < sgA.r - sgC.r		
+	)	
+
+	
+	union all 
+	select 0 as segLength
+)
+
+
+
+	select sgA.l, sgA.r, sgA.r - sgC.r as segLength
+	from segments sgA join segments sgC
+	on exists(
+		select 1
+		from segments sgB
+		where ((sgB.l <= sgA.l and sgA.l <= sgB.r) or (sgB.l <= sgA.r and sgA.r <= sgB.r)) and (sgB.l <> sgA.l or sgB.r <> sgA.r)
+	) and not exists (
+		select 1 
+		from segments sgD
+		where sgD.l <= sgC.l and sgC.r <= sgD.r and (sgD.l <> sgC.l and sgD.r <> sgC.r)
+	) 
+	and sgA.l <= sgC.r and sgC.r <= sgA.r and (sgA.l <> sgC.l or sgA.r <> sgC.r) 
+
+
+
+	select sgE.segLength
+	from 
+	(
+		select sgA.l, sgA.r, sgA.r - sgC.r as segLength
+		from segments sgA join segments sgC
+		on exists(
+			select 1
+			from segments sgB
+			where ((sgB.l <= sgA.l and sgA.l <= sgB.r) or (sgB.l <= sgA.r and sgA.r <= sgB.r)) and (sgB.l <> sgA.l or sgB.r <> sgA.r)
+		) and not exists (
+			select 1 
+			from segments sgD
+			where sgD.l <= sgC.l and sgC.r <= sgD.r and (sgD.l <> sgC.l and sgD.r <> sgC.r)
+		) 
+		and sgA.l <= sgC.r and sgC.r <= sgA.r and (sgA.l <> sgC.l or sgA.r <> sgC.r) 
+	) sgE
+	where not exists (
+		select sgA.l, sgA.r, sgA.r - sgC.r as segLength
+		from segments sgA join segments sgC
+		on exists(
+			select 1
+			from segments sgB
+			where ((sgB.l <= sgA.l and sgA.l <= sgB.r) or (sgB.l <= sgA.r and sgA.r <= sgB.r)) and (sgB.l <> sgA.l or sgB.r <> sgA.r)
+		) and not exists (
+			select 1 
+			from segments sgD
+			where sgD.l <= sgC.l and sgC.r <= sgD.r and (sgD.l <> sgC.l and sgD.r <> sgC.r)
+		) 
+		and sgA.l <= sgC.r and sgC.r <= sgA.r and (sgA.l <> sgC.l or sgA.r <> sgC.r) 
+		where sgA.l = sgE.l and sgA.r = sgE.r and sgE.segLength < sgA.r - sgC.r		
+	)
+
+
+
+
+with prevSegs as (
+	select sgA.l, sgA.r, sgA.r - sgC.r as segLength
+		from segments sgA join segments sgC
+		on exists(
+			select 1
+			from segments sgB
+			where ((sgB.l <= sgA.l and sgA.l <= sgB.r) or (sgB.l <= sgA.r and sgA.r <= sgB.r)) and (sgB.l <> sgA.l or sgB.r <> sgA.r)
+		) and not exists (
+			select 1 
+			from segments sgD
+			where sgD.l <= sgC.l and sgC.r <= sgD.r and (sgD.l <> sgC.l and sgD.r <> sgC.r)
+		) 
+	and sgA.l <= sgC.r and sgC.r <= sgA.r and (sgA.l <> sgC.l or sgA.r <> sgC.r) 
+)
+select sum(segLength)
+from
+(
+	select sgA.r - sgA.l as segLength
+	from segments sgA
+	where not exists(
+		select 1
+		from segments sgB
+		where ((sgB.l <= sgA.l and sgA.l <= sgB.r) or (sgB.l <= sgA.r and sgA.r <= sgB.r)) and (sgB.l <> sgA.l or sgB.r <> sgA.r)
+	)
+	
+	union all 
+	select sgE.segLength
+	from prevSegs sgE
+	where not exists (
+		select 1
+		from prevSegs segF
+		where segF.l = sgE.l and segF.r = sgE.r and sgE.segLength < segF.segLength	
+	)	
+
+	
+	union all 
+	select 0 as segLength
+)
+
+
+With separateSegs as (
+	select *
+	from segments sgA
+	where not exists(
+		select 1
+		from segments sgB
+		where ((sgB.l <= sgA.l and sgA.l <= sgB.r) or (sgB.l <= sgA.r and sgA.r <= sgB.r)) and (sgB.l <> sgA.l or sgB.r <> sgA.r)
+	)
+),
+nonbelongSegs as (
+	select *
+	from segments sgA
+	where not exists (
+		select 1 
+		from segments sgB
+		where sgB.l <= sgA.l and sgA.r <= sgB.r and (sgB.l <> sgA.l and sgB.r <> sgA.r)
+	) and exists(
+		select 1
+		from segments sgB
+		where ((sgB.l <= sgA.l and sgA.l <= sgB.r) or (sgB.l <= sgA.r and sgA.r <= sgB.r)) and (sgB.l <> sgA.l or sgB.r <> sgA.r)
+	) 
+),
+prevSegs as (
+	select sgA.l, sgA.r, sgA.r - sgB.r as segLength
+	from nonbelongSegs sgA join nonbelongSegs sgB
+	on sgA.l <= sgB.r and sgB.r <= sgA.r and (sgA.l <> sgB.l or sgA.r <> sgB.r)
+)
+select sum(segLength)
+from
+(
+	select sgA.r - sgA.l as segLength
+	from separateSegs sgA
+	
+	union all 
+	select sgE.segLength
+	from prevSegs sgE
+	where not exists (
+		select 1
+		from prevSegs segF
+		where segF.l = sgE.l and segF.r = sgE.r and sgE.segLength < segF.segLength	
+	)	
+
+	
+	union all 
+	select 0 as segLength
+)
+
+
+
+
+
+	
+======================================================================================================================================================
+
+With allPoint as (
+	SELECT    l AS x
+	FROM      segments
+	UNION
+	SELECT    r AS x
+	FROM      segments
+),
+joinPoint as (
+	SELECT    x AS r
+	FROM      segments
+	JOIN allPoint pois 
+	ON x > l AND x <= r
+)
+SELECT  Ifnull(SUM(r - l), 0)
+FROM    
+( 
+	SELECT DISTINCT
+		r ,
+		( 
+			SELECT    MAX(x)
+			FROM      allPoint
+			WHERE     x < r
+		) AS l
+	FROM  joinPoint  AS rights
+) AS chopped_segments
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

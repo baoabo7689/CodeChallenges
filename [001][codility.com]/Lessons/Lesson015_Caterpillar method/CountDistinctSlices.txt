@@ -1,0 +1,187 @@
+An integer M and a non-empty zero-indexed array A consisting of N non-negative integers are given. All integers in array A are less than or equal to M.
+
+A pair of integers (P, Q), such that 0 ≤ P ≤ Q < N, is called a slice of array A. The slice consists of the elements A[P], A[P + 1], ..., A[Q]. A distinct slice is a slice consisting of only unique numbers. That is, no individual number occurs more than once in the slice.
+
+For example, consider integer M = 6 and array A such that:
+
+    A[0] = 3
+    A[1] = 4
+    A[2] = 5
+    A[3] = 5
+    A[4] = 2
+There are exactly nine distinct slices: (0, 0), (0, 1), (0, 2), (1, 1), (1, 2), (2, 2), (3, 3), (3, 4) and (4, 4).
+
+The goal is to calculate the number of distinct slices.
+
+Write a function:
+
+int solution(int M, int A[], int N);
+that, given an integer M and a non-empty zero-indexed array A consisting of N integers, returns the number of distinct slices.
+
+If the number of distinct slices is greater than 1,000,000,000, the function should return 1,000,000,000.
+
+For example, given integer M = 6 and array A such that:
+
+    A[0] = 3
+    A[1] = 4
+    A[2] = 5
+    A[3] = 5
+    A[4] = 2
+the function should return 9, as explained above.
+
+Assume that:
+
+N is an integer within the range [1..100,000];
+M is an integer within the range [0..100,000];
+each element of array A is an integer within the range [0..M].
+Complexity:
+
+expected worst-case time complexity is O(N);
+expected worst-case space complexity is O(M), beyond input storage (not counting the storage required for input arguments).
+Elements of input arrays can be modified.
+Copyright 2009–2017 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited.
+
+
+
+======================================================================================================================================================
+
+-N:
+	.Group 1: N groups
+	.Group 2: N-1 groups
+	.Group N: 1
+	=> Count = (N+1)*N/2
+
+-N=3
+	Count=(3+1)*3/2=6
+
+
+
+start-------------nextStart---------------------end
+Count += count(range from start->nextStart) + (end - nextStart)*(nextStart - start)
+	 = (nextStart-start+1)*(nextStart-start) / 2 + (end - nextStart)*(nextStart - start)	
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+
+
+function solution(M, A) {
+	var N = A.length;
+	
+	var counts = [];
+	for(var i=0; i<=M; i++) {
+		counts[i] = 0;
+	}
+	
+	var result = 0;	
+	var max = 1000000000;
+	
+	var end = -1;
+	for(var start=0; start<N;) {
+		var aStart = A[start];
+		
+		end++;
+		var a = A[end];				
+		while(counts[a] <= 1 && end < N) {
+			var nextValue =  counts[a] + 1;	
+			counts[a] = nextValue;		
+			if(nextValue === 2) {
+				break;
+			}
+			
+			end++;
+			a = A[end];
+		}	
+				
+		if(end === N) {
+			var range = end - start + 1;
+			result += range*(range-1) / 2;
+			break;
+		}
+		
+		var nextStart = start;
+		var b = A[nextStart];
+		while(b !== a) {
+			counts[b] = counts[b] - 1;
+			nextStart++;
+			b = A[nextStart];
+		}	
+		
+		counts[b] = counts[b] - 1;
+		nextStart++;
+		
+		var range = nextStart - start + 1;
+		result += range*(range-1) / 2 + (end - nextStart)*(nextStart - start);
+		if(result >= max) {
+			return max;
+		}
+		
+		start = nextStart;	
+		console.log(start + " " + nextStart + " " + end);
+	}	
+	
+	return Math.min(result, max);
+}
+
+
+
+(7,[3,4,5,7,1,2,7])
+solution(7,[3,4,6,7,5,2,7,1]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,558 @@
+You are given two non-empty zero-indexed arrays A and B consisting of N integers. These arrays represent N planks. More precisely, A[K] is the start and B[K] the end of the K−th plank.
+
+Next, you are given a non-empty zero-indexed array C consisting of M integers. This array represents M nails. More precisely, C[I] is the position where you can hammer in the I−th nail.
+
+We say that a plank (A[K], B[K]) is nailed if there exists a nail C[I] such that A[K] ≤ C[I] ≤ B[K].
+
+The goal is to find the minimum number of nails that must be used until all the planks are nailed. In other words, you should find a value J such that all planks will be nailed after using only the first J nails. More precisely, for every plank (A[K], B[K]) such that 0 ≤ K < N, there should exist a nail C[I] such that I < J and A[K] ≤ C[I] ≤ B[K].
+
+For example, given arrays A, B such that:
+
+    A[0] = 1    B[0] = 4
+    A[1] = 4    B[1] = 5
+    A[2] = 5    B[2] = 9
+    A[3] = 8    B[3] = 10
+four planks are represented: [1, 4], [4, 5], [5, 9] and [8, 10].
+
+Given array C such that:
+
+    C[0] = 4
+    C[1] = 6
+    C[2] = 7
+    C[3] = 10
+    C[4] = 2
+if we use the following nails:
+
+0, then planks [1, 4] and [4, 5] will both be nailed.
+0, 1, then planks [1, 4], [4, 5] and [5, 9] will be nailed.
+0, 1, 2, then planks [1, 4], [4, 5] and [5, 9] will be nailed.
+0, 1, 2, 3, then all the planks will be nailed.
+Thus, four is the minimum number of nails that, used sequentially, allow all the planks to be nailed.
+
+Write a function:
+
+int solution(int A[], int B[], int N, int C[], int M);
+that, given two non-empty zero-indexed arrays A and B consisting of N integers and a non-empty zero-indexed array C consisting of M integers, returns the minimum number of nails that, used sequentially, allow all the planks to be nailed.
+
+If it is not possible to nail all the planks, the function should return −1.
+
+For example, given arrays A, B, C such that:
+
+    A[0] = 1    B[0] = 4
+    A[1] = 4    B[1] = 5
+    A[2] = 5    B[2] = 9
+    A[3] = 8    B[3] = 10
+
+    C[0] = 4
+    C[1] = 6
+    C[2] = 7
+    C[3] = 10
+    C[4] = 2
+the function should return 4, as explained above.
+
+Assume that:
+
+N and M are integers within the range [1..30,000];
+each element of arrays A, B, C is an integer within the range [1..2*M];
+A[K] ≤ B[K].
+Complexity:
+
+expected worst-case time complexity is O((N+M)*log(M));
+expected worst-case space complexity is O(M), beyond input storage (not counting the storage required for input arguments).
+Elements of input arrays can be modified.
+Copyright 2009–2017 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited.
+=================================================================================================================================================================================================================
+A. N planks, we can choose Ci={Ak1, ..., Akl} max length?
+	=> not
+			
+1	----C1----
+2	   -C1--------------------------------C4---
+3					----C2----
+4					   -C2----------------C4---
+5										--C4----------------------C3----
+6															 	 -C3------------------------																								
+7										--C4-------C5----
+8.												  -C5-------																			
+
+Must choose: C1, C2, C3, C5
+When choose C4 => not min 
+
+
+B. Problem: Find range to nail that max min nail position
+	For each position
+		-Reach end postion: 
+			from last start->end: if have new: must choose this range
+			from last start->end: if not have new: not choose this range
+			
+
+=================================================================================================================================================================================================================
+
+function solution(A, B, C) {
+	var N = A.length;
+	var M = C.length;
+	
+	var startSize = 0;
+	var endSize = M;
+	var size = Math.floor((endSize + startSize) / 2);
+	while(startSize !== endSize) {
+		var canNail = check(C, M, N, size, A, B);
+		
+		if(canNail) {
+			endSize = size;
+		} else {
+			startSize = size + 1;
+		}		
+		
+		size = Math.floor((endSize + startSize) / 2);
+	}
+	
+	var canNail = check(C, M, N, size, A, B);
+		
+	return canNail ? size : -1;
+}
+
+function check(C, M, N, size, A, B) {	
+	if(size === 0) {
+		return false;
+	}
+	
+	var exists = [];
+	for(var i=0; i < size; i++) {
+		var c = C[i];
+		exists[c] = true;
+	}
+
+	var max = 2*M;
+	var nails = [];
+	for(var i=0; i<=max; i++) {
+		nails[i] = 0;
+	}
+	
+	nails[-1] = 0;
+	for(var i=0; i<=max; i++) {
+		nails[i] = nails[i-1] + (exists[i] ? 1 : 0);
+	}
+	
+	
+	console.log(size);
+	console.log(exists);
+	console.log(nails);
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];
+		console.log(nails[b] + " " + nails[a - 1]);
+		if(nails[b] - nails[a - 1] === 0) {
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+solution([1, 4, 5, 8], [4, 5, 9, 10], [4, 6, 7, 10, 2]);
+solution([1], [2], [2]);
+
+
+
+=================================================================================================================================================================================================================
+
+function solution(A, B, C) {
+	var N = A.length;
+	var M = C.length;
+	
+	var max = 2*M;
+	var nails = [];
+	
+	for(var i=0; i<max; i++) {
+		var c = C[i];
+		nails[c] = nails[c] === undefined ? i : nails[c];
+		console.log();
+	}
+	
+	var nexts = [];
+	var mins = [];
+	var maxMinNail = undefined;
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];
+		
+		var nextPostion = a;
+		while(nexts[nextPostion]) {
+			nextPostion = nexts[a];
+		}
+		
+		var minNail = undefined;
+		for(var j=nextPostion; j<=b; j++) {
+			var nail = nails[j];
+			minNail = minNail === undefined ? nail : Math.min(minNail, nail);
+		}
+		
+		maxMinNail = maxMinNail === undefined ? minNail : Math.max(maxMinNail, minNail);
+		for(var j=nextPostion; j<=b; j++) {
+			mins[j] = minNail;
+			nexts[j] = b;
+		}		
+	}
+		
+	
+	return maxMinNail === undefined ? -1 : maxMinNail;
+}
+
+
+solution([1, 4, 5, 8], [4, 5, 9, 10], [4, 6, 7, 10, 2]);
+
+
+
+
+
+
+
+function solution(A, B, C) {
+	var N = A.length;
+	var M = C.length;
+	
+	var max = 2*M;
+	var nails = [];
+	
+	for(var i=0; i<M; i++) {
+		var c = C[i];
+		nails[c] = nails[c] === undefined ? (i+1) : nails[c];
+	}
+	
+	console.log("nails");
+	console.log(nails);
+	
+	var starts = [];
+	var ends = [];
+	for(var i=0; i<=max; i++) {
+		starts[i] = 0;		
+		ends[i] = 0;
+	}
+		
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];
+		
+		starts[a] = starts[a] + 1;
+		ends[b] = ends[b] + 1;
+	}
+	
+	console.log(starts);
+	console.log(ends);
+	
+	var minNail = undefined;
+	
+	var startCount = 0;
+	var result = undefined;
+	var hasUnnailed = false;
+	for(var i=0; i<=max; i++) {
+		var start = starts[i];
+		var end = ends[i];
+		startCount += start;
+		
+		if(startCount !== 0) {
+			var nail = nails[i];
+			minNail = minNail === undefined  ? nail : (nail === undefined ? minNail : Math.min(minNail, nail));			
+		}
+				
+		if(end) { 
+			if(minNail === undefined && end === startCount) {
+				return -1;
+			}
+			
+			result = result === undefined ? minNail : (minNail === undefined ? result : Math.max(result, minNail));
+			
+			minNail = undefined;
+		}
+									
+		startCount -= end;
+		// console.log("start: " + start + " " + end + " " + minNail + " " + result);
+		// console.log("startCount: " + startCount);		
+	}
+	
+	return result === undefined ? -1 : result;
+}
+
+
+solution([2], [2], [1]);
+solution([1, 4, 5, 8], [4, 5, 9, 10], [4, 6, 7, 10, 2]);
+
+
+
+
+
+
+
+function solution(A, B, C) {
+	var N = A.length;
+	var M = C.length;
+	
+	var max = 2*M;
+	var nails = [];
+	
+	for(var i=0; i<M; i++) {
+		var c = C[i];
+		nails[c] = nails[c] === undefined ? (i+1) : nails[c];
+	}
+		
+	console.log("nails");
+	console.log(nails);
+	
+	var starts = [];
+	var ends = [];
+	for(var i=0; i<=max; i++) {
+		starts[i] = 0;		
+		ends[i] = 0;
+	}
+		
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];
+		
+		starts[a] = starts[a] + 1;
+		ends[b] = ends[b] + 1;
+	}
+	
+	console.log(starts);
+	console.log(ends);
+	var minNail = undefined;
+	
+	var startCount = 0;
+	var result = undefined;
+	var hasUnnailed = false;
+	for(var i=0; i<=max; i++) {
+		var start = starts[i];
+		var end = ends[i];
+		
+		var nail = nails[i];
+		if(startCount !== 0 && nail !== undefined) {
+			minNail = minNail === undefined  ? nail : Math.min(minNail, nail);		
+		}
+		
+		if(startCount && end) {			
+			if(minNail === undefined && end === startCount) {
+				return -1;
+			}
+						
+			if(minNail !== undefined && hasUnnailed) {
+				result = result === undefined ? minNail : Math.max(result, minNail);		
+			}
+			
+			hasUnnailed = false;			
+		}
+		
+		if(start) {
+			hasUnnailed=true;			
+		}
+		
+		startCount += start - end;
+		
+		console.log("hasUnnailed: " + hasUnnailed);
+		console.log("start: " + start + " " + end + " " + minNail + " " + result);
+		// console.log("startCount: " + startCount);	
+	}
+	
+	return result === undefined ? -1 : result;
+}
+
+solution([1, 4, 5, 8], [4, 5, 9, 10], [4, 6, 7, 10, 2]);
+
+nails
+VM47:15 (11) [empty × 2, 5, empty × 1, 1, empty × 1, 2, 3, empty × 2, 4]
+VM47:32 (11) [0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0]
+VM47:33 (11) [0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1]
+
+
+
+
+
+
+
+
+http://codility-lessons.blogspot.com/2015/03/lesson-11-nailingplanks-nailing-planks.html
+
+
+
+
+function solution(A, B, C) {
+	var N = A.length;
+	var M = C.length;
+	
+	var nailIndexes = [];
+	for(var i=0;i<M;i++) {
+		var nail = C[i];
+		var value = nailIndexes[nail];
+		
+		nailIndexes[nail] = value === undefined ? (i + 1) : value;
+	}
+		
+	var ends = [];
+	for(var i=0; i<N;i++) {
+		var end = B[i];
+		var start = A[i];
+		
+		var value = ends[end];
+		ends[end] = value === undefined ? start : Math.max(start, value);
+	}
+	
+	var max = 2*M;	
+	var checkedStartPosition = -1;
+	var minNails = [];
+	var lastCheckPosition = 0;
+	var result = 0;
+	var positions = [];
+	
+	for(var i=0; i<=max;i++) {
+		var start = ends[i];
+		
+		if(start === undefined || start <= checkedStartPosition) {
+			continue;
+		}
+		
+		checkedStartPosition = start;
+		while(positions.length && positions[0] < start) {
+			positions=positions.slice(1);
+			minNails=minNails.slice(1);
+		}
+		
+		lastCheckPosition = Math.max(lastCheckPosition, start);		
+		while(lastCheckPosition <= i) {
+			var minNail = nailIndexes[lastCheckPosition];
+			if(minNail === undefined) {
+				lastCheckPosition++;
+				continue;
+			}
+			
+			while(minNail < minNails[minNails.length-1] && minNails.length){
+				minNails.pop();
+				positions.pop();
+			}
+			
+			minNails.push(minNail);
+			positions.push(lastCheckPosition);
+			lastCheckPosition++;
+		}
+		
+		if(minNails.length === 0) {
+			return -1;
+		}
+		
+		result = Math.max(result, minNails[0]);	
+	}
+	
+	return result;
+}
+
+
+solution([2], [2], [1]);
+solution([1, 4, 5, 8], [4, 5, 9, 10], [4, 6, 7, 10, 2]);
+
+[ , , 5, , 1, , 2, 3, , , 4 ]
+[ , , , , 1, 4, , , , 5, 8 ]
+
+
+
+	console.log(nailIndexes);
+	console.log(ends);
+
+
+
+[,1]
+[,,2]
+2
+
+
+=================================================================================================================================================================================================================
+
+
+function solution(A, B, C) {
+	var N = A.length;
+	var M = C.length;
+	
+	var nailIndexes = [];
+	for(var i=0;i<M;i++) {
+		var nail = C[i];
+		var value = nailIndexes[nail];
+		
+		nailIndexes[nail] = value === undefined ? (i + 1) : value;
+	}
+		
+	var ends = [];
+	for(var i=0; i<N;i++) {
+		var end = B[i];
+		var start = A[i];
+		
+		var value = ends[end];
+		ends[end] = value === undefined ? start : Math.max(start, value);
+	}
+	
+	var max = 2*M;	
+	var checkedStartPosition = -1;
+	var minNails = [];
+	var lastCheckPosition = 0;
+	var result = 0;
+	var chooseIndex = 0;
+	var positions = [];
+	
+	
+	for(var i=0; i<=max;i++) {
+		var start = ends[i];
+		
+		if(start === undefined || start <= checkedStartPosition) {
+			continue;
+		}
+		
+		checkedStartPosition = start;
+		while(chooseIndex < positions.length && positions[chooseIndex] < start) {
+			chooseIndex++;
+		}
+		
+		lastCheckPosition = Math.max(lastCheckPosition, start);		
+		while(lastCheckPosition <= i) {
+			var minNail = nailIndexes[lastCheckPosition];
+			if(minNail === undefined) {
+				lastCheckPosition++;
+				continue;
+			}
+			
+			while(minNail < minNails[minNails.length-1] && minNails.length > chooseIndex){
+				minNails.pop();
+				positions.pop();
+			}
+			
+			minNails.push(minNail);
+			positions.push(lastCheckPosition);
+			lastCheckPosition++;
+		}
+		
+		if(minNails.length === chooseIndex) {
+			return -1;
+		}
+		
+		result = Math.max(result, minNails[chooseIndex]);	
+	}
+	
+	return result;
+}
+
+
+
+O(M) + O(N) + [O(2*M): lastCheckPosition cứ tăng => O(M)]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

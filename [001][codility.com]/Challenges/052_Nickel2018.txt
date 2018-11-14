@@ -1,0 +1,135 @@
+
+On the sequence of logical values (true or false) we can build up an OR-Pascal-triangle structure. Instead of summing the values, as in a standard Pascal-triangle, we will combine them using the OR function. That means that the lowest row is simply the input sequence, and every entry in each subsequent row is the OR of the two elements below it. For example, the OR-Pascal-triangle built on the array [true, false, false, true, false] is as follows:
+
+Your job is to count the number of nodes in the OR-Pascal-triangle that contain the value true (this number is 11 for the animation above).
+
+Write a function:
+
+    function solution(P);
+
+that, given an array P of N Booleans, returns the number of fields in the OR-Pascal-triangle built on P that contain the value true. If the result is greater than 1,000,000,000, your function should return 1,000,000,000.
+
+Given P = [true, false, false, true, false], the function should return 11, as explained above.
+
+Given P = [true, false, false, true], the function should return 7, as can be seen in the animation below.
+
+Assume that:
+
+        N is an integer within the range [1..100,000].
+
+Complexity:
+
+        expected worst-case time complexity is O(N);
+        expected worst-case space complexity is O(1), beyond input storage (not counting the storage required for input arguments).
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+======================================================================================================================================================
+
+	
+    function solution(P) {
+		var N = P.length;
+		if(N == 0) {
+			return 0;
+		}
+		
+		var count = 0;
+		var max = 1000000000;
+		if(P[N - 1]) {
+			count += N;
+		}
+		
+		for(var i=N-2; i>=0; i--) {
+			var p = P[i];
+			if(!p) {
+				continue;
+			}
+			
+			count += (i + 1);
+			if(!P[i+1]) {
+				count += i;
+			}
+			
+			if(count > max) {
+				return max;
+			}
+		}
+		
+		return count;
+	}
+	
+
+
+
+    function solution(P) {
+		var N = P.length;
+		if(N == 0) {
+			return 0;
+		}
+		
+		var count = 0;
+		var max = 1000000000;
+		for(var i=N-1; i>=0; i--) {
+			var p = P[i];
+			if(p) {
+				count += i+1;
+				if(count >= max) {
+					return max;
+				}
+				
+				continue;
+			}
+			
+			for(var j=i-1; j>=0; j--) {
+				if(P[j]) {
+					break;
+				}
+			}
+						
+			if(j < 0) {
+				break;
+			}
+			
+			// từ j->i: dựng được hình bình hành: (i-j+1)*(j+1)
+			count += (i-j+1)*(j+1);
+			if(count >= max) {
+				return max;
+			}		
+
+			i=j;
+		}
+		
+		return count;
+	}
+	
+
+	
+	
+ [True, False, False, True, False]
+
+
+T F F T F
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

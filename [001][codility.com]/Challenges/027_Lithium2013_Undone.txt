@@ -1,0 +1,391 @@
+
+Clocks
+START
+Find the maximal number of clocks with hands that look identical when rotated.
+
+
+
+
+You are given N round clocks.
+
+Every clock has M hands, and these hands can point to positions 1, 2, 3, ..., P (yes, these represent numbers around each face). The clocks are represented by the matrix A consisting of N rows and M columns of integers. The first row represents the hands of the first clock, and so on.
+
+For example, you are given matrix A consisting of five rows and two columns, and P = 4:
+  A[0][0] = 1    A[0][1] = 2
+  A[1][0] = 2    A[1][1] = 4
+  A[2][0] = 4    A[2][1] = 3
+  A[3][0] = 2    A[3][1] = 3
+  A[4][0] = 1    A[4][1] = 3
+
+You can rotate the clocks to obtain several clocks that look identical. For example, if you rotate the third, fourth and fifth clocks you can obtain the following clocks:
+
+After rotation, the first, third and fourth clocks look the same, and the second clock looks the same as the fifth one. That means there are four pairs of clocks that look the same: (1, 3), (1, 4), (2, 5) and (3, 4).
+
+Write a function:
+
+    function solution(A, P);
+
+that, given a zero-indexed matrix A consisting of N rows and M columns of integers and integer P, returns the maximal number of pairs of clocks that can look the same after rotation.
+
+For example, given the following array A and P = 4:
+    A[0][0] = 1     A[0][1] = 2
+    A[1][0] = 2     A[1][1] = 4
+    A[2][0] = 4     A[2][1] = 3
+    A[3][0] = 2     A[3][1] = 3
+    A[4][0] = 1     A[4][1] = 3
+
+the function should return 4, as explained above.
+
+Write an efficient algorithm for the following assumptions:
+
+        N and M are integers within the range [1..500];
+        P is an integer within the range [1..1,000,000,000];
+        each element of matrix A is an integer within the range [1..P];
+        the elements of each row of matrix A are all distinct.
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+=================================================================================================================================================================================================================
+-Sort hands of each clock 
+-Put clock to position: d1_d2_...
+-Count
+=> 
+		
+-Sort: N*MlogM 
+-Loop: N 
+-N*M
+-Count: N		
+=> O(N*M + N*MlogM)
+
+=================================================================================================================================================================================================================
+
+function sort(A) {
+	var N = A.length;
+	
+	if(N === 0) {
+		return A;
+	}
+		
+	var max = A[0];
+	
+	var aInfo = [];
+	
+	for(var i=0; i<N; i++) {
+		var value = A[i];
+		
+		if(value < 0) {
+			continue;
+		}
+		
+		aInfo.push({ value: value, digit: value});
+		
+		if(max < value) {
+			max = value;
+		}
+	}
+	
+	N = aInfo.length;
+	var M = Math.round(Math.log(max)/Math.log(10));
+		
+	for(var i=0; i<=M; i++) {
+		var sortBaskets = initSortBaskets();
+		
+		for(var j=0; j<N;j++) {
+			var a = aInfo[j];
+			var digit = a.digit % 10;
+			a.digit = a.digit ? Math.floor(a.digit / 10) : 0;
+			
+			sortBaskets[digit].push(a);
+		}
+		
+		aInfo = combineSortBaskets(sortBaskets);
+	}	
+	
+	var result = [];	
+	for(var i=0; i<N; i++) {		
+		result.push(aInfo[i].value);
+	}
+	
+	return result;
+}
+
+
+function initSortBaskets() {
+	var sortBaskets = [];
+	
+	for(var i=0;i<10;i++) {
+		sortBaskets.push([]);
+	}
+	
+	return sortBaskets;
+}
+
+
+function combineSortBaskets(sortBaskets) {
+	var result = [];
+	
+	for(var i=0;i<10;i++) {
+		var basket = sortBaskets[i];
+		
+		for(var j=0;j<basket.length; j++) {
+			result.push(basket[j]);		
+		}
+	}
+	
+	return result;
+}
+
+
+function solution(A, P) {
+	console.log(A);
+	console.log(P);
+	
+	var N = A.length;
+	if(N == 0) {
+		return 0;
+	}
+	
+	var M = A[0].length;
+	var counts = {};
+	var keys = [];
+	
+	for(var i=0; i<N; i++) {
+		A[i] = sort(A[i]);
+	}
+	
+	console.log(A);
+	
+	for(var i=0; i<N; i++) {
+		var row = A[i];
+		var key = "";
+		for(var j=1; j<M; j++) {
+			key += row[j] - row[j-1] + "_";
+		}
+		
+		if(counts[key]) {
+			counts[key]++;				
+		} else {
+			keys.push(key);
+			counts[key] = 1;	
+		}
+	}
+	
+	
+	var result = 0;
+	for(var i=0; i<keys.length; i++) {
+		var key = keys[i];
+		var count = counts[key];
+		result += count*(count-1) / 2;
+	}
+	
+	return result;
+}
+
+
+
+4 # 7
+
+[ [ 2, 5, 9 ],
+  [ 7, 9, 2 ],
+  [ 3, 6, 10 ],
+  [ 4, 7, 11 ],
+  [ 6, 8, 1 ],
+  [ 5, 8, 1 ] ]
+11
+[ [ 2, 5, 9 ],
+  [ 2, 7, 9 ],
+  [ 3, 6, 10 ],
+  [ 4, 7, 11 ],
+  [ 1, 6, 8 ],
+  [ 1, 5, 8 ] ]
+
+
+
+[ 2, 5, 9 ] 
+[ 2, 7, 9 ] [ 1, 6, 8 ]
+[ 3, 6, 10 ] [ 4, 7, 11 ]
+[ 1, 5, 8 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+function solution(S) {
+	var mod = 1410000017;
+	var L = S.length;
+	var maxIndex = L-1;
+	
+	var multipliers = 100;
+	
+	var numberCounts = [0, 9];
+	var zeroCounts = [0, 1];
+	
+	for(var i=2; i<L; i++) {
+		numberCounts[i] = (multipliers - 1 + mod) % mod;
+		zeroCounts[i] = (zeroCounts[i-1]*9 + numberCounts[i-1]) % mod; 
+		
+		multipliers = (multipliers*10) % mod;
+	}
+	
+	console.log(numberCounts);
+	console.log(zeroCounts);
+	var result = 1;
+	
+	for(var i=0; i<L; i++) {
+		var digit = parseInt(S[i]);
+		if(digit === 0) {
+			continue;
+		}
+		
+		var diff = L - i - 1;
+		result = (result + digit * zeroCounts[diff]  + diff) % mod; 
+		
+		console.log(digit);
+		console.log("Count: " + zeroCounts[L - i - 1]);
+		console.log("Result: " + result);
+	}
+	
+	
+	return result;
+}
+
+
+
+solution('100');
+
+
+S=100
+0 10 20 30 40 50 60 70 80 90 100
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

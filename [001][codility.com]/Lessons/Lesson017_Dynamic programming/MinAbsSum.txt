@@ -1,0 +1,265 @@
+For a given array A of N integers and a sequence S of N integers from the set {−1, 1}, we define val(A, S) as follows:
+
+val(A, S) = |sum{ A[i]*S[i] for i = 0..N−1 }|
+(Assume that the sum of zero elements equals zero.)
+
+For a given array A, we are looking for such a sequence S that minimizes val(A,S).
+
+Write a function:
+
+int solution(int A[], int N);
+that, given an array A of N integers, computes the minimum value of val(A,S) from all possible values of val(A,S) for all possible sequences S of N integers from the set {−1, 1}.
+
+For example, given array:
+
+  A[0] =  1
+  A[1] =  5
+  A[2] =  2
+  A[3] = -2
+your function should return 0, since for S = [−1, 1, −1, 1], val(A, S) = 0, which is the minimum possible value.
+
+Assume that:
+
+N is an integer within the range [0..20,000];
+each element of array A is an integer within the range [−100..100].
+Complexity:
+
+expected worst-case time complexity is O(N*max(abs(A))2);
+expected worst-case space complexity is O(N+sum(abs(A))), beyond input storage (not counting the storage required for input arguments).
+Elements of input arrays can be modified.
+Copyright 2009–2017 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited.
+
+======================================================================================================================================================
+
+min[0] = |A[0]|
+min[1] = min(|-A[0]+A[1]|, |A[0]+A[1]|)
+min[2] = min:
+	-A[0]+A[1]+A[2]
+	-A[0]-A[1]+A[2]
+	A[0]-A[1]+A[2]
+	A[0]+A[1]+A[2]
+	= |A[2] + min[1]| ???
+
+min[X] = min|A[X] +- min[X-1]| ???
+
+Example	
+[2 1 3]
+min[0] = 2
+min[1] = 1 
+min[2] = 0	=> min[2] != min|A[2] +- min[1]|
+
+
+Sort A Asc
+Min = ???
+
+
+
+prev[0] = A[0]
+prev[1] = A[0] + A[1], A[0]-A[1]
+prev[2] = A[0] + A[1] + A[2], A[0] - A[1] + A[2], A[0] + A[1] - A[2], A[0] - A[1] - A[2]
+
+
+-Solution:
+	Giả sử result = +-A1 +- ... +-An 
+	Gom thành 2 nhóm = (Ai) - (Aj)
+	= P - Q
+	Xét S = P + Q
+	có 1 trong 2 <= S/2
+	=> P <= S/2 <= Q
+	=> min(|P-Q|) khi P càng gần S/2 
+=> 	Cần tính S => A đưa về số dương hết, S = sum(A)
+
+======================================================================================================================================================
+
+function solution(A) {
+	var N = A.length;
+	var max = 0;
+	var sum = 0;
+	for(var i = 0; i < N; i++) {
+		var newValue = Math.abs(A[i]);
+		A[i] = newValue;		
+		max= Math.max(max, newValue);
+		sum += newValue;
+	}
+	
+	var canSums = [];	
+	canSums[0] = 1;
+	for(var i=0; i<N; i++) {
+		var a_i = A[i];
+		var canSums2 = [];
+		
+		for(var j=0; j <= sum; j++) {
+			if(canSums[j]) {
+				canSums2[j + a_i] = 1;
+			}			
+		}
+				
+		for(var j=0; j <= sum; j++) {
+			if(canSums2[j]) {
+				canSums[j] = 1;
+			}			
+		}
+	}
+			
+	console.log(canSums);	
+	var maxSum = sum/2;
+	var result = sum;
+	for(var i = 0; i <= maxSum; i++) {
+		if(canSums[i] === 1) {
+			// sum - 2 * i = Q - P
+			result = Math.min(result, sum - 2 * i);
+		}
+	}
+	
+	return result;
+}
+
+
+solution([2, 2, 1]);
+[1,1,1,1,1,1]
+
+
+solution([3, 1]);
+======================================================================================================================================================
+
+function solution(A) {
+	var N = A.length;
+	var max = 0;
+	var sum = 0;
+	for(var i = 0; i < N; i++) {
+		var newValue = Math.abs(A[i]);
+		A[i] = newValue;		
+		max= Math.max(max, newValue);
+		sum += newValue;
+	}
+	
+	var canSums = [];	
+	canSums[0] = 1;
+	for(var i=0; i<N; i++) {
+		var a_i = A[i];
+		var canSums2 = [];
+		
+		for(var j=0; j <= sum; j++) {
+			if(canSums[j]) {
+				canSums2[j + a_i] = 1;
+			}			
+		}
+				
+		for(var j=0; j <= sum; j++) {
+			if(canSums2[j]) {
+				canSums[j] = 1;
+			}			
+		}
+	}
+	
+		
+	console.log(canSums);	
+	var maxSum = sum/2;
+	var result = sum;
+	for(var i = Math.floor(maxSum); i >= 0; i--) {
+		if(canSums[i] === 1) {
+			// sum - 2 * i = Q - P
+			result = Math.abs(sum - 2 * i);
+			break;
+		}
+	}
+	
+	return result;
+}
+======================================================================================================================================================
+
+function solution(A) {
+	var N = A.length;
+	var max = 0;
+	var sum = 0;
+	
+	var counts = [];
+	for(var i = 0; i < N; i++) {
+		var newValue = Math.abs(A[i]);
+		A[i] = newValue;		
+		max= Math.max(max, newValue);
+		sum += newValue;
+		
+		if(counts[newValue] === undefined) {
+			counts[newValue] = 1;
+			continue;
+		}
+		
+		counts[newValue] = counts[newValue] + 1;
+	}
+	
+	var canSums = [];
+	canSums[0] = 0;
+	for(var j=1; j <= sum; j++) {
+		canSums[j] = -1;
+	}
+		
+	for(var a=1; a<= max; a++) {
+		console.log(a);
+		if(!counts[a]) {
+			continue;
+		}
+		
+		for(var j=0; j<sum; j++) {
+			if(canSums[j] >= 0) {
+				canSums[j] = counts[a];
+				continue;
+			}
+			
+			if(j >= a && canSums[j - a] > 0) {
+				canSums[j] = canSums[j - a] - 1;				
+			}
+		}		
+	}	
+	
+	// 0 -> a1 -> 2*a1 -> ...
+	// 0 -> b1 -> 2*b1, a1+b1, ...
+	// console.log(canSums);
+	var maxSum = sum/2;
+	var result = sum;
+	for(var i = Math.floor(maxSum); i >= 0; i--) {
+		if(canSums[i] >= 0) {
+			// sum - 2 * i = Q - P
+			result = Math.abs(sum - 2 * i);
+			break;
+		}
+	}
+	
+	return result;
+}
+
+
+solution([1, 5, 2, -2]);
+[ , 1, 2, , , 1 ]
+[ 1, 5, 2 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

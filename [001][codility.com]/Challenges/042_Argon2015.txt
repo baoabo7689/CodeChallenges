@@ -1,0 +1,257 @@
+
+TrekAndSwim
+Find a longest slice of a binary array that can be split into two parts: in the left part, 0 should be the leader; in the right part, 1 should be the leader.
+
+
+
+You want to spend your next vacation in Poland. Despite its not being a very big country, Poland has a highly diverse natural environment ranging from the Baltic Sea in the north to the Tatra Mountains in the south. As you enjoy swimming in the sea as well as trekking up mountains, you would like to spend some time in both of those locations. However, the weather in Poland can sometimes be very capricious, so you also need to take that into account when planning your vacation.
+
+In the summer you are free for N consecutive days. You can start and finish your vacation on any of these days. You want to spend the first part of your vacation at the seaside and the remaining part in the mountains. These parts can each be of any positive length, and you want to maximize the total length of the vacation.
+
+You have obtained a weather forecast for all N days when you are free. By curious coincidence, the weather on every day is expected to be either perfect for spending the day at the seaside but not in the mountains, or vice versa (perfect for trekking but not for swimming). Obviously, you want the best possible weather during each part of your vacation, so you require the weather to be perfect for swimming for more than half of the days in the first part of your vacation, and perfect for trekking for more than half of the days in the second part of your vacation.
+
+The weather forecast is described in an array A: for each K (0 ≤ K < N), A[K] is equal to 0 if the weather during day K favors the seaside, or 1 if the weather during that day favors the mountains.
+
+Write a function:
+
+    function solution(A);
+
+that, given an array A of N integers, returns the length of the longest vacation consistent with your requirements.
+
+For example, consider array A such that:
+    A[0] = 1
+    A[1] = 1
+    A[2] = 0
+    A[3] = 1
+    A[4] = 0
+    A[5] = 0
+    A[6] = 1
+    A[7] = 1
+
+You are free for eight days. The weather during days 2, 4 and 5 will be better for swimming, and better for trekking during the remaining days. You can start your vacation on day 1, spend five days at the seaside (three days will have perfect weather, which is more than half) and then spend two days in the mountains (both days will have perfect weather). That results in a vacation length of seven days, which is the longest possible vacation that meets your criteria, so the function should return 7.
+
+For array A such that:
+    A[0] = 1
+    A[1] = 0
+
+there is no vacation that satisfies your requirements, so the function should return 0.
+
+Assume that:
+
+        N is an integer within the range [2..100,000];
+        each element of array A is an integer that can have one of the following values: 0, 1.
+
+Complexity:
+
+        expected worst-case time complexity is O(N);
+        expected worst-case space complexity is O(N) (not counting the storage required for input arguments).
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+
+======================================================================================================================================================
+https://yatb.giacomodrago.com/en/post/17/codility_challenge_argon_2015_solution.html
+
+-Tìm First Index of 0/Last Index of 1 = [L1, R1]
+-Xét
+	+[L1, R1] có 1 head => [L1] có 0 head/[L1+1, R1] có 1 head
+	+[L1, R1] có 0 head => [L1, R1 - 1] có 0 head, [R1] có 1 head 
+	+[L1, R1] có count(0) = count(1) = k
+		[L1+1, R1] có count(1) = k > (2k-1)/ 2 => [L1] có 0 head/[L1+1, R1] có 1 head
+	=> [L1, R1] là 1 trong những cách plan 
+	
+-Giả sử kết quả [L, R]
+	+Nếu L1<L và R<R1 => [L1, R1] dài hơn
+	+Nếu L<L1 và R<R1 => từ L tới L1-1 là số 1
+		.M giữa L,R => [L, M] có 0 head 
+		Nếu [M,R1] có 0 head => [L, R1-1] có 0 head/[R1] có 1 head 
+		Nếu [M,R1] có 1 head => [L,M] có 0 head/[M,R1] có 1 head 
+		[M,R1] có count(0) = count(1) => [L, R1-1] có 0 head/[R1] có 1 head 
+		=> [L, R1] thoả plan
+	+L1<=L và R<=R1 
+=> [L, R] luôn chứa [L1, R1]
+
+-[L, M, R] => M thuộc [L1, R1]
+và [L1, M] có 0 head vì ([L, M] có 0 head, [L, L1] chỉ có 1)
+[M, R1] có 1 head vì ([M, R] có 1 head, [R1, R] chỉ có 0)
+
+-Xét [L1, M] có 0 head, mỗi lần hơn 2 chữ số => có thể lùi về trước 1 số 
+Tương tự [M, R1] 
+=> tính maxLength ứng với mỗi M 
+=> max 
+-prefixSum của 0 và 1 để tính số hơn
+
+
+
+
+======================================================================================================================================================
+
+function solution(A) {
+	console.log(A);
+	var N = A.length;
+	var first0 = undefined;
+	var last1 = undefined;
+	var pSum0s = [];
+	var pSum1s = [];
+	
+	pSum0s[-1] = 0;
+	pSum1s[-1] = 0;
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		if(a == 1) {	
+			last1 = i;
+		}
+		
+		if(a == 0 && first0 == undefined) {
+			first0 = i;			
+		}	
+			
+		pSum0s[i] = pSum0s[i - 1] + (a == 0 ? 1 : 0);	
+		pSum1s[i] = pSum1s[i - 1] + (a == 1 ? 1 : 0);				
+	}
+	
+	if(first0 == undefined || last1 == undefined || last1 < first0) {
+		return 0;
+	}	
+	
+	var maxLength = 0;
+	var s0 = pSum0s[first0 - 1];
+	var s1 = pSum1s[first0 - 1];
+	
+	var e0 =  pSum0s[last1];
+	var e1 =  pSum1s[last1];
+	var minLength = last1 - first0 + 1;
+	var maxExtra1 = N - last1 - 1;
+	
+	debugger;
+	for(var m=first0; m<=last1; m++) {
+		var m0 = pSum0s[m];
+		var m1 = pSum1s[m];
+		
+		var ms0 = m0 - s0;
+		var ms1 = m1 - s1;
+		
+		var em0 = e0 - m0;
+		var em1 = e1 - m1;
+		if(ms0 <= ms1 || em1 <= em0) {
+			continue;
+		}
+		
+		var extra0 = ms0 - ms1 - 1;
+		extra0 = extra0 > first0 ? first0 : extra0;
+		
+		var extra1 = em1 - em0 - 1;
+		extra1 = extra1 > maxExtra1 ? maxExtra1 : extra1; 
+		
+		var length = extra0 + extra1;
+		maxLength = Math.max(maxLength, length);
+	}
+	
+	return minLength + maxLength;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,274 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 6.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>CS241: Data Structures & Algorithms II</title>
+</head>
+
+<body BGCOLOR="#FFFFFF" LINK="#003399" VLINK="#003366" ALINK="#660000">
+<h2 align="left"><b pbzloc="0">CS241 -- Lecture Notes: </b>Self-Balancing Binary Search Tree</h2>
+
+<div width="95%">
+<div align="center" width="100%">
+<center>
+<table border="0" height="20" width="100%">
+	<tbody>
+		<tr>
+			<td height="20" width="50%"><b><a href="http://www.csupomona.edu/~ftang/">Daisy Tang</a></b></td>
+		</tr>
+	</tbody>
+</table>
+</center>
+</div>
+</div>
+<td height="20" width="50%">
+<p align="right"><a href="../notes.htm">Back To Lectures Notes</a></p>
+</td>
+<hr /> <a href="http://en.wikipedia.org/wiki/Self-balancing_binary_search_tree">Self-balancing binary search tree</a>.&nbsp; Click <a href="http://people.ksp.sk/~kuko/bak/index.html">here</a> to see the animation.
+
+<hr />
+<table border="0" width="100%">
+	<tbody>
+		<tr>
+			<td bgcolor="#cce6ff" width="100%"><font size="4"><b>Introduction</b></font></td>
+		</tr>
+		<tr>
+			<td width="100%">
+			<p><b>Definitions</b>:</p>
+
+			<ul>
+				<li>A self-balancing binary search tree or height-balanced binary search tree is a binary search tree (BST) that attempts to keep its height, or the number of levels of nodes beneath the root, as small as possible at all times, automatically.</li>
+			</ul>
+
+			<p><img border="0" src="images/trees/balanced1.JPG" width="80%" /></p>
+
+			<p>&nbsp;</p>
+			</td>
+		</tr>
+		<tr>
+			<td bgcolor="#cce6ff" width="100%"><font size="4"><b>Overview</b></font></td>
+		</tr>
+		<tr>
+			<td width="100%"><b>Question</b>: What is the major disadvantage of an ordinary BST?
+			<p>Most operations on a BST take time proportional to the height of the tree, so it is desirable to keep the height small.</p>
+
+			<p>Self-balancing binary trees solve this problem by performing transformations on the tree at key times, in order to reduce the height. Although a certain overhead is involved, it is justified in the long run by ensuring fast execution of later operations.</p>
+
+			<p>The height must always be at most the ceiling of <i>log</i><sub>2</sub><i>n</i>.</p>
+
+			<p>Balanced BSTs are not always so precisely balanced, since it can be expensive to keep a tree at minimum height at all times; instead, most algorithms keep the height within a constant factor of this lower bound.</p>
+
+			<table border="1" id="table1" width="30%">
+				<tbody>
+					<tr>
+						<th>Operation</th>
+						<th>Big-O time</th>
+					</tr>
+					<tr>
+						<td>Lookup</td>
+						<td><i>O</i>(log <i>n</i>)</td>
+					</tr>
+					<tr>
+						<td>Insertion</td>
+						<td><i>O</i>(log <i>n</i>)</td>
+					</tr>
+					<tr>
+						<td>Removal</td>
+						<td><i>O</i>(log <i>n</i>)</td>
+					</tr>
+					<tr>
+						<td>In-order traversal</td>
+						<td><i>O</i>(<i>n</i>)</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p><b>Implementations</b>:</p>
+
+			<ul>
+				<li>AA tree</li>
+				<li>AVL tree</li>
+				<li>Red-black tree</li>
+				<li>Scapegoat tree</li>
+				<li>Splay tree</li>
+				<li>Treap</li>
+			</ul>
+
+			<p><b>Self-Balancing BST Applications</b>:</p>
+
+			<ul>
+				<li>They can be used to construct and maintain ordered lists, such as priority queues.</li>
+				<li>They can also be used for associative arrays; key-value pairs are inserted with an ordering based on the key alone. In this capacity, self-balancing BSTs have a number of advantages and disadvantages over their main competitor, hash tables.</li>
+				<li>They can be easily extended to record additional information or perform new operations. These extensions can be used, for example, to optimize database queries or other list-processing algorithms.</li>
+			</ul>
+			</td>
+		</tr>
+		<tr>
+			<td bgcolor="#cce6ff" width="100%"><b><font size="4"><a href="http://en.wikipedia.org/wiki/AVL_tree">AVL Trees</a></font></b></td>
+		</tr>
+		<tr>
+			<td width="100%"><b>Properties of an AVL tree</b>:
+			<ul>
+				<li>In an AVL tree, the heights of the two child subtrees of any node differ by at most one; therefore, it is also said to be height-balanced.</li>
+				<li>Lookup, insertion, and deletion all take O(log <i>n</i>) time in both the average and worst cases, where <i>n</i> is the number of nodes in the tree.</li>
+				<li>Insertions and deletions may require the tree to be <i>rebalanced</i> by one or more tree rotations.</li>
+				<li>The <b>balance factor</b> of a node is <i>the height of its right subtree minus the height of its left subtree</i> and a node with a balance factor 1, 0, or -1 is considered balanced.</li>
+			</ul>
+
+			<p><u><b>Insertion</b></u>:</p>
+
+			<ul>
+				<li>After inserting a node, it is necessary to check <i>each of the node&#39;s ancestors</i> for consistency with the AVL rules.</li>
+				<li>For each node checked, if the balance factor remains 1, 0, or -1 then no rotations are necessary. Otherwise, it&#39;s unbalanced.</li>
+				<li>After each insertion, at most two tree rotations are needed to restore the entire tree.</li>
+			</ul>
+
+			<p>There are four cases, choosing which one depends on different types of unbalanced relations. In the following cases, assume Root is the initial parent before a rotation and Pivot is the child to take the root&#39;s place.</p>
+
+			<p><img border="0" src="images/trees/left-left.bmp" width="80%" /></p>
+
+			<p>&nbsp;</p>
+
+			<p><img border="0" src="images/trees/right-right.bmp" width="80%" /></p>
+
+			<p>&nbsp;</p>
+
+			<p><img border="0" src="images/trees/left-right.bmp" width="80%" /></p>
+
+			<p>&nbsp;</p>
+
+			<p><img border="0" src="images/trees/right-left.bmp" width="80%" /></p>
+
+			<p><u><b>Deletion</b></u>:</p>
+
+			<ul>
+				<li>If a node is a leaf, remove it.</li>
+				<li>If the node is not a leaf, replace it with either the largest in its left subtree (rightmost) or the smallest in its right subtree (leftmost), and remove that node. The node that was found as replacement has at most one subtree.</li>
+				<li>After deletion, retrace the path from parent of the replacement to the root, adjusting the balance factors as needed.</li>
+				<li>More complicated rules for stopping. The retracing can stop if the balance factor becomes -1 or +1 indicating that the height of the subtree has remained unchanged. If the balance factor becomes 0 then the height of the subtree has decreased by one and the retracing needs to continue. This is in contrast to an insertion where a rotation resulting in a balance factor of 0 indicated that the subtree&#39;s height has remained unchanged.</li>
+			</ul>
+
+			<p><img border="0" src="images/trees/avl.jpg" width="80%" /></p>
+
+			<p>Overall, the time required is <i>O</i>(log <i>n</i>) for lookup, plus a maximum of <i>O</i>(log <i>n</i>) rotations on the way back to the root, so the deletion can be completed in <i>O</i>(log <i>n</i>) time.</p>
+
+			<p><u><b>Lookup (Search)</b></u>:</p>
+
+			<p>Lookup in an AVL tree is exactly the same as in an unbalanced BST. Because of the height-balancing of the tree, a lookup takes <i>O</i>(log <i>n</i>) time.</p>
+
+			<p>Example. Insert 14, 17, 11, 7, 53, 4, 13, 12, 8 into an empty AVL tree and then remove 53, 11, 8 from the AVL tree.&nbsp; Please take a look at the following <a href="images/trees/AVL%20tree%20animation.ppt">slides</a> for AVL tree insertion and deletion animation (use the slide show mode).</p>
+
+			<p>Your exercise:</p>
+
+			<ul>
+				<li>Build an AVL tree with the following values: 15, 20, 24, 10, 13, 7, 30, 36, and 25.</li>
+				<li>Remove 24 and 20 from the above tree.</li>
+			</ul>
+
+			<p>&nbsp;</p>
+			</td>
+		</tr>
+		<tr>
+			<td width="100%"><b>Discussion</b>:
+			<ul>
+				<li>Compare binary search trees with hash tables. Find pros and cons of each data structure.
+				<ul>
+					<li>Time complexity of operations</li>
+					<li>Space complexity of data structure</li>
+					<li pbzloc="2">Handling varying input sizes</li>
+					<li>Traversal</li>
+					<li>Other supported operations?</li>
+				</ul>
+				</li>
+			</ul>
+
+			<p>&nbsp;</p>
+			</td>
+		</tr>
+		<tr>
+			<td bgcolor="#cce6ff" width="100%"><b><a href="http://en.wikipedia.org/wiki/Red-black_tree"><font size="4">Red-Black Trees</font></a></b></td>
+		</tr>
+		<tr>
+			<td width="100%">A red-black tree (RB-tree) is a type of self-balancing BST. It is complex, but has a good worst-case running time for its operations and is efficient in practice: it can search, insert, and delete in <i>O</i>(log <i>n</i>) time, where <i>n</i> is the total number of elements in the tree.
+			<ul>
+				<li>In RB-trees, the leaf nodes are not relevant and do not contain data. A null child pointer can encode the fact that this child is a leaf.</li>
+				<li>Like BSTs, RB-trees allow efficient in-order traversals of elements.</li>
+				<li>The search time on a RB-tree results in <i>O</i>(log <i>n</i>) time.</li>
+			</ul>
+
+			<p><b>Properties</b>:</p>
+
+			<p>A RB-tree is a BST where each node has a color attribute, the value of which is either <i>red</i> or <i>black</i>. In addition to the ordinary requirements imposed on BSTs, the following additional requirements apply to RB-trees:</p>
+
+			<ol>
+				<li>A node is either red or black.</li>
+				<li>The root is black.</li>
+				<li>All leaves are black.</li>
+				<li>Both children of every red node are black.</li>
+				<li>Every simple path from a given node to any of its descendant leaves contains the same number of black nodes.</li>
+			</ol>
+
+			<p><img border="0" src="images/trees/rb-tree.bmp" width="80%" /></p>
+
+			<p>The above constraints enforce a critical property of RB-trees:</p>
+
+			<ul>
+				<li>The longest path from the root to any leaf is no more than twice as long as the shortest path from the root to any other leaf in that tree.</li>
+				<li>The result is that the tree is roughly balanced.</li>
+				<li>Insertion, deletion, and search require worst-case time proportional to the height of the tree, the theoretical upper bound on the height allows RB-trees to be efficient in the worst case.</li>
+			</ul>
+
+			<p>To see why these properties guarantee this, it suffices to note that no path can have two red nodes in a row, due to property 4. The shortest possible path has all black nodes, and the longest possible path alternates between red and black nodes. Since all maximal paths have the same number of black nodes, by property 5, this shows that no path is more than twice as long as any other path.</p>
+
+			<p>Insertions and removals are quite complex in a RB-tree in order to keep the properties.</p>
+
+			<p><b>Insertion</b>:</p>
+
+			<p>Insertion begins by adding the node as any BST insertion does and by coloring it red. It&#39;s a red inner node with two black leaves.</p>
+
+			<ul>
+				<li>Property 3 (all leaves are black) always holds.</li>
+				<li>Property 4 (both children of every red node are black) is threatened only by adding a red node, repainting a black node red, or a rotation.</li>
+				<li>Property 5 (all paths have same number of black nodes) is threatened only by adding a black node, repainting a red node black (or vice versa), or a rotation.</li>
+			</ul>
+
+			<p>In the following description, we have labels N (current node), P (N&#39;s parent), G (N&#39;s grandparent), and U (N&#39;s uncle).</p>
+
+			<ul>
+				<li>Case 1: N is root. It&#39;s repainted black to satisfy property 2.</li>
+				<li>Case 2: P is black. Property 4 (children of red are black) is not violated. Property 5 holds since N has two black leaf children, but N is red.</li>
+				<li>Case 3: if both P and U are red, repaint them black and repaint G red. Recursively insert G.</li>
+			</ul>
+
+			<p><img border="0" src="images/trees/self%20b1.jpg" /></p>
+
+			<ul>
+				<li>Case 4: P is red, but U is black; N is the right child of P, and P is the left child of G. Perform left rotation on P. Then go to Case 5.</li>
+			</ul>
+
+			<p><img border="0" src="images/trees/self%20b2.jpg" /></p>
+
+			<p>&nbsp;</p>
+
+			<ul>
+				<li>Case 5: right rotation. Repaint G and P.</li>
+			</ul>
+
+			<p><img border="0" src="images/trees/self%20b3.jpg" /></p>
+
+			<p>&nbsp;</p>
+
+			<p>For deletion on a RB-Tree, please see the Wikipedia link for details.</p>
+
+			<p>Let&#39;s try it out with the following sequence of values: 14, 17, 11, 7, 53, 4, 13, 12, and 8.</p>
+
+			<p>&nbsp;</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<hr /> <i>Last updated: Oct. 2013 </i></body>
+</html>

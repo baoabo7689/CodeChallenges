@@ -1,0 +1,236 @@
+
+PrefixSuffixSet
+START
+Calculate the number of pairs (P, S) such that {A[0], ..., A[P]} = {A[S], ..., A[N-1]}.
+
+
+
+
+A non-empty array A consisting of N integers is given. A prefix suffix set is a pair of indices (P, S) such that 0 ≤ P, S < N and such that:
+
+        every value that occurs in the sequence A[0], A[1], ..., A[P] also occurs in the sequence A[S], A[S + 1], ..., A[N − 1],
+        every value that occurs in the sequence A[S], A[S + 1], ..., A[N − 1] also occurs in the sequence A[0], A[1], ..., A[P].
+
+The goal is to calculate the number of prefix suffix sets in the array.
+
+For example, consider array A such that:
+    A[0] = 3
+    A[1] = 5
+    A[2] = 7
+    A[3] = 3
+    A[4] = 3
+    A[5] = 5
+
+There are exactly fourteen prefix suffix sets: (1, 4), (1, 3), (2, 2), (2, 1), (2, 0), (3, 2), (3, 1), (3, 0), (4, 2), (4, 1), (4, 0), (5, 2), (5, 1), (5, 0).
+
+Write a function:
+
+    function solution(A);
+
+that, given a non-empty array A of N integers, returns the number of prefix suffix sets.
+
+If the number of prefix suffix sets is greater than 1,000,000,000, the function should return 1,000,000,000.
+
+For example, given:
+    A[0] = 3
+    A[1] = 5
+    A[2] = 7
+    A[3] = 3
+    A[4] = 3
+    A[5] = 5
+
+the function should return 14, as explained above.
+
+Write an efficient algorithm for the following assumptions:
+
+        N is an integer within the range [1..40,000];
+        each element of array A is an integer within the range [−1,000,000,000..1,000,000,000].
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+=================================================================================================================================================================================================================
+
+
+=================================================================================================================================================================================================================
+
+function solution(A) {
+	var N = A.length;
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+function solution(S) {
+	var mod = 1410000017;
+	var L = S.length;
+	var maxIndex = L-1;
+	
+	var multipliers = 100;
+	
+	var numberCounts = [0, 9];
+	var zeroCounts = [0, 1];
+	
+	for(var i=2; i<L; i++) {
+		numberCounts[i] = (multipliers - 1 + mod) % mod;
+		zeroCounts[i] = (zeroCounts[i-1]*9 + numberCounts[i-1]) % mod; 
+		
+		multipliers = (multipliers*10) % mod;
+	}
+	
+	console.log(numberCounts);
+	console.log(zeroCounts);
+	var result = 1;
+	
+	for(var i=0; i<L; i++) {
+		var digit = parseInt(S[i]);
+		if(digit === 0) {
+			continue;
+		}
+		
+		var diff = L - i - 1;
+		result = (result + digit * zeroCounts[diff]  + diff) % mod; 
+		
+		console.log(digit);
+		console.log("Count: " + zeroCounts[L - i - 1]);
+		console.log("Result: " + result);
+	}
+	
+	
+	return result;
+}
+
+
+
+solution('100');
+
+
+S=100
+0 10 20 30 40 50 60 70 80 90 100
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

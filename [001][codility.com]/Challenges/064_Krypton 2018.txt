@@ -1,0 +1,458 @@
+
+
+Matrix A, consisting of N rows and N columns of non-negative integers, is given. Rows are numbered from 0 to N−1 (from top to bottom). Columns are numbered from 0 to N−1 (from left to right). We would like to find a path that starts at the upper-left corner (0, 0) and, moving only right and down, finishes at the bottom-right corner (N−1, N−1). Then, all the numbers on this path will be multiplied together.
+
+Find a path such that the product of all the numbers on the path contain the minimal number of trailing zeros. We assume that 0 has 1 trailing zero.
+
+Write a function:
+
+    function solution(A);
+
+that, given matrix A, returns the minimal number of trailing zeros.
+
+Examples:
+
+1. Given matrix A below:
+
+The picture describes the first example test.
+
+the function should return 1. The optimal path is: (0,0) → (0,1) → (0,2) → (1,2) → (2,2) → (2,3) → (3,3). The product of numbers 2, 10, 1, 4, 2, 1, 1 is 160, which has one trailing zero. There is no path that yields a product with no trailing zeros.
+
+2. Given matrix A below:
+
+The picture describes the second example test.
+
+the function should return 2. One of the optimal paths is: (0,0) → (1,0) → (1,1) → (1,2) → (2,2) → (3,2) → (3,3). The product of numbers 10, 1, 1, 1, 10, 1, 1 is 100, which has two trailing zeros. There is no path that yields a product with fewer than two trailing zeros.
+
+3. Given matrix A below:
+
+The picture describes the third example test.
+
+the function should return 1. One of the optimal paths is: (0,0) → (0,1) → (1,1) → (1,2) → (2,2). The product of numbers 10, 10, 0, 10, 10 is 0, which has one trailing zero. There is no path that yields a product with no trailing zeros.
+
+Write an efficient algorithm for the following assumptions:
+
+        N is an integer within the range [1..500];
+        each element of matrix A is an integer within the range [0..1,000,000,000].
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited.
+
+
+
+
+======================================================================================================================================================
+056_Gallium2018.txt
+
+
+
+[ 1, 1 ]
+[ 0, 1 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+find maximum trailing zero
+
+
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+function find_2_5(n) {
+    var result = {
+      count2: 0,
+      count5: 0,
+      is0: 1,
+      max2: 0,
+      max5: 0,
+      
+      remain5: 0,
+      remain2: 0
+    };
+    
+    if(n == 0) {
+        return result;
+    }
+    
+    result.is0 = 0;
+    
+    while(n != 0 && n%2 ==0) {
+        n /= 2;
+        result.count2++;
+    }
+    
+    while(n != 0 && n%5 ==0) {
+        n /= 5;
+        result.count5++;
+    }
+    
+    result.max2 = result.count2;
+    result.max5 = result.count5;
+    
+    return result;
+}
+
+function log(A) {
+    var n = A.length;
+    
+    for(var i=0; i<n; i++) {
+        var rA = A[i];
+        console.log(rA);
+    }
+}
+
+function solution(A) {
+    // write your code in JavaScript (Node.js 8.9.4)
+    var n = A.length;
+    var m = A[0].length;
+    var processA = [];
+    
+    for(var i=0; i<n; i++) {
+        var rA = A[i];
+        var rP = [];
+        
+        for(var j=0; j<m; j++) {
+            var a = rA[j];
+            rP[j] = find_2_5(a);
+        }
+        
+        processA[i] = rP;
+    }
+    
+    for(var i=1; i<n; i++) {
+        var prev = processA[0][i-1];
+        var next = processA[0][i];
+        
+        if(prev.is0) {
+            next.is0 = 1;
+            continue;
+        }
+        
+        next.max2 = prev.max2 + next.count2;
+        next.max5 = prev.max5 + next.count5;
+    } 
+    
+    for(var i=1; i<n; i++) {
+        var prev = processA[i-1][0];
+        var next = processA[i][0];
+        
+        if(prev.is0) {
+            next.is0 = 1;
+            continue;
+        }
+        
+        next.max2 = prev.max2 + next.count2;
+        next.max5 = prev.max5 + next.count5;
+    } 
+    
+    for(var i=1; i<n; i++) {
+        var rP = processA[i];
+        for(var j=1; j<n; j++) {
+            var topP = processA[i-1][j];
+            var leftP = processA[i][j-1];
+            var p = processA[i][j];
+            
+            if(topP.is0 && leftP.is0) {
+                p.is0 = 1;
+                continue;
+            }
+            
+            if(topP.max2 + topP.max5 == 0) {
+                p.max2 += leftP.max2;
+                p.max5 += leftP.max5;
+                p.remain2 = leftP.remain2;
+                p.remain5 = leftP.remain5;
+                continue;
+            }
+            
+            if(leftP.max2 + leftP.max5 == 0) {
+                p.max2 += topP.max2;
+                p.max5 += topP.max5;
+                p.remain2 = topP.remain2;
+                p.remain5 = topP.remain5;
+                continue;
+            }
+            
+            p.max2 += Math.max(topP.max2, leftP.max2); 
+            if(topP.max2 == leftP.max2) {
+                p.remain5 = Math.max(topP.remain5, leftP.remain5); 
+            } else {
+                p.remain5 = (topP.max2 < leftP.max2 ? leftP : topP).remain5;
+            }
+            
+            p.max5 += Math.max(topP.max5, leftP.max5); 
+            if(topP.max5 == leftP.max5) {
+                p.remain2 = Math.max(topP.remain2, leftP.remain2); 
+            } else {
+                p.remain2 = (topP.max5 < leftP.max5 ? leftP : topP).remain2;
+            }
+        }
+    }
+    
+    
+    // log(processA);
+    var end = processA[n-1][n-1];
+    
+    return end.is0 ? 1 : Math.max(end.max2, end.max5);
+}
+
+
+
+======================================================================================================================================================
+find minimum trailing zero
+
+
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+function find_2_5(n) {
+    var result = {
+      count2: 0,
+      count5: 0,
+      is0: 1,
+      min2: 0,
+      min5: 0,
+      
+      remain5: 0,
+      remain2: 0
+    };
+    
+    if(n == 0) {
+        return result;
+    }
+    
+    result.is0 = 0;
+    
+    while(n != 0 && n%2 ==0) {
+        n /= 2;
+        result.count2++;
+    }
+    
+    while(n != 0 && n%5 ==0) {
+        n /= 5;
+        result.count5++;
+    }
+    
+    result.min2 = result.count2;
+    result.min5 = result.count5;
+    result.remain2 = result.count2;
+    result.remain5 = result.count5;
+    
+    return result;
+}
+
+function log(A) {
+    var n = A.length;
+    
+    for(var i=0; i<n; i++) {
+        var rA = A[i];
+        console.log(rA);
+    }
+}
+
+function logP(A) {
+    var n = A.length;
+    
+    for(var i=0; i<n; i++) {
+        var rA = A[i];
+        //console.log(rA);
+        var str = '';
+        
+        for(var j=0; j<n; j++) {
+            var a = rA[j];
+            str += a.count2 + "-" + a.count5 + "-" + a.min2 + "-" + a.min5 + "-" + 
+                    a.remain2 + "-" + a.remain5 + "  ";
+        }
+        
+        console.log(str);
+    }
+}
+
+function solution(A) {
+	//log(A);
+    // write your code in JavaScript (Node.js 8.9.4)
+    var n = A.length;
+    var m = A[0].length;
+    var processA = [];
+    
+    for(var i=0; i<n; i++) {
+        var rA = A[i];
+        var rP = [];
+        
+        for(var j=0; j<m; j++) {
+            var a = rA[j];
+            rP[j] = find_2_5(a);
+        }
+        
+        processA[i] = rP;
+    }
+    
+    for(var i=1; i<n; i++) {
+        var prev = processA[0][i-1];
+        var next = processA[0][i];
+        
+        if(prev.is0) {
+            next.is0 = 1;
+            continue;
+        }
+        
+        next.min2 += prev.min2;
+        next.min5 += prev.min5;
+        
+        next.remain2 += prev.remain2;
+        next.remain5 += prev.remain5;
+    } 
+    
+    for(var i=1; i<n; i++) {
+        var prev = processA[i-1][0];
+        var next = processA[i][0];
+        
+        if(prev.is0) {
+            next.is0 = 1;
+            continue;
+        }
+        
+        next.min2 += prev.min2;
+        next.min5 += prev.min5;
+        
+        next.remain2 += prev.remain2;
+        next.remain5 += prev.remain5;
+    } 
+    
+    for(var i=1; i<n; i++) {
+        var rP = processA[i];
+        for(var j=1; j<n; j++) {
+            var topP = processA[i-1][j];
+            var leftP = processA[i][j-1];
+            var p = processA[i][j];
+            
+			if(topP.is0 && leftP.is0) {
+				p.is0 = 1;
+				continue;
+			}
+			
+			if((topP.is0 || leftP.is0) && Math.min(p.min2, p.min5) != 0) {
+				p.is0 = 1;
+				continue;	
+			}
+			
+            if(topP.is0) {
+				var count0 = Math.min(Math.min(leftP.min2, leftP.remain5), Math.min(leftP.min5, leftP.remain2));
+				if(count0 == 0) {
+					continue;					
+				}
+				
+				p.is0 = 1;	
+                continue;
+            }
+            
+            if(leftP.is0) {
+				var count0 = Math.min(Math.min(topP.min2, topP.remain5), Math.min(topP.min5, topP.remain2));
+				if(count0 == 0) {
+					continue;					
+				}
+				
+				p.is0 = 1;	
+                continue;
+            }
+			
+            p.min2 += Math.min(topP.min2, leftP.min2); 
+            if(topP.min2 == leftP.min2) {
+                p.remain5 += Math.min(topP.remain5, leftP.remain5); 
+            } else {
+                p.remain5 += (topP.min2 < leftP.min2 ? topP : leftP).remain5;
+            }
+            
+            p.min5 += Math.min(topP.min5, leftP.min5); 
+            if(topP.min5 == leftP.min5) {
+                p.remain2 += Math.min(topP.remain2, leftP.remain2); 
+            } else {
+                p.remain2 += (topP.min5 < leftP.min5 ? topP : leftP).remain2;
+            }
+        }
+    }
+    
+    //logP(processA);
+    var end = processA[n-1][n-1];
+    var a1 = Math.min(end.min2, end.remain5);
+    var a2 = Math.min(end.min5, end.remain2);
+    
+    return end.is0 ? 1 : Math.min(a1, a2);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

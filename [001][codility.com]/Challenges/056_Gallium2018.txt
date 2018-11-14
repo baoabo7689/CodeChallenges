@@ -1,0 +1,808 @@
+
+
+Write a function:
+
+    function solution(A);
+
+that, given an array of N positive integers, returns the maximum number of trailing zeros of the number obtained by multiplying three different elements from the array. Numbers are considered different if they are at different positions in the array.
+
+For example, given A = [7, 15, 6, 20, 5, 10], the function should return 3 (you can obtain three trailing zeros by taking the product of numbers 15, 20 and 10 or 20, 5 and 10).
+
+For another example, given A = [25, 10, 25, 10, 32], the function should return 4 (you can obtain four trailing zeros by taking the product of numbers 25, 25 and 32).
+
+Assume that:
+
+        N is an integer within the range [3..100,000];
+        each element of array A is an integer within the range [1..1,000,000,000].
+
+Complexity:
+
+        expected worst-case time complexity is O(N*log(max(A)));
+        expected worst-case space complexity is O(N) (not counting the storage required for input arguments).
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+======================================================================================================================================================
+-Phân tích ra 5 và 2 
+
+x1 x2 x3, y1 y2 y3 
+
+-Nếu x1/y1 + x2/y2
+	.Dư 5 => chọn 2 max 
+	.Dư 2 => chọn 5 max 
+-Chia 2 trường hợp: chọn 2/5 max => tính max 
+	.Trong cùng 1 x => chọn y max sẽ có lợi hơn 
+	=> duyệt lần lượt 0 -> log(maxA), duyệt N phần tử tính max 
+	=> O(N * log(maxA))
+
+-Cách 1: Nếu chọn tuần tự: x1, x2, x3 theo 3 vòng lặp => Max = O(logM)^3
+logM từ 12->30: (logM)^2 < N: 144->900
+=> Max = O(N*logM)
+
+
+-Cách 2:
+	.Distinct: Mod2s => reduce time 
+	
+https://www.geeksforgeeks.org/maximum-number-of-trailing-zeros-in-the-product-of-the-subsets-of-size-k/
+
+======================================================================================================================================================
+
+solution([25, 10, 25, 10, 32]);
+
+solution([7, 15, 6, 20, 5, 10]); // ok
+
+Example test:   [25, 10, 25, 10, 32]
+Output:
+[ { max: 5, mods: [ 5 ], used: false },
+  { max: 1, mods: [ 1, 1 ], used: false },
+  { max: 0, mods: [ 0, 0 ], used: false, secondMax: 0 } ]
+[ { max: 2, mods: [ 2, 2 ], used: false },
+  { max: 1, mods: [ 1, 1 ], used: false },
+  <3 empty items>,
+  { max: 0, mods: [ 0 ], used: true, secondMax: 0 } ]
+5
+2
+{ '0_2': 2, '1_1': 2, '5_0': 1 }
+{ '2_0': 2, '1_1': 2, '0_5': 1 }
+WRONG ANSWER (got 6 expected 4)
+
+
+Example test:   [7, 15, 6, 20, 5, 10]
+Output:
+[ { max: 1, mods: [ 0, 1 ], used: false },
+  { max: 2, mods: [ 0, 2, 0, 1 ], used: false, secondMax: 1 } ]
+[ { max: 1, mods: [ 0, 1, 1 ], used: false },
+  { max: 1, mods: [ 0, 1 ], used: false },
+  { max: 1, mods: [ 1 ], used: true, secondMax: 0 } ]
+2
+1
+{ '0_0': 1, '0_1': 2, '1_0': 1, '2_1': 1, '1_1': 1 }
+{ '0_0': 1, '1_0': 2, '0_1': 1, '1_2': 1, '1_1': 1 }
+WRONG ANSWER (got 4 expected 3)
+
+
+
+
+======================================================================================================================================================
+
+function mod(n, i) {
+	var result = 0;
+	
+	while(n > 0 && n % i == 0) {
+		n /= i;
+		result++;
+	}
+	
+	return result;
+}
+
+function secondMax(A, max) {
+	var temp = [];
+	var N = A.length;
+	var usedMax = false;
+	var secondMax = 0;
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		if(usedMax == false && a == max) {
+			usedMax = true;
+			continue;
+		}
+		
+		secondMax = Math.max(secondMax, a);
+	}
+	
+	return secondMax;
+}
+
+function solution(A) {
+	console.log(A);
+	var N = A.length;
+	var mod5s = [];
+	var mod2s = [];	
+	
+	var max2 = 0;
+	var max5 = 0;
+	
+	var a2 = [];
+	var a5 = [];
+	var count2_5 = {};
+	var count5_2 = {};
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var mod5 = mod(a, 5);
+		var mod2 = mod(a, 2);
+		
+		a2[i] = mod2;
+		a5[i] = mod5;
+		
+		max2 = Math.max(max2, mod2);
+		max5 = Math.max(max5, mod5);
+		
+		if(mod5s[mod5]) {
+			var temp = mod5s[mod5];			
+			temp.max = Math.max(temp.max, mod2);
+			temp.mods.push(mod2);
+		} else{
+			mod5s[mod5] = {
+				max: mod2,
+				mods: [mod2],
+				used: false
+			};
+		}
+				
+		if(mod2s[mod2]) {
+			var temp = mod2s[mod2];			
+			temp.max = Math.max(temp.max, mod5);
+			temp.mods.push(mod5);			
+		} else{
+			mod2s[mod2] = {
+				max: mod5,
+				mods: [mod5],
+				used: false
+			};			
+		}		
+	
+		var key = mod2 + "_" + mod5;
+		if(count2_5[key]) {
+			count2_5[key]++;			
+		}else{
+			count2_5[key] = 1;
+		}
+		
+		key = mod5 + "_" + mod2;
+		if(count5_2[key]) {
+			count5_2[key]++;			
+		}else{
+			count5_2[key] = 1;
+		}
+	}
+	
+	var mod2sMax = mod2s[max2];
+	mod2sMax.used = mod2sMax.mods.length == 1;
+	mod2sMax.secondMax = secondMax(mod2sMax.mods, mod2sMax.max);
+	
+	var mod5sMax = mod5s[max5];
+	mod5sMax.used = mod5sMax.mods.length == 1;
+	mod5sMax.secondMax = secondMax(mod5sMax.mods, mod5sMax.max);
+	
+	//console.log(mod5s);
+	//console.log(mod2s);
+	//console.log("max2 = " + max2);
+	//console.log("max5 = " + max5);
+	//console.log(count2_5);
+	//console.log(count5_2);
+	
+	var result = 0;
+	
+	var x3 = max2;
+	var y3 = mod2sMax.max;
+	count2_5[x3 + "_" + y3]--;
+	
+	debugger;
+	for(var m2 = max2; m2 >=0; m2--) {
+		var mod2 = mod2s[m2];
+		if(!mod2 || mod2.used) {
+			continue;
+		}
+		
+		var x2 = m2;
+		var y2 = m2 == max2 ? mod2.secondMax : mod2.max;
+		count2_5[x2 + "_" + y2]--;
+	
+		var sum2 = x2 + x3;
+		var sum5 = y3 + y3;
+		
+		for(var i=0; i<N; i++) {
+			var mod2 = a2[i];
+			var mod5 = a5[i];
+			if(count2_5[mod2 + "_" + mod5] == 0) {
+				continue;
+			}
+			
+			var sum2F = mod2 + sum2;
+			var sum5F = mod5 + sum5;
+			var digits = Math.min(sum2F, sum5F);
+			result = Math.max(digits, result);
+		}
+		
+		count2_5[x2 + "_" + y2]++;
+	}
+	
+	x3 = max5;
+	y3 = mod5sMax.max;
+	count5_2[x3 + "_" + y3];
+	
+	// debugger;
+	for(var m5 = max5; m5 >=0; m5--) {
+		var mod5 = mod5s[m5];
+		if(!mod5 || mod5.used) {
+			continue;
+		}
+		
+		var x2 = m5;
+		var y2 = m5 == max5 ? mod5.secondMax : mod5.max;
+		count5_2[x2 + "_" + y2]--;
+	
+		var sum5 = x2 + x3;
+		var sum2 = y3 + y3;
+		
+		for(var i=0; i<N; i++) {
+			var mod2 = a2[i];
+			var mod5 = a5[i];
+			if(count5_2[mod2 + "_" + mod5] == 0) {
+				continue;
+			}
+			
+			var sum2F = mod2 + sum2;
+			var sum5F = mod5 + sum5;
+			var digits = Math.min(sum2F, sum5F);
+			result = Math.max(digits, result);
+		}
+		
+		count5_2[x2 + "_" + y2]++;
+	}
+	
+	count2_5[x3 + "_" + y3]++;
+	
+	
+	return result;
+}
+
+solution([ 244140625, 10000000, 10000000, 10000000, 536870912 ]);
+
+[ 244140625, 10000000, 10000000, 10000000, 536870912 ]
+
+[12, 7, 7, 7, 0]
+[0, 7, 7, 7, 29]
+
+[ 244140625, 10000000, 10000000, 10000000, 536870912 ]
+[ { max: 29, mods: [ 29 ], used: false },
+  <6 empty items>,
+  { max: 7, mods: [ 7, 7, 7 ], used: false },
+  <4 empty items>,
+  { max: 0, mods: [ 0 ], used: true, secondMax: 0 } ]
+[ { max: 12, mods: [ 12 ], used: false },
+  <6 empty items>,
+  { max: 7, mods: [ 7, 7, 7 ], used: false },
+  <21 empty items>,
+  { max: 0, mods: [ 0 ], used: true, secondMax: 0 } ]
+max2 = 29
+max5 = 12
+{ '0_12': 1, '7_7': 3, '29_0': 1 }
+{ '12_0': 1, '7_7': 3, '0_29': 1 }
+
+
+
+======================================================================================================================================================
+
+
+function mod(n, i) {
+	var result = 0;
+	
+	while(n > 0 && n % i == 0) {
+		n /= i;
+		result++;
+	}
+	
+	return result;
+}
+
+function nthMax(A, maxes) {
+	var maxesLength = maxes.length;	
+	var N = A.length;
+	var usedMaxCount = 0;
+	var result = -1;
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		if(usedMaxCount < maxesLength && maxes.indexOf(a) != -1) {
+			usedMaxCount++;
+			continue;
+		}
+		
+		result = Math.max(result, a);
+	}
+	
+	return result;
+}
+
+function solution(A) {
+	// console.log(A);
+	var N = A.length;
+	var mod2s = [];	
+	
+	var max2 = 0;
+	var max5 = 0;
+	
+	var a2 = [];
+	var a5 = [];
+	var count2_5 = {};
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var mod5 = mod(a, 5);
+		var mod2 = mod(a, 2);
+		
+		a2[i] = mod2;
+		a5[i] = mod5;
+		
+		max2 = Math.max(max2, mod2);
+		max5 = Math.max(max5, mod5);
+						
+		if(mod2s[mod2]) {
+			var temp = mod2s[mod2];			
+			temp.mods.push(mod5);			
+		} else{
+			mod2s[mod2] = {
+				max: mod5,
+				mods: [mod5],
+				used: false
+			};			
+		}		
+	
+		var key = mod2 + "_" + mod5;
+		if(count2_5[key]) {
+			count2_5[key]++;			
+		} else {
+			count2_5[key] = 1;
+		}		
+	}
+	
+	for(var i=0; i<mod2s.length; i++) {
+		var mod2 = mod2s[i];
+		if(!mod2) {
+			continue;
+		}
+		
+		mod2.max = nthMax(mod2.mods, []);
+		mod2.secondMax = nthMax(mod2.mods, [mod2.max]);
+		mod2.thirdMax = nthMax(mod2.mods, [mod2.max, mod2.secondMax]);
+	}
+		
+	var result = 0;
+	for(var i=0; i<mod2s.length; i++) {
+		var mod2_1 = mod2s[i];
+		if(!mod2_1) {
+			continue;
+		}
+		
+		var x1 = i;
+		var y1 = mod2_1.max;
+		key1 = x1 + "_" + y1;
+		count2_5[key1]--;	
+		
+		for(var j=i; j<mod2s.length; j++) {
+			var mod2_2 = mod2s[j];
+			if(!mod2_2) {
+				continue;
+			}
+				
+			var x2 = j;
+			var y2 = mod2_2.max;
+			var key2 = x2 + "_" + y2;			
+			if(count2_5[key2] == 0) {
+				y2 = mod2_2.secondMax;
+			}
+			
+			if(y2 == -1) {
+				continue;
+			}
+			
+			count2_5[key2]--;	
+			for(var k=j; k<mod2s.length; k++) {
+				var mod2_3 = mod2s[k];
+				if(!mod2_3) {
+					continue;
+				}
+				
+				var x3 = k;
+				var y3 = mod2_3.max;
+				var key3 = x3 + "_" + y3;			
+				if(count2_5[key3] == 0) {
+					y3 = mod2_3.secondMax;
+				}
+						
+				if(count2_5[key3] == 0) {
+					y3 = mod2_3.thirdMax;
+				}
+				
+				if(y3 == -1) {
+					continue;
+				}
+				
+				var digits = Math.min(x1 + x2 + x3, y1 + y2 + y3);
+				result = Math.max(result, digits);
+			}
+						
+			count2_5[key2]++;	
+		}		
+		
+		count2_5[key1]++;	
+	}
+		
+	return result;
+}
+
+
+======================================================================================================================================================
+Optimize4
+
+
+function mod(n, i) {
+	var result = 0;
+	
+	while(n > 0 && n % i == 0) {
+		n /= i;
+		result++;
+	}
+	
+	return result;
+}
+
+function nthMax(A, maxes) {
+	var maxesLength = maxes.length;	
+	var N = A.length;
+	var usedMaxCount = 0;
+	var result = -1;
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		if(usedMaxCount < maxesLength && maxes.indexOf(a) != -1) {
+			usedMaxCount++;
+			continue;
+		}
+		
+		result = Math.max(result, a);
+	}
+	
+	return result;
+}
+
+function solution(A) {
+	var N = A.length;
+	var mod2s = [];	
+		
+	var count2_5 = {};
+	var exists = [];
+	var distinctMod2 = [];
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var mod5 = mod(a, 5);
+		var mod2 = mod(a, 2);
+		
+		if(exists[mod2]) {
+			var temp = mod2s[mod2];			
+			temp.mods.push(mod5);	
+		} else {	
+			distinctMod2.push(mod2);
+			exists[mod2] = true;	
+			mod2s[mod2] = {
+				max: mod5,
+				mods: [mod5],
+				used: false
+			};	
+		}
+		
+		var key = mod2 + "_" + mod5;
+		if(count2_5[key]) {
+			count2_5[key]++;			
+		} else {
+			count2_5[key] = 1;
+		}		
+	}
+	
+	for(var i=0; i<distinctMod2.length; i++) {
+		var mod2 = mod2s[distinctMod2[i]];
+		mod2.max = nthMax(mod2.mods, []);
+		mod2.secondMax = nthMax(mod2.mods, [mod2.max]);
+		mod2.thirdMax = nthMax(mod2.mods, [mod2.max, mod2.secondMax]);
+	}
+			
+	var result = 0;
+	for(var i=0; i<distinctMod2.length; i++) {
+		var m2_1 = distinctMod2[i];
+		var mod2_1 = mod2s[m2_1];	
+		
+		var x1 = m2_1;
+		var y1 = mod2_1.max;
+		key1 = x1 + "_" + y1;
+		count2_5[key1]--;	
+		
+		for(var j=i; j<distinctMod2.length; j++) {
+			var m2_2 = distinctMod2[j];
+			var mod2_2 = mod2s[m2_2];
+				
+			var x2 = m2_2;
+			var y2 = mod2_2.max;
+			var key2 = x2 + "_" + y2;			
+			if(count2_5[key2] == 0) {
+				y2 = mod2_2.secondMax;
+			}
+			
+			if(y2 == -1) {
+				continue;
+			}
+			
+			count2_5[key2]--;	
+			for(var k=j; k<distinctMod2.length; k++) {
+				var m2_3 = distinctMod2[k];
+				var mod2_3 = mod2s[m2_3];
+				
+				var x3 = m2_3;
+				var y3 = mod2_3.max;
+				var key3 = x3 + "_" + y3;			
+				if(count2_5[key3] == 0) {
+					y3 = mod2_3.secondMax;
+				}
+				
+				key3 = x3 + "_" + y3;				
+				if(count2_5[key3] == 0) {
+					y3 = mod2_3.thirdMax;
+				}
+				
+				if(y3 == -1) {
+					continue;
+				}
+				
+				var digits = Math.min(x1 + x2 + x3, y1 + y2 + y3);
+				result = Math.max(result, digits);
+			}
+						
+			count2_5[key2]++;	
+		}		
+		
+		count2_5[key1]++;	
+	}
+		
+	return result;
+}
+
+======================================================================================================================================================
+Optimize5: tốn time hơn Optimize4
+
+function mod(n, i) {
+	var result = 0;
+	
+	while(n > 0 && n % i == 0) {
+		n /= i;
+		result++;
+	}
+	
+	return result;
+}
+
+function solution(A) {
+	var N = A.length;
+	var a2 = [];
+	var a5 = [];
+	var max5 = 0;
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var mod5 = mod(a, 5);
+		var mod2 = mod(a, 2);		
+		a2[i] = mod2;
+		a5[i] = mod5;
+		max5 = Math.max(max5, mod5);	
+	}
+	
+	var k = 3;
+	var s = [];
+	var MAX5 = 100;
+	for(var i=0; i<=k; i++) {
+		s[i] = [];
+		for(var j=0; j<MAX5; j++) {
+			s[i][j] = -1;
+		}
+	}
+	
+	s[0][0] = 0;
+	debugger;
+	for(var a=0; a<N; a++) {
+		var mod5 = a5[a];
+		var mod2 = a2[a];
+		
+		for(var i=k-1; i>=0; i--) {
+			for(var j=0; j<MAX5; j++) {
+				if(s[i][j] != -1) {
+					s[i + 1][j + mod5] = Math.max(s[i + 1][j + mod5], s[i][j] + mod2);
+				}
+			}
+		}
+	}
+		
+	var result = 0;
+	var sk = s[k];
+	for(var i=0; i<MAX5; i++) {
+		var digits = Math.min(sk[i], i);
+		result = Math.max(result, digits);
+	}
+		
+	return result;
+}
+
+
+
+======================================================================================================================================================
+Optimize6: chậm hơn Optimize4
+
+function mod(n, i) {
+	var result = 0;
+	
+	while(n > 0 && n % i == 0) {
+		n /= i;
+		result++;
+	}
+	
+	return result;
+}
+
+function solution(A) {
+	var N = A.length;
+	var a2 = [];
+	var a5 = [];
+	var max5 = 0;
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var mod5 = mod(a, 5);
+		var mod2 = mod(a, 2);		
+		a2[i] = mod2;
+		a5[i] = mod5;
+		max5 = Math.max(max5, mod5);	
+	}
+	
+	var k = 3;
+	var s = [];
+	var MAX5 = (k+1) * max5;
+	for(var i=0; i<=k; i++) {
+		s[i] = [];
+		for(var j=0; j<MAX5; j++) {
+			s[i][j] = -1;
+		}
+	}
+	
+	s[0][0] = 0;
+	debugger;
+	for(var a=0; a<N; a++) {
+		var mod5 = a5[a];
+		var mod2 = a2[a];
+		
+		for(var i=k-1; i>=0; i--) {
+			for(var j=0; j<MAX5; j++) {
+				if(s[i][j] != -1) {
+					s[i + 1][j + mod5] = Math.max(s[i + 1][j + mod5], s[i][j] + mod2);
+				}
+			}
+		}
+	}
+		
+	var result = 0;
+	var sk = s[k];
+	for(var i=0; i<MAX5; i++) {
+		var digits = Math.min(sk[i], i);
+		result = Math.max(result, digits);
+	}
+		
+	return result;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

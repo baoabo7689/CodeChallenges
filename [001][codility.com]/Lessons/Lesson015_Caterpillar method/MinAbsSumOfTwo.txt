@@ -1,0 +1,320 @@
+Let A be a non-empty zero-indexed array consisting of N integers.
+
+The abs sum of two for a pair of indices (P, Q) is the absolute value |A[P] + A[Q]|, for 0 ≤ P ≤ Q < N.
+
+For example, the following array A:
+
+  A[0] =  1
+  A[1] =  4
+  A[2] = -3
+has pairs of indices (0, 0), (0, 1), (0, 2), (1, 1), (1, 2), (2, 2). 
+The abs sum of two for the pair (0, 0) is A[0] + A[0] = |1 + 1| = 2. 
+The abs sum of two for the pair (0, 1) is A[0] + A[1] = |1 + 4| = 5. 
+The abs sum of two for the pair (0, 2) is A[0] + A[2] = |1 + (−3)| = 2. 
+The abs sum of two for the pair (1, 1) is A[1] + A[1] = |4 + 4| = 8. 
+The abs sum of two for the pair (1, 2) is A[1] + A[2] = |4 + (−3)| = 1. 
+The abs sum of two for the pair (2, 2) is A[2] + A[2] = |(−3) + (−3)| = 6. 
+Write a function:
+
+int solution(int A[], int N);
+that, given a non-empty zero-indexed array A consisting of N integers, returns the minimal abs sum of two for any pair of indices in this array.
+
+For example, given the following array A:
+
+  A[0] =  1
+  A[1] =  4
+  A[2] = -3
+the function should return 1, as explained above.
+
+Given array A:
+
+  A[0] = -8
+  A[1] =  4
+  A[2] =  5
+  A[3] =-10
+  A[4] =  3
+the function should return |(−8) + 5| = 3.
+
+Assume that:
+
+N is an integer within the range [1..100,000];
+each element of array A is an integer within the range [−1,000,000,000..1,000,000,000].
+Complexity:
+
+expected worst-case time complexity is O(N*log(N));
+expected worst-case space complexity is O(N), beyond input storage (not counting the storage required for input arguments).
+Elements of input arrays can be modified.
+Copyright 2009–2017 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited.
+
+======================================================================================================================================================
+[-9,8]
+=> can't split 
+
+[3,-4,4]
+=> min(n+1) can't depend on min(n)
+
+Xét
+a1 <= a2 <= ... <= an 
+
+-a1 >0 => min = a1+a2
+-an <0 => min = an + a(n-1)
+-có ai<0<=a(i+1)
+	|a1+a2|=|a1| + |a2|
+	|a2+a3|=||a2|-|a3||
+	-5, -4, 14 => choose -4,-5
+	-14,4,5	=> choose 4,5
+	-8,-2,1,3 => choose -2,1
+	=> Choose 2 min -, 2 min +
+	Then compare
+	=> time = n (if not sort)
+			= nlogn (if sort)
+
+
+[ -3, 1, 4 ]
+[-4,-1,3]
+
+[-4, -3, 1, 2, 4]
+
+1,2,4
+-3,-4
+
+
+
+
+
+
+
+-Split A to positive and negative, then sort 2 arrays
+
+p1 -> pi 
+n1 -> nj
+
+-Nếu n_j < p_i: xác định p_k sao cho
+	+p_k-1 < n_j < p_k 
+		với x > k: p_x > p_k 
+		=> n_j - p_x < n_j - p_k 
+		=> |n_j - p_k| < |n_j - p_x|
+		
+	+nếu không có => j dừng ở 0
+	
+
+-Nếu n_j === p_i: return 0
+_Nếu n_j > p_i: Xác định n_k sao cho
+	+ n_k-1 < p_i < n_k 
+		với x > k: n_x > n_k 
+		=> n_x - p_i > n_k - p_i
+		
+		với y < i: p_y < p_i
+		=> n_k - p_i > n_k - p_y
+		n_x - p_y > n_x - p_i > n_k - p_i
+		=> loại n_x
+	+ nếu không có => j dừng ở 0
+
+
+
+
+
+
+======================================================================================================================================================
+function solution(A) {
+	var N = A.length;
+	var positives = [];
+	var negatives = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		if(a === 0) {
+			return 0;
+		}
+		
+		if(a < 0) {
+			negatives.push(-a);
+			continue;
+		}
+		
+		positives.push(a);
+	}
+	
+	positives = sort(positives);
+	negatives = sort(negatives);
+	
+	var negativeIndex = negatives.length - 1;
+	if(negativeIndex === -1) {
+		return positives[0] * 2;
+	}
+	
+	var positiveIndex = positives.length - 1;
+	if(positiveIndex === -1) {
+		return negatives[0] * 2;
+	}
+	
+	var min = undefined;
+	console.log(positives);
+	console.log(negatives);
+	
+	while(true) {
+		if(negatives[negativeIndex] === positives[positiveIndex]) {
+			return 0;
+		}
+		
+		var negative = negatives[negativeIndex];
+		if(negative < positives[positiveIndex]) {
+			while(positiveIndex >= 0 && negative < positives[positiveIndex]) {
+				positiveIndex--;
+			}	
+			
+			var diff =  positives[positiveIndex + 1] - negative ;
+			min = min === undefined ? diff : Math.min(min, diff);
+			
+			if(positiveIndex !== -1) {
+				continue;				
+			}
+			
+			min = Math.min(min, 2*negatives[0]);
+			break;
+		}
+		
+	
+		var positive = positives[positiveIndex];
+		while(negativeIndex >= 0 && negatives[negativeIndex] > positive) {
+			negativeIndex--;
+		}
+		
+		var diff = negatives[negativeIndex + 1] - positive;
+		min = min === undefined ? diff : Math.min(min, diff);		
+		if(negativeIndex === -1) {
+			min = Math.min(min, 2*positives[0]);
+			break;		
+		}	
+		
+	}	
+	
+	return min;
+}
+
+
+
+
+function sort(A, isNegative) {
+	var N = A.length;
+	
+	if(N === 0) {
+		return A;
+	}
+		
+	var max = Math.abs(A[0]);
+	
+	var aInfo = [];
+	
+	for(var i=0; i<N; i++) {
+		var value = isNegative ? -A[i] : A[i];
+		
+		aInfo.push({ value:  value, digit: value});
+		
+		if(max < value) {
+			max = value;
+		}
+	}
+	
+	N = aInfo.length;
+	var M = Math.round(Math.log(max)/Math.log(10));
+		
+	for(var i=0; i<=M; i++) {
+		var sortBaskets = initSortBaskets();
+		
+		for(var j=0; j<N;j++) {
+			var a = aInfo[j];
+			var digit = a.digit % 10;	
+			a.digit = a.digit ? Math.floor(a.digit / 10) : 0;
+			
+			sortBaskets[digit].push(a);
+		}
+					
+		aInfo = combineSortBaskets(sortBaskets);
+	}	
+	
+	var result = [];	
+	
+	if(isNegative) {
+		for(var i=N-1; i>=0; i--) {		
+			result.push(-aInfo[i].value);
+		}		
+	} else {
+		for(var i=0; i<N; i++) {		
+			result.push(aInfo[i].value);
+		}		
+	}
+	
+	return result;
+}
+
+
+function initSortBaskets() {
+	var sortBaskets = [];
+	
+	for(var i=0;i<10;i++) {
+		sortBaskets.push([]);
+	}
+	
+	return sortBaskets;
+}
+
+
+function combineSortBaskets(sortBaskets) {
+	var result = [];
+	
+	for(var i=0;i<10;i++) {
+		var basket = sortBaskets[i];
+		
+		for(var j=0;j<basket.length; j++) {
+			result.push(basket[j]);		
+		}
+	}	
+	
+	return result;
+}
+
+
+
+solution([-8, 4, 5, -10, 3] );
+solution([1, 4, -3]);
+
+
+
+
+[ 1, 4 ]
+[ 3 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

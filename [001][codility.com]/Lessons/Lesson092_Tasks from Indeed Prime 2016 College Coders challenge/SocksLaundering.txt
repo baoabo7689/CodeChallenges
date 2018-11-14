@@ -1,0 +1,293 @@
+
+
+Bob is about to go on a trip. But first he needs to take care of his supply of socks. Each sock has its own color. Bob wants to take as many pairs of clean socks as possible (both socks in the pair should be of the same color).
+
+Socks are divided into two drawers: clean and dirty socks. Bob has time for only one laundry and his washing machine can clean at most K socks. He wants to pick socks for laundering in such a way that after washing he will have a maximal number of clean, same-colored pairs of socks. It is possible that some socks cannot be paired with any other sock, because Bob may have lost some socks over the years.
+
+Bob has exactly N clean and M dirty socks, which are described in arrays C and D, respectively. The colors of the socks are represented as integers (equal numbers representing identical colors).
+
+For example, given four clean socks and five dirty socks:
+
+If Bob's washing machine can clean at most K = 2 socks, then he can take a maximum of three pairs of clean socks. He can wash one red sock and one green sock, numbered 1 and 2 respectively. Then he will have two pairs of red socks and one pair of green socks.
+
+Write a function:
+
+    function solution(K, C, D);
+
+that, given an integer K (the number of socks that the washing machine can clean), two arrays C and D (containing the color representations of N clean and M dirty socks respectively), returns the maximum number of pairs of socks that Bob can take on the trip.
+
+For example, given K = 2, C = [1, 2, 1, 1] and D = [1, 4, 3, 2, 4], the function should return 3, as explained above.
+
+Assume that:
+
+        K is an integer within the range [0..50];
+        each element of arrays C, D is an integer within the range [1..50];
+        C and D are not empty and each of them contains at most 50 elements.
+
+In your solution, focus on correctness. The performance of your solution will not be the focus of the assessment.
+Copyright 2009–2017 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+======================================================================================================================================================
+
+11
+10
+
+5+1=6pair
+10pair
+
+
+12
+10
+
+13
+10 = 11 
+
+9
+10 = 9
+
+8
+10 = 9
+
+
+6
+10= 
+
+7
+10=
+ 
+ 
+ K=3
+ 1122334
+ 1234
+ 
+ K=1
+ 112
+ 12
+======================================================================================================================================================
+
+function solution(K, C, D) {
+	var N = C.length;
+	var cCounts = [];
+	var cList = [];
+	var cExists = [];
+	for(var i=0; i<N; i++) {
+		var c = C[i];
+		
+		if(cCounts[c] === undefined) {
+			cExists[c] = true;
+			cList.push(c);
+			cCounts[c] = 1;
+			continue;
+		}
+				
+		cCounts[c] = cCounts[c] + 1;
+	}
+	
+	// console.log(cCounts);
+	// console.log(cExists);
+	// console.log(cList);
+	
+	var M = D.length;
+	var dCounts = [];
+	var dList = [];
+	var dExists = [];
+	for(var i=0; i<M; i++) {
+		var d = D[i];
+		
+		if(dCounts[d] === undefined) {
+			dExists[d] = true;
+			dList.push(d);
+			dCounts[d] = 1;
+			continue;
+		}
+				
+		dCounts[d] = dCounts[d] + 1;
+	}
+	
+	// console.log(dCounts);
+	// console.log(dExists);	
+	// console.log(dList);
+	
+	var washedStocks = 0;
+	var cleanPairs = 0;
+	for(var i=0; i<cList.length; i++) {
+		var c = cList[i];
+		var cCount = cCounts[c];
+		cleanPairs += Math.floor(cCount/2);
+		
+		if(cCount%2 === 0 || !dExists[c]) {
+			continue;
+		}
+		
+		if(washedStocks < K) {
+			washedStocks += 1;
+			dCounts[c] = dCounts[c] - 1;			
+		}		
+	}		
+	
+	if(washedStocks >= K) {
+		return cleanPairs + washedStocks;
+	}
+	
+	cleanPairs += washedStocks;
+	K = K - washedStocks;
+	washedStocks = 0;
+	
+	for(var i=0; i<dList.length; i++) {
+		var c = dList[i];
+		var dCount = dCounts[c];
+		var minCount = Math.floor(dCount/2) * 2;	
+		var subK = K - washedStocks;
+		
+		if(minCount >= subK) {
+			washedStocks = K;
+			break;
+		}	
+
+		washedStocks += minCount;
+	}
+	
+	return cleanPairs + Math.floor(washedStocks/2);
+}
+
+function logArr(C) {	
+	var log = "";
+	var start = 48;
+	for(var i=start; i<C.length && i<start+4; i++) {
+		log += "00" + C[i];
+	}
+	
+	return parseInt(log);
+}
+
+(1, [1], [4])
+
+solution(5, [1, 1, 2], [2, 2, 3]);
+solution(1, [5], [5]);
+solution(3, [1, 2], [8, 8, 8, 8, 9]);
+
+solution(2, [1, 2, 1, 1], [1, 4, 3, 2, 4])
+
+[ , 3, 1 ]
+[ , true, true ]
+[ 1, 2 ]
+
+[ , 1, 1, 1, 2 ]
+[ , true, true, true, true ]
+[ 1, 4, 3, 2 ]
+
+
+(3, [1, 2], [8, 8, 8, 8, 9])
+[ , 1, 1 ]
+[ , true, true ]
+[ 1, 2 ]
+
+[ , , , , , , , , 4, 1 ]
+[ , , , , , , , , true, true ]
+[ 8, 9 ]
+
+0
+0
+
+0
+2
+
+function split(s) {
+	var sParts = s.split(" ");
+	var counts = [];
+	for(var i=0; i< sParts.length; i++) {
+		var sPart = sParts[i];
+		if(sPart.length === "") {
+			continue;
+		}	
+		
+		var numberS = parseInt(sPart);
+		
+		if(!counts[numberS]) {
+			counts[numberS] = 1;
+			continue;
+		}
+		
+		counts[numberS] = counts[numberS] + 1;
+	}
+	
+	return counts;
+}
+
+split("14 1 19 10 16 9 12 16 10 12 5 11 8 16 20 19 6 6 6 17 7 10 2 14 12 19 10 18 8 10 15 11 19 3 5 2 11 19 20 16 1 13 20 9 16 3 6 16 16 5");
+
+19 
+Wash: 1
+cleanPairs: 18
+K: 1
+C: [14 1 19 10 16 9 12 16 10 12 5 11 8 16 20 19 6 6 6 17 7 10 2 14 12 19 10 18 8 10 15 11 19 3 5 2 11 19 20 16 1 13 20 9 16 3 6 16 16 5]
+length = 48 
+[empty, 2, 2, 2, empty, 3, 4, 1, 2, 2, 5, 3, 3, 1, 2, 1, 7, 1, 1, 5, 3]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

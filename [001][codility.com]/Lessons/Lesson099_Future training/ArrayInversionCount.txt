@@ -1,0 +1,826 @@
+An array A consisting of N integers is given. An inversion is a pair of indexes (P, Q) such that P < Q and A[Q] < A[P].
+
+Write a function:
+
+function solution(A);
+that computes the number of inversions in A, or returns −1 if it exceeds 1,000,000,000.
+
+Assume that:
+
+N is an integer within the range [0..100,000];
+each element of array A is an integer within the range [−2,147,483,648..2,147,483,647].
+For example, in the following array:
+
+ A[0] = -1 A[1] = 6 A[2] = 3
+ A[3] =  4 A[4] = 7 A[5] = 4
+there are four inversions:
+
+   (1,2)  (1,3)  (1,5)  (4,5)
+so the function should return 4.
+
+Complexity:
+
+expected worst-case time complexity is O(N*log(N));
+expected worst-case space complexity is O(N), beyond input storage (not counting the storage required for input arguments).
+Elements of input arrays can be modified.
+Copyright 2009–2017 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+======================================================================================================================================================
+
+ http://www.stoimen.com/blog/2012/06/22/computer-algorithms-binary-search-tree-data-structure/
+ https://www.cpp.edu/~ftang/courses/CS241/notes/self%20balance%20bst.htm
+ http://www.geeksforgeeks.org/avl-tree-set-1-insertion/
+ 
+ Time to build AVL tree: log1+log2+..+logN = NlogN
+ 
+======================================================================================================================================================
+Wrong Solution
+
+function solution(A) {
+	var N = A.length;
+	if(N <= 1) {
+		return 0;
+	}
+	
+	var tree = {
+		value: A[0],
+		left: null,
+		right: null,
+		parentNode: null,
+		childCount: 0,
+		duplicate: 1
+	};
+	
+	var count = 0;
+	var maxCount = 1000000000;
+	for(var i=1; i<A.length; i++) {
+		var a = A[i];
+		var insertResult = insertNode(tree, a);
+		tree = insertResult[0];
+		var aNode = insertResult[1];
+		
+		count += countGreaterThanA(aNode);
+		//console.log("Tree");
+		//console.log(tree);
+		//console.log(count);
+		
+		if(count > maxCount) {
+			return -1;
+		}	
+	}	
+	
+	return count;	
+}
+
+function countGreaterThanA(aNode) {
+	var count = aNode.right=== null ? 0 : aNode.right.childCount + aNode.right.duplicate;
+	var node = aNode.parentNode;
+	
+	while(node !== null) {
+		if(node.value <= aNode.value) {
+			node = node.parentNode;
+			continue;
+		}
+		
+		count += node.right=== null ? 0 : node.right.childCount  + node.right.duplicate;
+		count += node.duplicate;
+		node = node.parentNode;
+	}
+	
+	return count;
+}
+
+function insertNode(tree, a) {
+	var currentNode = tree;
+	var aNode = {
+		value: a,
+		left: null,
+		right: null,
+		parentNode: null,
+		childCount: 0,
+		duplicate: 1
+	};
+	
+	while(currentNode !== null) {		
+		if(currentNode.value === aNode.value) {
+			currentNode.duplicate++;
+			aNode = currentNode;
+			break;
+		}
+		
+		if(a < currentNode.value && currentNode.left === null) {
+			aNode.parentNode = currentNode;
+			currentNode.left = aNode;
+			currentNode.childCount++;
+			break;
+		}
+		
+		if(currentNode.value < a && currentNode.right === null) {
+			aNode.parentNode = currentNode;
+			currentNode.right = aNode;
+			currentNode.childCount++;
+			break;
+		}
+		
+		if(a < currentNode.value && currentNode.left.value < a) {
+			aNode.left = currentNode.left;
+			aNode.right = currentNode;
+			aNode.childCount =  currentNode.childCount + currentNode.duplicate;
+			
+			
+			aNode.parentNode = currentNode.parentNode;
+			if(aNode.parentNode) {
+				if(currentNode.parentNode.value < aNode.value) {
+					currentNode.parentNode.right = aNode;
+				} else {
+					currentNode.parentNode.left = aNode;				
+				}				
+			}
+			
+			
+			currentNode.left.parentNode = aNode;
+			
+			currentNode.parentNode = aNode;
+			currentNode.childCount -= currentNode.left.childCount + currentNode.left.duplicate;
+			currentNode.left = null;
+			break;
+		}
+		
+		if(currentNode.value < a && a < currentNode.right.value) {
+			aNode.right = currentNode.right;
+			aNode.left = currentNode;
+			aNode.childCount =  currentNode.childCount + currentNode.duplicate;
+			
+			aNode.parentNode = currentNode.parentNode;
+			if(aNode.parentNode) {
+				if(currentNode.parentNode.value < aNode.value) {
+					currentNode.parentNode.right = aNode;
+				} else {
+					currentNode.parentNode.left = aNode;				
+				}				
+			}
+			
+			currentNode.right.parentNode = aNode;
+			
+			currentNode.parentNode = aNode;
+			currentNode.childCount -= currentNode.right.childCount  + currentNode.right.duplicate;
+			currentNode.right = null;
+			break;
+		}
+		
+		currentNode.childCount++;
+		if(a < currentNode.value ) {
+			currentNode = currentNode.left;
+			continue;			
+		}
+		
+		currentNode = currentNode.right;
+	}
+	
+	if(aNode.parentNode === null) {
+		tree = aNode;
+	}
+	
+	return [tree, aNode];
+}
+
+[0], [], [1,2,3], [1,1,1]
+
+[10, 2, 1, 4, 1, -1, 19, 1] 
+
+solution([10, 2, 1, 4, 1, -1, 19, 1]);
+solution([-1, 6, 3, 4, 7, 4]);
+
+======================================================================================================================================================
+Slow performance: must convert to Balance Binary Search Tree
+
+function solution(A) {
+	var N = A.length;
+	if(N <= 1) {
+		return 0;
+	}
+	
+	var tree = {
+		value: A[0],
+		left: null,
+		right: null,
+		parentNode: null,
+		childCount: 0,
+		duplicate: 1,
+		height: 0
+	};
+	
+	var count = 0;
+	var maxCount = 1000000000;
+	for(var i=1; i<A.length; i++) {
+		var a = A[i];
+		var insertResult = insertNode(tree, a);
+		tree = insertResult[0];
+		var aNode = insertResult[1];
+		
+		count += countGreaterThanA(aNode);
+		//console.log("Tree");
+		//console.log(tree);
+		//console.log(count);
+		
+		if(count > maxCount) {
+			return -1;
+		}	
+	}	
+	
+	return count;	
+}
+
+function countGreaterThanA(aNode) {
+	var count = aNode.right=== null ? 0 : aNode.right.childCount + aNode.right.duplicate;
+	var node = aNode.parentNode;
+	
+	while(node !== null) {
+		if(node.value < aNode.value) {
+			node = node.parentNode;
+			continue;
+		}
+		
+		count += node.right=== null ? 0 : node.right.childCount  + node.right.duplicate;
+		count += node.duplicate;
+		node = node.parentNode;
+	}
+	
+	return count;
+}
+
+function insertNode(tree, a) {
+	var currentNode = tree;
+	var aNode = {
+		value: a,
+		left: null,
+		right: null,
+		parentNode: null,
+		childCount: 0,
+		duplicate: 1,
+		height: 0
+	};
+	
+	var shouldCalculateHeight = false;
+	
+	while(currentNode !== null) {		
+		if(currentNode.value === aNode.value) {
+			currentNode.duplicate++;
+			aNode = currentNode;
+			break;
+		}
+		
+		if(a < currentNode.value && currentNode.left === null) {
+			aNode.parentNode = currentNode;
+			currentNode.left = aNode;
+			currentNode.childCount++;
+			shouldCalculateHeight=true;
+			break;
+		}
+		
+		if(currentNode.value < a && currentNode.right === null) {
+			aNode.parentNode = currentNode;
+			currentNode.right = aNode;
+			currentNode.childCount++;
+			shouldCalculateHeight=true;
+			break;
+		}
+		
+		currentNode.childCount++;
+		currentNode = a < currentNode.value ? currentNode.left : currentNode.right;
+	}
+	
+	if(aNode.parentNode === null) {
+		tree = aNode;
+	}
+	
+	return [tree, aNode];
+}
+
+
+======================================================================================================================================================
+
+function solution(A) {
+	var N = A.length;
+	if(N <= 1) {
+		return 0;
+	}
+	
+	var tree = {
+		value: A[0],
+		left: null,
+		right: null,
+		parentNode: null,
+		childCount: 0,
+		duplicate: 1,
+		height: 1
+	};
+	
+	var count = 0;
+	var maxCount = 1000000000;
+	for(var i=1; i<A.length; i++) {
+		var a = A[i];
+		var insertResult = insertNode(tree, a);
+		tree = insertResult[0];
+		var aNode = insertResult[1];
+		
+		count += countGreaterThanA(aNode);
+		//console.log("Tree");
+		//console.log(tree);
+		//console.log(count);
+		
+		if(count > maxCount) {
+			return -1;
+		}	
+	}	
+	
+	return count;	
+}
+
+function countGreaterThanA(aNode) {
+	var count = aNode.right=== null ? 0 : aNode.right.childCount + aNode.right.duplicate;
+	var node = aNode.parentNode;
+	
+	while(node !== null) {
+		if(node.value < aNode.value) {
+			node = node.parentNode;
+			continue;
+		}
+		
+		count += node.right=== null ? 0 : node.right.childCount  + node.right.duplicate;
+		count += node.duplicate;
+		node = node.parentNode;
+	}
+	
+	return count;
+}
+
+function insertNode(tree, a) {
+	var currentNode = tree;
+	var aNode = {
+		value: a,
+		left: null,
+		right: null,
+		parentNode: null,
+		childCount: 0,
+		duplicate: 1,
+		height: 1
+	};
+	
+	var shouldCalculateHeight = false;
+	
+	while(currentNode !== null) {		
+		if(currentNode.value === aNode.value) {
+			currentNode.duplicate++;
+			aNode = currentNode;
+			break;
+		}
+		
+		if(a < currentNode.value && currentNode.left === null) {
+			aNode.parentNode = currentNode;
+			currentNode.left = aNode;
+			currentNode.childCount++;
+			shouldCalculateHeight=true;
+			break;
+		}
+		
+		if(currentNode.value < a && currentNode.right === null) {
+			aNode.parentNode = currentNode;
+			currentNode.right = aNode;
+			currentNode.childCount++;
+			shouldCalculateHeight=true;
+			break;
+		}
+		
+		currentNode.childCount++;
+		currentNode = a < currentNode.value ? currentNode.left : currentNode.right;
+	}
+	
+	if(shouldCalculateHeight) {
+		tree = calculateHeight(tree,aNode);
+	}
+	
+	return [tree, aNode];
+}
+
+function calculateHeight(tree, aNode) {
+	var upNode = aNode.parentNode;
+	var grandChild = aNode;
+	
+	if(upNode.height !== 0) {
+		upNode.height++;	
+		return tree;		
+	}
+	
+	upNode.height++;	
+	while(upNode.parentNode !== null) {
+		var grandParent = upNode.parentNode;
+		grandParent.height++;
+		
+		var leftHeight = grandParent.left ? grandParent.left.height : 0;
+		var rightHeight = grandParent.right ? grandParent.right.height : 0;
+		
+		if(Math.abs(leftHeight - rightHeight) <= 1) {
+			grandChild = upNode;
+			upNode = upNode.parentNode;
+			continue;
+		}
+		
+		
+		if(leftHeight > rightHeight && grandChild.value < upNode.value) {
+			rightRotate(grandParent);
+			if(upNode.parentNode === null) {
+				tree = upNode;
+			}
+			
+			break;
+		}
+		
+		if(leftHeight > rightHeight && grandChild.value > upNode.value) {
+			leftRotate(upNode);
+			rightRotate(grandParent);
+			
+			if(grandChild.parentNode === null) {
+				tree = grandChild;
+			}
+			
+			break;
+		}
+		
+		if(leftHeight < rightHeight && grandChild.value > upNode.value) {
+			leftRotate(grandParent);
+			if(upNode.parentNode === null) {
+				tree = upNode;
+			}
+			
+			break;
+		}
+		
+		if(leftHeight < rightHeight && grandChild.value < upNode.value) {
+			rightRotate(upNode);
+			leftRotate(grandParent);
+			
+			if(grandChild.parentNode === null) {
+				tree = grandChild;
+			}
+			
+			break;
+		}
+				
+		grandChild = upNode;
+		upNode = upNode.parentNode;
+	}
+	
+	return tree;	
+}
+
+function rightRotate(yNode) {
+	// childCount, height, prentNode	
+	var yLeft = yNode.left;
+	var yLeftRight = yLeft.right;
+	
+	yLeft.childCount += sumRightChildCount(yNode);	
+	
+	yNode.childCount -= yLeft.childCount + yLeft.duplicate;
+	
+	yLeft.right = yNode;	
+	yNode.prentNode = yLeft;
+	
+	yNode.left = yLeftRight;
+	if(yLeftRight) {
+		yLeftRight.prentNode = yNode;
+		yNode.childCount += sumRightChildCount(yLeftRight);		
+	}
+	
+	yNode.height = nodeHeight(yNode);
+	yLeft.height = nodeHeight(yLeft);
+	
+	return yLeft;
+}
+
+function leftRotate(yNode) {
+	// childCount, height, prentNode	
+	var yRight = yNode.right;
+	var yRightLeft = yRight.left;
+	
+	yRight.childCount += sumRightChildCount(yNode);	
+	
+	yNode.childCount -= yRight.childCount + yRight.duplicate;
+	
+	yRight.left = yNode;	
+	yNode.prentNode = yRight;
+	
+	yNode.right = yRightLeft;
+	if(yRightLeft) {
+		yRightLeft.prentNode = yNode;
+		yNode.childCount += sumRightChildCount(yRightLeft);		
+	}
+	
+	yNode.height = nodeHeight(yNode);
+	yLeft.height = nodeHeight(yRight);
+	
+	return yRight;
+}
+
+function sumRightChildCount(node) {
+	var result = node.right ? node.right.childCount +  node.right.duplicate : 0;	
+	return result + node.duplicate;
+}
+
+function nodeHeight(node) {
+	var left = node.left ? node.left.height : 0;
+	var right = node.right ? node.right.height : 0;
+	
+	return Math.max(left, right) + 1;
+}
+
+solution([5, 4, 3, 2, 1]);
+
+
+======================================================================================================================================================
+Fast
+
+function sortA(A) {
+	var N = A.length;
+	
+	var positive = [];
+	var negative = [];
+	
+	for(var i=0; i<N; i++) {		
+		var value = A[i];
+		if(value < 0) {
+			negative.push(value);
+		}else{
+			positive.push(value);
+		}
+	}
+	
+	positive = sort(positive);
+	negative = sort(negative, true);
+	
+	return negative.concat(positive);	
+}
+
+function sort(A, isNegative) {
+	var N = A.length;
+	
+	if(N === 0) {
+		return A;
+	}
+		
+	var max = Math.abs(A[0]);
+	
+	var aInfo = [];
+	
+	for(var i=0; i<N; i++) {
+		var value = isNegative ? -A[i] : A[i];
+		
+		aInfo.push({ value:  value, digit: value});
+		
+		if(max < value) {
+			max = value;
+		}
+	}
+	
+	N = aInfo.length;
+	var M = Math.round(Math.log(max)/Math.log(10));
+		
+	for(var i=0; i<=M; i++) {
+		var sortBaskets = initSortBaskets();
+		
+		for(var j=0; j<N;j++) {
+			var a = aInfo[j];
+			var digit = a.digit % 10;	
+			a.digit = a.digit ? Math.floor(a.digit / 10) : 0;
+			
+			sortBaskets[digit].push(a);
+		}
+					
+		aInfo = combineSortBaskets(sortBaskets);
+	}	
+	
+	var result = [];	
+	
+	if(isNegative) {
+		for(var i=N-1; i>=0; i--) {		
+			result.push(-aInfo[i].value);
+		}		
+	} else {
+		for(var i=0; i<N; i++) {		
+			result.push(aInfo[i].value);
+		}		
+	}
+	
+	return result;
+}
+
+function initSortBaskets() {
+	var sortBaskets = [];
+	
+	for(var i=0;i<10;i++) {
+		sortBaskets.push([]);
+	}
+	
+	return sortBaskets;
+}
+
+function combineSortBaskets(sortBaskets) {
+	var result = [];
+	
+	for(var i=0;i<10;i++) {
+		var basket = sortBaskets[i];
+		
+		for(var j=0;j<basket.length; j++) {
+			result.push(basket[j]);		
+		}
+	}	
+	
+	return result;
+}
+
+function solution(A) {
+	var N = A.length;
+	if(N <= 1) {
+		return 0;
+	}
+	
+	var distinctA = [];
+	var exists = [];
+	for(var i=0; i<N; i++) {	
+		var a = A[i];
+		if(exists[a]) {
+			continue;
+		}
+		
+		distinctA.push(a);
+		exists[a] = true;
+	}
+	
+	var sortedDistinctA = sortA(distinctA);	
+	var tree = createTree(sortedDistinctA, 0, sortedDistinctA.length);
+	
+	var count = 0;
+	var maxCount = 1000000000;
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		count += countLargerThanA(a, tree);
+		
+		if(count > maxCount) {
+			return -1;
+		}	
+	}
+	
+	return count;
+}
+
+function createTree(sortedDistinctA, leftIndex, rightIndex) {
+	var middle = Math.floor((leftIndex + rightIndex)/2);
+	
+	if(rightIndex < leftIndex) {
+		return null;
+	}
+	
+	return {
+		value: sortedDistinctA[middle],
+		left: createTree(sortedDistinctA, leftIndex, middle - 1),
+		right: createTree(sortedDistinctA, middle + 1, rightIndex),
+		childCount: 0,
+		duplicate: 0
+	};	
+}
+
+function countLargerThanA(a, tree) {
+	var count = 0;
+	var node = tree;	
+	while(node != null) {
+		if(node.value === a) {
+			node.duplicate++;
+			count += node.right ? node.right.childCount + node.right.duplicate : 0;
+			break;
+		}
+		
+		node.childCount++;
+		
+		if(a < node.value) {			
+			count += node.right ? node.right.childCount + node.right.duplicate : 0;
+			count += node.duplicate;
+			
+			node = node.left;
+			continue;
+		}
+		
+		
+		node = node.right;		
+	}	
+	
+	return count;
+}
+
+
+
+
+======================================================================================================================================================
+
+
+
+function solution(a){
+  if(a.length <= 1) return 0;
+  
+  var index = Math.floor(a.length/2);
+  
+  var leftArray = copyOfRange(a, 0, index);
+  var rightArray = copyOfRange(a, index, a.length);
+  
+  var count = solution(leftArray) + solution(rightArray) + mergeCount(a, leftArray, rightArray);  
+  return count >= 1000000000 ? -1 : count;	
+}
+
+
+function copyOfRange(a, startIndex, endIndex){
+	var result = [];
+	for(var i=startIndex; i<endIndex; i++) {
+		result.push(a[i]);
+	}
+	
+	return result;
+}
+
+function mergeCount(a, left, right){
+  var l = 0, r = 0, inv = 0;
+  var aIndex = -1;
+  
+  while(l < left.length || r < right.length){
+	aIndex++;
+	  
+    if(l == left.length){
+	  a[aIndex] = right[r];
+      r++;
+	  continue;
+    }
+    
+	if(r == right.length){
+	  a[aIndex] = left[l];
+      l++;
+	  continue;
+    }
+    
+	if(left[l] > right[r]){
+      inv += (left.length - l);
+	  a[aIndex] = right[r];
+      r++;
+	  continue;
+    }
+	
+    if(left[l] <= right[r]){
+	  a[aIndex] = left[l];
+      l++;
+	  continue;
+    }
+  }
+  
+  return inv;
+}
+
+
+
+
+ [10, 2, 1, 4, 1, -1, 19, 1]
+
+ [a1 < a2 < ... < ai][a3 < a4 < ... < aj]
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

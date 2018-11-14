@@ -1,0 +1,699 @@
+
+IncreasingSequences
+
+
+You have two sequences A and B consisting of integers, both of length N, and you would like them to be (strictly) increasing, i.e. for each K (0 ≤ K < N − 1), A[K] < A[K + 1] and B[K] < B[K + 1]. Thus, you need to modify the sequences, but the only manipulation you can perform is to swap an arbitrary element in sequence A with the corresponding element in sequence B. That is, both elements to be exchanged must occupy the same index position within each sequence.
+
+For example, given A = [5, 3, 7, 7, 10] and B = [1, 6, 6, 9, 9], you can swap elements at positions 1 and 3, obtaining A = [5, 6, 7, 9, 10], B = [1, 3, 6, 7, 9].
+
+Your goal is make both sequences increasing, using the smallest number of moves.
+
+Write a function:
+
+    function solution(A, B);
+
+that, given two arrays A, B of length N, containing integers, returns the minimum number of swapping operations required to make the given arrays increasing. If it is impossible to achieve the goal, return −1.
+
+For example, given:
+A[0] = 5        B[0] = 1
+A[1] = 3        B[1] = 6
+A[2] = 7        B[2] = 6
+A[3] = 7        B[3] = 9
+A[4] = 10       B[4] = 9
+
+your function should return 2, as explained above.
+
+Given:
+A[0] = 5        B[0] = 2
+A[1] = -3       B[1] = 6
+A[2] = 6        B[2] = -5
+A[3] = 4        B[3] = 1
+A[4] = 8        B[4] = 0
+
+your function should return −1, since you cannot perform operations that would make the sequences become increasing.
+
+Given:
+A[0] = 1        B[0] = -2
+A[1] = 5        B[1] = 0
+A[2] = 6        B[2] = 2
+
+your function should return 0, since the sequences are already increasing.
+
+Assume that:
+
+        N is an integer within the range [2..100,000];
+        each element of arrays A, B is an integer within the range [−1,000,000,000..1,000,000,000];
+        A and B have equal lengths.
+
+Complexity:
+
+        expected worst-case time complexity is O(N);
+        expected worst-case space complexity is O(N) (not counting the storage required for input arguments).
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+======================================================================================================================================================
+
+function solution(A, B) {
+	console.log(A);
+	console.log(B);
+	
+	var N = A.length;
+	
+	var changes = 0;
+	var prevA = A[0];
+	var prevB = B[0];
+	
+	for(var i=1; i<N; i++) {
+		var a = A[i];
+		var b = B[i];
+		
+		if(a <= prevA && (a <= prevB || b <= prevA)) {
+			return -1;			
+		}
+				
+		if(b <= prevB && (b <= prevB || a <= prevB)) {
+			return -1;
+		}
+		
+		if(a == prevA || b == prevB) {			
+			prevA = b;
+			prevB = a;		
+			changes++;
+			continue;
+		}
+			
+		prevA = a;
+		prevB = b;			
+	}
+	
+	return changes;
+}
+
+
+Từ cuối lên
+
+1.
+0.076 s
+WRONG ANSWER, got 5 expected 2
+stdout:
+
+[ 0, 1, 2, 3, 4, 9, 10, 11, 12 ]
+[ 4, 5, 6, 7, 8, 6, 8, 12, 13 ]
+
+2.
+0.076 s
+WRONG ANSWER, got 4 expected 3
+stdout:
+
+[ -1, 0, 2, 5, 9, 11, 11, 13, 13 ]
+[ -1, 0, 4, 4, 5, 8, 12, 12, 14 ]
+
+
+
+Từ trên xuống
+
+1.
+0.076 s
+OK
+stdout:
+
+[ 0, 1, 2, 3, 4, 9, 10, 11, 12 ]
+[ 4, 5, 6, 7, 8, 6, 8, 12, 13 ]
+
+2.
+0.076 s
+WRONG ANSWER, got 4 expected 3
+stdout:
+
+[ -1, 0, 2, 5, 9, 11, 11, 13, 13 ]
+[ -1, 0, 4, 4, 5, 8, 12, 12, 14 ]
+
+
+function solution(A, B) {
+	console.log(A);
+	console.log(B);
+	
+	var N = A.length;
+	
+	var changes = 0;
+	var prevA = A[0];
+	var prevB = B[0];
+	
+	for(var i=1; i<N; i++) {
+		var a = A[i];
+		var b = B[i];
+		
+		if(a < prevA) {
+			if(a <= prevB) {
+				return -1;
+			}
+			
+			if(b <= prevA) {
+				return -1;
+			}
+			
+			prevA = b;
+			prevB = a;
+			changes++;
+			continue;
+		}	
+		
+		if(a == prevA) {
+			if(a <= prevB) {
+				return -1;
+			}
+			
+			if(b <= prevA) {
+				return -1;
+			}
+			
+			prevA = b;
+			prevB = a;
+			changes++;
+			continue;		
+		}
+		
+		if(b < prevB) {
+			if(b <= prevA) {
+				return -1;
+			}
+			
+			if(a <= prevB) {
+				return -1;
+			}
+			
+			prevA = b;
+			prevB = a;
+			changes++;
+			continue;
+		}
+		
+		if(b == prevB) {
+			if(b <= prevA) {
+				return -1;
+			}
+			
+			if(a <= prevB) {
+				return -1;
+			}
+			
+			prevA = b;
+			prevB = a;
+			changes++;
+			continue;
+		}
+				
+		prevA = a;
+		prevB = b;
+	}
+	
+	return changes;
+}
+
+
+2.
+0.072 s
+WRONG ANSWER, got 4 expected 3
+stdout:
+
+[ -1, 0, 2, 5, 9, 11, 11, 13, 13 ]
+[ -1, 0, 4, 4, 5, 8, 12, 12, 14 ]
+
+
+1.
+0.072 s
+WRONG ANSWER, got 4 expected 3
+stdout:
+
+[ 14, 16, 16, 17, 18, 19, 21, 22 ]
+[ 14, 15, 17, 18, 19, 20, 20, 21 ]
+
+
+3.
+0.076 s
+WRONG ANSWER, got 4 expected 2
+stdout:
+
+[ -1, 1, 2, 3, 4, 4 ]
+[ 0, 0, 1, 2, 3, 5 ]
+
+
+
+1 2 3
+
+nếu 0 đổi 1: mà phải đổi 2, 3
+	-nếu đổi 1: 0 đổi 2, 3 
+		=> chọn đổi 1
+	-nếu đổi 1: đổi 2 hoặc 3
+		=> 0 đổi 1 
+nếu đổi 1: thì phải đổi 1 
+
+function solution(A, B) {
+	console.log(A);
+	console.log(B);
+	
+	var N = A.length;
+	
+	var changes = 0;
+	var last2 = N - 2;
+	
+	debugger;
+	for(var i=0 ;i<N; i++) {
+		var a = A[i];
+		var b = B[i];
+		
+		if(i>0 && (a<=A[i-1] || b<=B[i-1])) {
+			if(a<=B[i-1] || b<=A[i-1]) {
+				return -1;
+			}
+			
+			A[i] = b;
+			B[i] = a;
+			changes++;
+			continue;
+		}
+		
+		// Remain cases, a/b no need to be changed: i==0 || (A[i-1]<a && B[i-1]<b)
+		if(i >= last2) {
+			continue;
+		}
+		
+		if(i > 0 && (a<=B[i-1] || b<=A[i-1])) {
+			// a/b must in it position
+			continue;			
+		}
+		
+		var a2 = A[i+1];
+		var a3 = A[i+2];
+		var b2 = B[i+1];
+		var b3 = B[i+2];
+		
+		if(a2 <= b || b2 <= a) {
+			continue;				
+		}
+		
+		if(a2 <= a && a3 <= b2) {
+			// If keep a/b => must change 2 steps. Find way to reduce steps			
+			if(a2<a3 && b2<b3){
+				// change 1 step	
+				A[i] = b;
+				B[i] = a;
+				changes++;
+				continue;				
+			}
+			
+			// a3<=a2 || b3<=b2
+			// change 2 steps: a/b, a3/b3			
+			continue;			
+		}
+		
+		if(a2<=a && b2<a3) {
+			// Must change a/b or a2/b2 
+			// Change: a/b: b a2 a3|a b2 b3 
+			// Change: a2/b2: a b2 a3| b a2 b3		
+			if(a2<b3) {
+				continue;					
+			}
+			
+			A[i] = b;
+			B[i] = a;
+			changes++;	
+			continue;			
+		}
+		
+		if(a<a2 && a3<=b2) {
+			if(b<b2) {
+				// no need to change
+				continue;					
+			}
+			
+			// b2 <= b 
+			// Change a/b or a2/b2
+			// Change a/b: b a2 a3| a b2 b3
+			// Change a2/b2: a b2 a3|b a2 b3 => change a3/b3: a b2 b3| b a2 b3
+			// => change a/b: b a2 a3| a b2 b3				
+			A[i] = b;
+			B[i] = a;
+			changes++;
+			continue;				
+		}
+				
+		if(a<a2 && b2<a3) {
+			if(b<b2) {
+				// no need to change
+				continue;					
+			}
+			
+			// b2 <= b 
+			// Change a/b or a2/b2
+			// Change a/b: b a2 a3| a b2 b3 
+			// Change a2/b2: a b2 a3|b a2 b3 
+			if(a2<b3) {
+				continue;
+			}
+				
+			A[i] = b;
+			B[i] = a;
+			changes++;			
+			continue;				
+		}		
+	}
+
+	console.log(A);
+	console.log(B);
+	return changes;
+}
+solution(
+[ -13, -12, 0, -6, 5, 9, 12, 4, 18, 8 ],
+[ -15, -4, -7, 3, -5, -4, 0, 17, 7, 25 ]);
+
+Real: 5
+[-13, -12, -7, -6, -5, -4, 0, 4, 7, 8]
+[-15, -4, 0, 3, 5, 9, 12, 17, 18, 25]
+
+Expected:
+[ -13, -4, 0, 3, 5, 9, 12, 17, 18, 25 ],
+[ -15, -12, -7, -6, -5, -4, 0, 4, 7, 8 ]
+
+
+
+
+[ -13, -12, -7, -6, -5, -4, 0, 4, 7, 8 ],
+[ -15, -4, 0, 3, 5, 9, 12, 17, 18, 25 ]
+
+
+
+
+
+got 5 expected 4
+[ -13, -12, -7, -6, 5, 9, 12, 4, 18, 8 ]
+[ -15, -4, 0, 3, -5, -4, 0, 17, 7, 25 ]
+
+
+
+
+solution([ -1, 0, 2, 5, 9, 11, 11, 13, 13 ],
+[ -1, 0, 4, 4, 5, 8, 12, 12, 14 ]);
+
+
+
+ got 4 expected 3
+stdout:
+
+[ -1, 0, 2, 5, 9, 11, 11, 13, 13 ]
+[ -1, 0, 4, 4, 5, 8, 12, 12, 14 ]
+
+
+
+[ -1, 0, 4, 5, 9, 11, 12, 13, 14 ]
+[ -1, 0, 2, 4, 5, 8, 11, 12, 13 ]
+
+
+
+got 4 expected 2
+stdout:
+[ -1, 1, 2, 3, 4, 4 ]
+[ 0, 0, 1, 2, 3, 5 ]
+
+got 5 expected 4
+stdout:
+[ -13, -12, 0, -6, 5, 9, 12, 4, 18, 8 ]
+[ -15, -4, -7, 3, -5, -4, 0, 17, 7, 25 ]
+
+
+
+function solution(A, B) {
+	console.log(A);
+	console.log(B);
+	
+	var N = A.length;
+	
+	var changes = 0;
+	var last2 = N - 2;
+	
+	debugger;
+	for(var i=0 ;i<N; i++) {
+		var a = A[i];
+		var b = B[i];
+		
+		if(i>0 && (a<=A[i-1] || b<=B[i-1])) {
+			if(a<=B[i-1] || b<=A[i-1]) {
+				return -1;
+			}
+			
+			A[i] = b;
+			B[i] = a;
+			changes++;
+			continue;
+		}
+		
+		// Remain cases, a/b no need to be changed: i==0 || (A[i-1]<a && B[i-1]<b)
+		if(i >= last2) {
+			continue;
+		}
+		
+		if(i > 0 && (a<=B[i-1] || b<=A[i-1])) {
+			// a/b must in it position
+			continue;			
+		}
+		
+		var a2 = A[i+1];
+		var a3 = A[i+2];
+		var b2 = B[i+1];
+		var b3 = B[i+2];
+		
+		if(a2 <= b || b2 <= a) {
+			continue;				
+		}
+		
+		if(a2 <= a && a3 <= b2) {
+			// If keep a/b => must change 2 steps. Find way to reduce steps: a b2 a3|b a2 b3		
+			if(a2<a3 && b2<b3){
+				// change 1 step: b a2 a3|a b2 b3	
+				A[i] = b;
+				B[i] = a;
+				changes++;
+				continue;				
+			}
+			
+			// a3<=a2 || b3<=b2
+			// if change a/b: b a2 a3|a b2 b3 => change 1 more step: a3/b3
+			// must keep a/b		
+			continue;			
+		}
+		
+		if(a2<=a && b2<a3) {
+			// Must change a/b or a2/b2 
+			// Change: a/b: b a2 a3|a b2 b3 
+			// Change: a2/b2: a b2 a3| b a2 b3		
+			if(a2<a3 && b2<b3) {
+				A[i] = b;
+				B[i] = a;
+				changes++;	
+				continue;					
+			}
+			
+			continue;			
+		}
+		
+		if(a<a2 && a3<=b2) {
+			if(b<b2) {
+				// no need to change
+				continue;					
+			}
+			
+			// b2 <= b 
+			// Change a/b or a2/b2
+			// Change a/b: b a2 a3| a b2 b3
+			// Change a2/b2: a b2 a3|b a2 b3 => change a3/b3: a b2 b3| b a2 b3
+			// => change a/b: b a2 a3| a b2 b3				
+			A[i] = b;
+			B[i] = a;
+			changes++;
+			continue;				
+		}
+				
+		if(a<a2 && b2<a3) {
+			if(b<b2) {
+				// no need to change
+				continue;					
+			}
+			
+			// b2 <= b 
+			// Change a/b or a2/b2
+			// Change a/b: b a2 a3| a b2 b3 
+			// Change a2/b2: a b2 a3|b a2 b3 
+			if(a2<a3 && b2<b3) {
+				A[i] = b;
+				B[i] = a;
+				changes++;
+				continue;
+			}
+
+			if(a3<=a2 || b3<=b2){
+				continue;					
+			}			
+		}		
+	}
+
+	console.log(A);
+	console.log(B);
+	return changes;
+}
+
+
+solution(
+[ -13, -12, 0, -6, 5, 9, 12, 4, 18, 8 ],
+[ -15, -4, -7, 3, -5, -4, 0, 17, 7, 25 ]);
+
+Real: 5
+[-13, -12, -7, -6, -5, -4, 0, 4, 7, 8]
+[-15, -4, 0, 3, 5, 9, 12, 17, 18, 25]
+
+Expected:
+[ -13, -4, 0, 3, 5, 9, 12, 17, 18, 25 ],
+[ -15, -12, -7, -6, -5, -4, 0, 4, 7, 8 ]
+
+
+function solution(A, B) {
+	console.log(A);
+	console.log(B);
+	
+	var N = A.length;
+	var minIfUnchanges = [];
+	var minIfChanges = [];
+	
+	minIfUnchanges[N-1] = 0;
+	minIfChanges[N-1] = 1;
+	
+	// debugger;
+	for(var i = N-2; i>=0; i--) {
+		var a = A[i];
+		var b = B[i];
+		var a2 = A[i+1];
+		var b2 = B[i+1];
+		
+		var minIfUnchange = minIfUnchanges[i+1];		
+		var minIfChange = minIfChanges[i+1];
+		
+		if((a2<=a && b2<=a) ||
+		   (a2<=b && b2<=b)) {
+			return -1;
+		}
+		
+		if(a<a2 && a<b2 && b<b2 && b<a2) { 
+			minIfUnchanges[i] = Math.min(minIfUnchange, minIfChange);
+			minIfChanges[i] =	Math.min(minIfUnchange, minIfChange) + 1;
+			continue;
+		}	
+		
+		if(a<a2 && a<b2 && b<b2 && a2<=b) {
+			minIfUnchanges[i] = minIfUnchange;			
+			minIfChanges[i] = minIfChange+ 1;
+			continue;			
+		}
+				
+		if(a<a2 && a<b2 && b2<=b && b<a2) {
+			minIfUnchanges[i]  = minIfChange;
+			minIfChanges[i] = minIfUnchange+ 1;
+			continue;			
+		}
+		
+		//a<a2 && a<b2 && b2<=b && a2<=b => cannot: a2<=b && b2<=b: return -1
+		
+		if(a<a2 && b2<=a && b<b2 && b<a2) {
+			minIfUnchanges[i]  = minIfUnchange;
+			minIfChanges[i] = minIfChange+1;
+			continue;			
+		}
+		
+		if(a<a2 && b2<=a && b<b2 && a2<=b) {
+			minIfUnchanges[i]  = minIfUnchange;
+			minIfChanges[i] = minIfChange+1;
+			continue;			
+		}
+		
+		if(a<a2 && b2<=a && b2<=b && b<a2) {
+			return -1;			
+		}
+		
+		//a<a2 && b2<=a && b2<=b && a2<=b => cannot: a2<=b && b2<=b: return -1
+		
+		if(a2<=a && a<b2 && b<b2 && b<a2) {
+			minIfUnchanges[i]  = minIfChange;
+			minIfChanges[i] = minIfUnchange+1;
+			continue;			
+		}
+		
+		if(a2<=a && a<b2 && b<b2 && a2<=b) {
+			return -1;
+		}
+		
+		if(a2<=a && a<b2 && b2<=b && b<a2) {
+			minIfUnchanges[i]  = minIfChange;
+			minIfChanges[i] = minIfUnchange+1;
+			continue;			
+		}
+		
+		//a2<=a && a<b2 && b2<=b && a2<=b => cannot: a2<=b && b2<=b: return -1		
+		//a2<=a && b2<=a && ... => cannot: a2<=a && b2<=a: return -1		
+	}
+	
+	console.log(minIfUnchanges);
+	console.log(minIfChanges);
+		
+	return Math.min(minIfUnchanges[0], minIfChanges[0]);
+}
+
+solution([5, 3, 7, 7, 10], [1, 6, 6, 9, 9]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

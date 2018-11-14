@@ -1,0 +1,252 @@
+
+KSparseBinaryCount
+Count ints with each two consecutive 1s (in a binary representation) separated by at least K 0s.
+
+
+======================================================================================================================================================
+
+In the binary number "100100010000" there are at least two 0s between any two consecutive 1s.
+In the binary number "100010000100010" there are at least three 0s between any two consecutive 1s.
+A positive integer N is called K-sparse if there are at least K 0s between any two consecutive 1s in its binary representation.
+
+For example, the binary number "100100010000" is 2-sparse. Similarly, "100010000100010" is 3-sparse. It is also 2-sparse, because 2 < 3. It is also 1-sparse and 0-sparse.
+
+We assume that any power of 2 (i.e. "1", "10", "100", "1000", ...) is K-sparse for any K.
+
+Write a function:
+
+    function solution(S, T, K);
+
+that, given:
+
+        string S containing a binary representation of some positive integer A,
+        string T containing a binary representation of some positive integer B,
+        a positive integer K.
+
+returns the number of K-sparse integers within the range [A..B] (both ends included). If the result exceeds 1,000,000,006, the function should return the remainder from the division of the result by 1,000,000,007.
+
+For example, given S = "101" (A = 5), T = "1111" (B=15) and K=2, the function should return 2, because there are just two 2-sparse integers in the range [5..15], namely "1000" (i.e. 8) and "1001" (i.e. 9).
+
+Assume that:
+
+        K is an integer within the range [1..30];
+        the length of S is within the range [1..300,000];
+        the length of T is within the range [1..300,000];
+        string S consists only of the characters "0" and/or "1";
+        string T consists only of the characters "0" and/or "1";
+        S and T have no leading zeros;
+        A ≤ B.
+
+Complexity:
+
+        expected worst-case time complexity is O(log(B));
+        expected worst-case space complexity is O(log(B)) (not counting the storage required for input arguments).
+
+Notation used:
+
+        B − number represented by T.
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+function solution(S) {
+	var mod = 1410000017;
+	var L = S.length;
+	var maxIndex = L-1;
+	
+	var multipliers = 100;
+	
+	var numberCounts = [0, 9];
+	var zeroCounts = [0, 1];
+	
+	for(var i=2; i<L; i++) {
+		numberCounts[i] = (multipliers - 1 + mod) % mod;
+		zeroCounts[i] = (zeroCounts[i-1]*9 + numberCounts[i-1]) % mod; 
+		
+		multipliers = (multipliers*10) % mod;
+	}
+	
+	console.log(numberCounts);
+	console.log(zeroCounts);
+	var result = 1;
+	
+	for(var i=0; i<L; i++) {
+		var digit = parseInt(S[i]);
+		if(digit === 0) {
+			continue;
+		}
+		
+		var diff = L - i - 1;
+		result = (result + digit * zeroCounts[diff]  + diff) % mod; 
+		
+		console.log(digit);
+		console.log("Count: " + zeroCounts[L - i - 1]);
+		console.log("Result: " + result);
+	}
+	
+	
+	return result;
+}
+
+
+
+solution('100');
+
+
+S=100
+0 10 20 30 40 50 60 70 80 90 100
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

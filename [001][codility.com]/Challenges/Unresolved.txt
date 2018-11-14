@@ -1,0 +1,31 @@
+Manganum 2017
+003.Gamma2011_ CountPalindromicSlices
+004.Epsilon2011_Minfuds
+007.Eta2011_HamiltonianRoutesCount
+008.Theta2011_GasStations
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

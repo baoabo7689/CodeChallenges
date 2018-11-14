@@ -1,0 +1,231 @@
+
+PrisonEscape
+START
+Place the minimum number of guards needed to prevent prisoners from escaping.
+
+
+There are N+1 intersections in a prison, connected by N corridors, and one can move between any two intersections using the corridors. Intersections with only one corridor are located near the exits from the prison.
+
+There is a cell block near every intersection. Exactly M cell blocks hold prisoners; others are empty. Due to a malfunction in the locking system, all the cells have been opened. The situation is critical and the governor of the prison needs to know where to position the guards in order to prevent the prisoners from escaping.
+
+You are given a map of the prison in the form of two arrays A, B of length N and an array C of length M:
+
+        For each I (0 ≤ I < N) there is a corridor between intersections A[I] and B[I].
+        For each I (0 ≤ I < M) there are prisoners in the cell block near intersection C[I].
+
+A guard can be located at an intersection, but not at an intersections near to a cell block which initially held prisoners. Prisoners from a cell block located near intersection X can escape from the prison if there is a path from X to an intersection located near an exit from the prison and there are no guards at any intersection along this path. The governor would like to know the minimum number of guards he must deploy in the operation.
+
+Write a function:
+
+    function solution(A, B, C);
+
+that, given arrays A, B of N integers and array C of M integers, returns the minimum number of guards that can prevent all prisoners from escaping. If there is no way to prevent an escape of some prisoner, the function should return −1.
+
+For example, given the following arrays:
+    A[0] = 0    B[0] = 1    C[0] = 1
+    A[1] = 1    B[1] = 2    C[1] = 6
+    A[2] = 2    B[2] = 3
+    A[3] = 3    B[3] = 4
+    A[4] = 3    B[4] = 5
+    A[5] = 2    B[5] = 6
+    A[6] = 6    B[6] = 8
+    A[7] = 6    B[7] = 7
+
+the function should return 4. Four guards can be positioned at the intersections numbered 0, 3, 7 and 8 (another solution would be to position guards at intersections 0, 2, 7 and 8). By positioning three or fewer guards, the governor is unable to prevent some prisoners from escaping.
+
+Assume that:
+
+        N is an integer within the range [1..200,000];
+        M is an integer within the range [0..N+1];
+        each element of arrays A, B, C is an integer within the range [0..N];
+        the elements of C are all distinct;
+        distance from intersection 0 to any other intersection is not greater than 500.
+
+Complexity:
+
+        expected worst-case time complexity is O(N);
+        expected worst-case space complexity is O(N) (not counting the storage required for input arguments).
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+
+
+
+
+ 
+======================================================================================================================================================
+-Từ các node có 1 connection => lên parent 
+-Nếu không là tree => có >= 2 roots 
+-Nếu là tree => có 1 root 
+-Nếu 1 cây con không có chứa c => những node con bỏ
+Nếu 1 cây con có chứa c => những node con phải được chặn lại
+=> count 
+
+http://zh-wang.github.io/blog/2014/08/14/codility-phosphorus-2014/
+
+Create a Node structure, holding its parent index, a boolean value presenting it is a prisoner or not. 
+Then a boolean value presenting whether prisoners can escape down to leaves, and another boolean value presenting whether prisoners can escape from the root.
+Depth-First-Search from node 0.
+Adjust the result according to node 0’s state. Done.
+A classic DFS holds time bound and space bound
+
+
+======================================================================================================================================================
+
+function countTrees(nodes) {
+	var actualRoots = [];		
+	checkedNodes = [];
+	for(var i=0; i<nodes.length; i++) {
+		var root = nodes[i];
+		if(checkedNodes[root.index]) {
+			continue;
+		}
+		
+		actualRoots.push(root);
+		var nextNodes = [root];
+		while(nextNodes.length) {
+			var tempNodes = [];
+			
+			for(var j=0; j<nextNodes.length; j++) {
+				var nextNode = nextNodes[j];
+				if(checkedNodes[nextNode.index]) {
+					continue;
+				}
+									
+				for(var k=0; k<nextNode.relations.length; k++) {
+					var relation = nextNode.relations[k];
+					if(checkedNodes[relation.index]) {
+						continue;
+					}
+				
+					relation.parentNode = nextNode;
+					nextNode.childs.push(relation);
+					tempNodes.push(relation);						
+				}				
+				
+				checkedNodes[nextNode.index] = true;
+			}
+							
+			nextNodes = tempNodes;
+		}			
+	}
+	
+	
+	// always 1 => 1 tree
+	return actualRoots.length;		
+}	
+
+solution([0, 1, 2, 3, 3, 2, 6, 6], [1, 2, 3, 4, 5, 6, 8, 7], [1, 6]);
+
+	
+function solution(A, B, C) {
+	//console.log(A);
+	//console.log(B);
+	//console.log(C);
+	
+	var N = A.length;
+	var nodes = [];
+	
+	for(var i=0; i<=N; i++) {
+		nodeByLevels[i] = [];
+		nodes[i] = {
+			index: i,
+			relations: [],
+			hasPrisoner: false,
+			
+			childs: [],
+			parentNode: undefined,
+			level: 0
+		};
+	}
+			
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];
+		
+		var nodeA = nodes[a];
+		var nodeB = nodes[b];
+		
+		nodeA.relations.push(nodeB);
+		nodeB.relations.push(nodeA);	
+	}
+	
+	var M = C.length;		
+	for(var i=0; i<M; i++) {
+		var c = C[i];
+		var nodeC = nodes[c];
+		if(nodeC.relations.length == 1) {
+			// Leaves có prisoner => không chặn được
+			return -1;
+		}
+		
+		nodes[c].hasPrisoner = true;
+	}
+			
+	
+	//debugger;		
+	var checkedNodes = [];
+	var root = nodes[0];
+	var nextNodes = [root];
+	while(nextNodes.length) {
+		var tempNodes = [];
+		
+		for(var j=0; j<nextNodes.length; j++) {
+			var nextNode = nextNodes[j];
+			if(checkedNodes[nextNode.index]) {
+				continue;
+			}
+								
+			for(var k=0; k<nextNode.relations.length; k++) {
+				var relation = nextNode.relations[k];
+				if(checkedNodes[relation.index]) {
+					continue;
+				}
+			
+				relation.parentNode = nextNode;
+				nextNode.childs.push(relation);
+				tempNodes.push(relation);						
+			}				
+			
+			checkedNodes[nextNode.index] = true;
+		}
+						
+		nextNodes = tempNodes;
+	}	
+
+	
+	return 0;		
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

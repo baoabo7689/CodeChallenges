@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<title>Bead sort - Wikipedia</title>
+<script>document.documentElement.className = document.documentElement.className.replace( /(^|\s)client-nojs(\s|$)/, "$1client-js$2" );</script>
+<script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":false,"wgNamespaceNumber":0,"wgPageName":"Bead_sort","wgTitle":"Bead sort","wgCurRevisionId":805783241,"wgRevisionId":805783241,"wgArticleId":1350423,"wgIsArticle":true,"wgIsRedirect":false,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Articles needing additional references from October 2017","All articles needing additional references","Articles with topics of unclear notability from October 2017","All articles with topics of unclear notability","Sorting algorithms"],"wgBreakFrames":false,"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"Bead_sort","wgRelevantArticleId":1350423,"wgRequestId":"We-iBApAICoAAEWa3GwAAAAN","wgIsProbablyEditable":true,"wgRelevantPageIsProbablyEditable":true,"wgRestrictionEdit":[],"wgRestrictionMove":[],"wgFlaggedRevsParams":{"tags":{}},"wgStableRevisionId":null,"wgWikiEditorEnabledModules":{"toolbar":true,"preview":false,"publish":false},"wgBetaFeaturesFeatures":[],"wgMediaViewerOnClick":true,"wgMediaViewerEnabledByDefault":false,"wgPopupsShouldSendModuleToUser":true,"wgPopupsConflictsWithNavPopupGadget":false,"wgVisualEditor":{"pageLanguageCode":"en","pageLanguageDir":"ltr","pageVariantFallbacks":"en","usePageImages":true,"usePageDescriptions":true},"wgPreferredVariant":"en","wgMFExpandAllSectionsUserOption":false,"wgMFDisplayWikibaseDescriptions":{"search":true,"nearby":true,"watchlist":true,"tagline":false},"wgRelatedArticles":null,"wgRelatedArticlesUseCirrusSearch":true,"wgRelatedArticlesOnlyUseCirrusSearch":false,"wgULSCurrentAutonym":"English","wgNoticeProject":"wikipedia","wgCentralNoticeCookiesToDelete":[],"wgCentralNoticeCategoriesUsingLegacy":["Fundraising","fundraising"],"wgCategoryTreePageCategoryOptions":"{\"mode\":0,\"hideprefix\":20,\"showcount\":true,\"namespaces\":false}","wgWikibaseItemId":"Q1082955","wgCentralAuthMobileDomain":false,"wgCodeMirrorEnabled":false,"wgVisualEditorToolbarScrollOffset":0,"wgVisualEditorUnsupportedEditParams":["undo","undoafter","veswitched"],"wgEditSubmitButtonLabelPublish":false});mw.loader.state({"ext.gadget.charinsert-styles":"ready","ext.globalCssJs.user.styles":"ready","ext.globalCssJs.site.styles":"ready","site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"ready","user.tokens":"loading","ext.cite.styles":"ready","ext.math.styles":"ready","ext.pygments":"ready","wikibase.client.init":"ready","ext.visualEditor.desktopArticleTarget.noscript":"ready","ext.uls.interlanguage":"ready","ext.wikimediaBadges":"ready","skins.vector.styles.experimental.print":"ready","mediawiki.legacy.shared":"ready","mediawiki.legacy.commonPrint":"ready","mediawiki.sectionAnchor":"ready","mediawiki.skinning.interface":"ready","skins.vector.styles":"ready","ext.globalCssJs.user":"ready","ext.globalCssJs.site":"ready"});mw.loader.implement("user.tokens@1dqfd7l",function ( $, jQuery, require, module ) {
+mw.user.tokens.set({"editToken":"+\\","patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});/*@nomin*/
+
+});mw.loader.load(["ext.cite.a11y","ext.math.scripts","site","mediawiki.page.startup","mediawiki.user","mediawiki.hidpi","mediawiki.page.ready","mediawiki.toc","mediawiki.searchSuggest","ext.gadget.teahouse","ext.gadget.ReferenceTooltips","ext.gadget.watchlist-notice","ext.gadget.DRN-wizard","ext.gadget.charinsert","ext.gadget.refToolbar","ext.gadget.extra-toolbar-buttons","ext.gadget.switcher","ext.centralauth.centralautologin","mmv.head","mmv.bootstrap.autostart","ext.popups","ext.visualEditor.desktopArticleTarget.init","ext.visualEditor.targetLoader","ext.eventLogging.subscriber","ext.wikimediaEvents","ext.navigationTiming","ext.uls.eventlogger","ext.uls.init","ext.uls.interface","ext.centralNotice.geoIP","ext.centralNotice.startUp","skins.vector.js"]);});</script>
+<link rel="stylesheet" href="/w/load.php?debug=false&amp;lang=en&amp;modules=ext.cite.styles%7Cext.math.styles%7Cext.pygments%2CwikimediaBadges%7Cext.uls.interlanguage%7Cext.visualEditor.desktopArticleTarget.noscript%7Cmediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.sectionAnchor%7Cmediawiki.skinning.interface%7Cskins.vector.styles%7Cskins.vector.styles.experimental.print%7Cwikibase.client.init&amp;only=styles&amp;skin=vector"/>
+<script async="" src="/w/load.php?debug=false&amp;lang=en&amp;modules=startup&amp;only=scripts&amp;skin=vector"></script>
+<meta name="ResourceLoaderDynamicStyles" content=""/>
+<link rel="stylesheet" href="/w/load.php?debug=false&amp;lang=en&amp;modules=ext.gadget.charinsert-styles&amp;only=styles&amp;skin=vector"/>
+<link rel="stylesheet" href="/w/load.php?debug=false&amp;lang=en&amp;modules=site.styles&amp;only=styles&amp;skin=vector"/>
+<meta name="generator" content="MediaWiki 1.31.0-wmf.4"/>
+<meta name="referrer" content="origin-when-cross-origin"/>
+<link rel="alternate" href="android-app://org.wikipedia/http/en.m.wikipedia.org/wiki/Bead_sort"/>
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/w/index.php?title=Bead_sort&amp;action=edit"/>
+<link rel="edit" title="Edit this page" href="/w/index.php?title=Bead_sort&amp;action=edit"/>
+<link rel="apple-touch-icon" href="/static/apple-touch/wikipedia.png"/>
+<link rel="shortcut icon" href="/static/favicon/wikipedia.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/w/opensearch_desc.php" title="Wikipedia (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="//en.wikipedia.org/w/api.php?action=rsd"/>
+<link rel="license" href="//creativecommons.org/licenses/by-sa/3.0/"/>
+<link rel="canonical" href="https://en.wikipedia.org/wiki/Bead_sort"/>
+<link rel="dns-prefetch" href="//login.wikimedia.org"/>
+<link rel="dns-prefetch" href="//meta.wikimedia.org" />
+<!--[if lt IE 9]><script src="/w/load.php?debug=false&amp;lang=en&amp;modules=html5shiv&amp;only=scripts&amp;skin=vector&amp;sync=1"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Bead_sort rootpage-Bead_sort vector-experimental-print-styles vector-nav-directionality skin-vector action-view">		<div id="mw-page-base" class="noprint"></div>
+		<div id="mw-head-base" class="noprint"></div>
+		<div id="content" class="mw-body" role="main">
+			<a id="top"></a>
+
+							<div id="siteNotice" class="mw-body-content"><!-- CentralNotice --></div>
+						<div class="mw-indicators mw-body-content">
+</div>
+			<h1 id="firstHeading" class="firstHeading" lang="en">Bead sort</h1>
+									<div id="bodyContent" class="mw-body-content">
+									<div id="siteSub" class="noprint">From Wikipedia, the free encyclopedia</div>
+								<div id="contentSub"></div>
+												<div id="jump-to-nav" class="mw-jump">
+					Jump to:					<a href="#mw-head">navigation</a>, 					<a href="#p-search">search</a>
+				</div>
+				<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><table class="plainlinks metadata ambox ambox-content ambox-Refimprove" role="presentation">
+<tr>
+<td class="mbox-image">
+<div style="width:52px"><a href="/wiki/File:Question_book-new.svg" class="image"><img alt="" src="//upload.wikimedia.org/wikipedia/en/thumb/9/99/Question_book-new.svg/50px-Question_book-new.svg.png" width="50" height="39" srcset="//upload.wikimedia.org/wikipedia/en/thumb/9/99/Question_book-new.svg/75px-Question_book-new.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/9/99/Question_book-new.svg/100px-Question_book-new.svg.png 2x" data-file-width="512" data-file-height="399" /></a></div>
+</td>
+<td class="mbox-text">
+<div class="mbox-text-span">This article <b>needs additional citations for <a href="/wiki/Wikipedia:Verifiability" title="Wikipedia:Verifiability">verification</a></b>. <span class="hide-when-compact">Please help <a class="external text" href="//en.wikipedia.org/w/index.php?title=Bead_sort&amp;action=edit">improve this article</a> by <a href="/wiki/Help:Introduction_to_referencing_with_Wiki_Markup/1" title="Help:Introduction to referencing with Wiki Markup/1">adding citations to reliable sources</a>. Unsourced material may be challenged and removed.</span> <small><i>(October 2017)</i></small> <small class="hide-when-compact"><i>(<a href="/wiki/Help:Maintenance_template_removal" title="Help:Maintenance template removal">Learn how and when to remove this template message</a>)</i></small></div>
+</td>
+</tr>
+</table>
+<table class="plainlinks metadata ambox ambox-content ambox-Notability" role="presentation">
+<tr>
+<td class="mbox-image">
+<div style="width:52px"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Ambox_important.svg/40px-Ambox_important.svg.png" width="40" height="40" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Ambox_important.svg/60px-Ambox_important.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Ambox_important.svg/80px-Ambox_important.svg.png 2x" data-file-width="40" data-file-height="40" /></div>
+</td>
+<td class="mbox-text">
+<div class="mbox-text-span">The topic of this article <b>may not meet Wikipedia's <a href="/wiki/Wikipedia:Notability" title="Wikipedia:Notability">general notability guideline</a></b>. <span class="hide-when-compact">Please help to establish notability by citing <a href="/wiki/Wikipedia:Identifying_reliable_sources" title="Wikipedia:Identifying reliable sources">reliable secondary sources</a> that are <a href="/wiki/Wikipedia:Independent_sources" class="mw-redirect" title="Wikipedia:Independent sources">independent</a> of the topic and provide significant coverage of it beyond its mere trivial mention. If notability cannot be established, the article is likely to be <a href="/wiki/Wikipedia:Merging" title="Wikipedia:Merging">merged</a>, <a href="/wiki/Wikipedia:Redirect" title="Wikipedia:Redirect">redirected</a>, or <a href="/wiki/Wikipedia:Deletion_policy" title="Wikipedia:Deletion policy">deleted</a>.<br />
+<small><span class="plainlinks"><i>Find sources:</i>&#160;<a rel="nofollow" class="external text" href="//www.google.com/search?as_eq=wikipedia&amp;q=%22Bead+sort%22&amp;num=50">"Bead sort"</a>&#160;–&#160;<a rel="nofollow" class="external text" href="//www.google.com/search?q=%22Bead+sort%22&amp;tbm=nws">news</a>&#160;<b>·</b> <a rel="nofollow" class="external text" href="//www.google.com/search?&amp;q=%22Bead+sort%22+site:news.google.com/newspapers&amp;source=newspapers">newspapers</a>&#160;<b>·</b> <a rel="nofollow" class="external text" href="//www.google.com/search?tbs=bks:1&amp;q=%22Bead+sort%22">books</a>&#160;<b>·</b> <a rel="nofollow" class="external text" href="//scholar.google.com/scholar?q=%22Bead+sort%22">scholar</a>&#160;<b>·</b> <a rel="nofollow" class="external text" href="https://www.jstor.org/action/doBasicSearch?Query=%22Bead+sort%22&amp;acc=on&amp;wc=on">JSTOR</a></span></small></span> <small><i>(October 2017)</i></small> <small class="hide-when-compact"><i>(<a href="/wiki/Help:Maintenance_template_removal" title="Help:Maintenance template removal">Learn how and when to remove this template message</a>)</i></small></div>
+</td>
+</tr>
+</table>
+<p><b>Bead sort</b>, also called <b>gravity sort</b>, is a <a href="/w/index.php?title=Natural_algorithm&amp;action=edit&amp;redlink=1" class="new" title="Natural algorithm (page does not exist)">natural</a> <a href="/wiki/Sorting_algorithm" title="Sorting algorithm">sorting algorithm</a>, developed by <a href="/w/index.php?title=Joshua_J._Arulanandham&amp;action=edit&amp;redlink=1" class="new" title="Joshua J. Arulanandham (page does not exist)">Joshua J. Arulanandham</a>, <a href="/wiki/Cristian_S._Calude" title="Cristian S. Calude">Cristian S. Calude</a> and <a href="/wiki/Michael_J._Dinneen" class="mw-redirect" title="Michael J. Dinneen">Michael J. Dinneen</a> in 2002, and published in The Bulletin of the <a href="/wiki/European_Association_for_Theoretical_Computer_Science" title="European Association for Theoretical Computer Science">European Association for Theoretical Computer Science</a>. Both <a href="/wiki/Digital_data" title="Digital data">digital</a> and <a href="/wiki/Analog_computer" title="Analog computer">analog</a> hardware <a href="/wiki/Implementation" title="Implementation">implementations</a> of bead sort can achieve a sorting time of <i><a href="/wiki/Big_O_Notation" class="mw-redirect" title="Big O Notation">O</a></i>(<i>n</i>); however, the implementation of this algorithm tends to be significantly slower in <a href="/wiki/Software" title="Software">software</a> and can only be used to sort lists of <a href="/wiki/Positive_integer" class="mw-redirect" title="Positive integer">positive integers</a>. Also, it would seem that even in the best case, the algorithm requires <i><a href="/wiki/Big_O_Notation" class="mw-redirect" title="Big O Notation">O</a></i>(<i>n<sup>2</sup></i>) space.</p>
+<p></p>
+<div id="toc" class="toc">
+<div class="toctitle">
+<h2>Contents</h2>
+</div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Algorithm_overview"><span class="tocnumber">1</span> <span class="toctext">Algorithm overview</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Complexity"><span class="tocnumber">2</span> <span class="toctext">Complexity</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#Example"><span class="tocnumber">3</span> <span class="toctext">Example</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#References_and_notes"><span class="tocnumber">4</span> <span class="toctext">References and notes</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#External_links"><span class="tocnumber">5</span> <span class="toctext">External links</span></a></li>
+</ul>
+</div>
+<p></p>
+<h2><span class="mw-headline" id="Algorithm_overview">Algorithm overview</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Bead_sort&amp;action=edit&amp;section=1" title="Edit section: Algorithm overview">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<div class="thumb tright">
+<div class="thumbinner" style="width:222px;"><a href="/wiki/File:BeadSort-Figure1.svg" class="image"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/cf/BeadSort-Figure1.svg/220px-BeadSort-Figure1.svg.png" width="220" height="174" class="thumbimage" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/cf/BeadSort-Figure1.svg/330px-BeadSort-Figure1.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/cf/BeadSort-Figure1.svg/440px-BeadSort-Figure1.svg.png 2x" data-file-width="380" data-file-height="300" /></a>
+<div class="thumbcaption">
+<div class="magnify"><a href="/wiki/File:BeadSort-Figure1.svg" class="internal" title="Enlarge"></a></div>
+Step 1: Suspended beads on vertical poles.</div>
+</div>
+</div>
+<div class="thumb tright">
+<div class="thumbinner" style="width:222px;"><a href="/wiki/File:BeadSort-Figure2.svg" class="image"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/92/BeadSort-Figure2.svg/220px-BeadSort-Figure2.svg.png" width="220" height="174" class="thumbimage" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/92/BeadSort-Figure2.svg/330px-BeadSort-Figure2.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/92/BeadSort-Figure2.svg/440px-BeadSort-Figure2.svg.png 2x" data-file-width="380" data-file-height="300" /></a>
+<div class="thumbcaption">
+<div class="magnify"><a href="/wiki/File:BeadSort-Figure2.svg" class="internal" title="Enlarge"></a></div>
+Step 2: The beads have been allowed to fall.</div>
+</div>
+</div>
+<p>The bead sort operation can be compared to the manner in which beads slide on parallel poles, such as on an <a href="/wiki/Abacus" title="Abacus">abacus</a>. However, each pole may have a distinct number of beads. Initially, it may be helpful to imagine the beads suspended on vertical poles. In Step 1, such an arrangement is displayed using <i>n=5</i> rows of beads on <i>m=4</i> vertical poles. The numbers to the right of each row indicate the number that the row in question represents; rows 1 and 2 are representing the positive integer 3 (because they each contain three beads) while the top row represents the positive integer 2 (as it only contains two beads).<sup id="cite_ref-rowconventions_1-0" class="reference"><a href="#cite_note-rowconventions-1">[1]</a></sup></p>
+<p>If we then allow the beads to fall, the rows now represent the same integers in sorted order. Row 1 contains the largest number in the set, while row <i>n</i> contains the smallest. If the above-mentioned convention of rows containing a series of beads on poles 1..<i>k</i> and leaving poles <i>k</i>+1..<i>m</i> empty has been followed, it will continue to be the case here.</p>
+<p>The action of allowing the beads to "fall" in our physical example has allowed the larger values from the higher rows to propagate to the lower rows. If the value represented by row <i>a</i> is smaller than the value contained in row <i>a+1</i>, some of the beads from row <i>a+1</i> will fall into row <i>a</i>; this is certain to happen, as row <i>a</i> does not contain beads in those positions to stop the beads from row <i>a+1</i> from falling.</p>
+<p>The mechanism underlying bead sort is similar to that behind <a href="/wiki/Counting_sort" title="Counting sort">counting sort</a>; the number of beads on each pole corresponds to the number of elements with value equal or greater than the index of that pole.</p>
+<h2><span class="mw-headline" id="Complexity">Complexity</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Bead_sort&amp;action=edit&amp;section=2" title="Edit section: Complexity">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<p>Bead sort can be implemented with four general levels of complexity, among others:</p>
+<ul>
+<li><i><a href="/wiki/Big_O_Notation" class="mw-redirect" title="Big O Notation">O</a></i>(1): The beads are all moved simultaneously in the same time unit, as would be the case with the simple physical example above. This is an abstract complexity, and cannot be implemented in practice.</li>
+<li><i><a href="/wiki/Big_O_Notation" class="mw-redirect" title="Big O Notation">O</a></i>(<span class="mwe-math-element"><span class="mwe-math-mathml-inline mwe-math-mathml-a11y" style="display: none;"><math xmlns="http://www.w3.org/1998/Math/MathML" >
+  <semantics>
+    <mrow class="MJX-TeXAtom-ORD">
+      <mstyle displaystyle="true" scriptlevel="0">
+        <mrow class="MJX-TeXAtom-ORD">
+          <msqrt>
+            <mi>n</mi>
+          </msqrt>
+        </mrow>
+      </mstyle>
+    </mrow>
+    <annotation encoding="application/x-tex">{\displaystyle {\sqrt {n}}}</annotation>
+  </semantics>
+</math></span><img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/2a2994734eae382ce30100fb17b9447fd8e99f81" class="mwe-math-fallback-image-inline" aria-hidden="true" style="vertical-align: -1.005ex; width:3.351ex; height:3.009ex;" alt="{\sqrt {n}}" /></span>): In a realistic physical model that uses gravity, the time it takes to let the beads fall is proportional to the square root of the maximum height, which is proportional to n.</li>
+<li><i><a href="/wiki/Big_O_Notation" class="mw-redirect" title="Big O Notation">O</a></i>(n): The beads are moved one row at a time. This is the case used in the analog and <a href="/wiki/Digital_hardware" class="mw-redirect" title="Digital hardware">digital hardware</a> solutions.</li>
+<li><i><a href="/wiki/Big_O_Notation" class="mw-redirect" title="Big O Notation">O</a></i>(S), where S is the sum of the integers in the input set: Each bead is moved individually. This is the case when bead sort is implemented without a mechanism to assist in finding empty spaces below the beads, such as in software implementations.</li>
+</ul>
+<p>Like the <a href="/wiki/Pigeonhole_sort" title="Pigeonhole sort">Pigeonhole sort</a>, bead sort is unusual in that in worst case it can perform faster than <i><a href="/wiki/Big_O_Notation" class="mw-redirect" title="Big O Notation">O</a></i>(<i>n</i> <a href="/wiki/Logarithm" title="Logarithm">log</a> <i>n</i>), the fastest performance possible for a <a href="/wiki/Comparison_sort" title="Comparison sort">comparison sort</a> in worst case. This is possible because the key for a bead sort is always a positive integer and bead sort exploits its structure.</p>
+<h2><span class="mw-headline" id="Example">Example</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Bead_sort&amp;action=edit&amp;section=3" title="Edit section: Example">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<p>This example is written in Python. The strategy for "dropping" the beads may be slightly different, but it does the same job.</p>
+<div class="mw-highlight mw-content-ltr" dir="ltr">
+<pre>
+<span class="lineno"> 1 </span><span class="k">def</span> <span class="nf">Gravity</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+<span class="lineno"> 2 </span>	<span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">]):</span>
+<span class="lineno"> 3 </span>		<span class="n">ori</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="c1">#for original</span>
+<span class="lineno"> 4 </span>		<span class="n">ref</span> <span class="o">=</span> <span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">]</span> <span class="c1">#for reference</span>
+<span class="lineno"> 5 </span>	<span class="k">else</span><span class="p">:</span>
+<span class="lineno"> 6 </span>		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"All elements must be positive integers"</span><span class="p">)</span>
+<span class="lineno"> 7 </span>	<span class="n">inter</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#for intermediate</span>
+<span class="lineno"> 8 </span>	<span class="n">ind</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#for index</span>
+<span class="lineno"> 9 </span>	<span class="n">prev</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ref</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">ind</span><span class="p">])</span> <span class="c1">#prev for previous</span>
+<span class="lineno">10 </span>	<span class="k">while</span> <span class="n">prev</span><span class="p">:</span>
+<span class="lineno">11 </span>		<span class="n">inter</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">prev</span><span class="p">))</span>
+<span class="lineno">12 </span>		<span class="n">ind</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="lineno">13 </span>		<span class="n">prev</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ref</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">ind</span><span class="p">])</span>
+<span class="lineno">14 </span>	<span class="n">ind</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="lineno">15 </span>	<span class="n">prev</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inter</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">ind</span><span class="p">])</span>
+<span class="lineno">16 </span>	<span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="lineno">17 </span>	<span class="k">while</span> <span class="n">prev</span><span class="p">:</span>
+<span class="lineno">18 </span>		<span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prev</span><span class="p">)</span>
+<span class="lineno">19 </span>		<span class="n">ind</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="lineno">20 </span>		<span class="n">prev</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inter</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">ind</span><span class="p">])</span>
+<span class="lineno">21 </span>	<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="lineno">22 </span>	<span class="k">return</span> <span class="n">out</span>
+<span class="lineno">23 </span>
+<span class="lineno">24 </span><span class="sd">"""how it does it: it counts the "beads" in each column, then uses those numbers to make a new set of rows.</span>
+<span class="lineno">25 </span><span class="sd">Adding up the beads in each column after turning the initial sums into the new rows gives the backwards</span>
+<span class="lineno">26 </span><span class="sd">version of the sorted list, which is then turned around using list slicing.</span>
+<span class="lineno">27 </span><span class="sd">If you believe you understand how the code does it and think you can describe it better, feel free to edit</span>
+<span class="lineno">28 </span><span class="sd">this description.</span>
+<span class="lineno">29 </span><span class="sd">Note: it might not work on zeroes, as the while loops stop when "prev" is equal to 0"""</span>
+<span class="lineno">30 </span><span class="c1"># contributed by an amateur programmer. Feel free to test &amp; use it.</span>
+</pre></div>
+<h2><span class="mw-headline" id="References_and_notes">References and notes</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Bead_sort&amp;action=edit&amp;section=4" title="Edit section: References and notes">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<div class="mw-references-wrap">
+<ol class="references">
+<li id="cite_note-rowconventions-1"><span class="mw-cite-backlink"><b><a href="#cite_ref-rowconventions_1-0">^</a></b></span> <span class="reference-text">By convention, a row representing the positive integer <i>k</i> should have beads on poles 1..<i>k</i> and poles <i>k</i>+1..<i>m</i> should be empty. This is not a strict requirement, but will most likely simplify implementation.</span></li>
+</ol>
+</div>
+<h2><span class="mw-headline" id="External_links">External links</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Bead_sort&amp;action=edit&amp;section=5" title="Edit section: External links">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<ul>
+<li><cite class="citation web"><a rel="nofollow" class="external text" href="http://www.cs.auckland.ac.nz/~jaru003/research/publications/journals/beadsort.pdf">"Bead-Sort: A Natural Sorting Algorithm"</a> <span style="font-size:85%;">(PDF)</span>.</cite><span title="ctx_ver=Z39.88-2004&amp;rfr_id=info%3Asid%2Fen.wikipedia.org%3ABead+sort&amp;rft.btitle=Bead-Sort%3A+A+Natural+Sorting+Algorithm&amp;rft.genre=unknown&amp;rft_id=http%3A%2F%2Fwww.cs.auckland.ac.nz%2F~jaru003%2Fresearch%2Fpublications%2Fjournals%2Fbeadsort.pdf&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook" class="Z3988"><span style="display:none;">&#160;</span></span>&#160;<small>(114&#160;<a href="/wiki/Kibibyte" title="Kibibyte">KiB</a>)</small></li>
+<li><a rel="nofollow" class="external text" href="http://mgs.spatial-computing.org/ImageGallery/EXEMPLES/BeadSort/index.html">Bead Sort in MGS</a>, a visualization of a bead sort implemented in the <a rel="nofollow" class="external text" href="http://mgs.spatial-computing.org">MGS</a> programming language</li>
+<li><a rel="nofollow" class="external text" href="http://mathworld.wolfram.com/Bead-Sort.html">Bead Sort on MathWorld</a></li>
+</ul>
+<div role="navigation" class="navbox" aria-labelledby="Sorting_algorithms" style="padding:3px">
+<table class="nowraplinks collapsible autocollapse navbox-inner" style="border-spacing:0;background:transparent;color:inherit">
+<tr>
+<th scope="col" class="navbox-title" colspan="2">
+<div class="plainlinks hlist navbar mini">
+<ul>
+<li class="nv-view"><a href="/wiki/Template:Sorting" title="Template:Sorting"><abbr title="View this template" style=";;background:none transparent;border:none;-moz-box-shadow:none;-webkit-box-shadow:none;box-shadow:none;">v</abbr></a></li>
+<li class="nv-talk"><a href="/wiki/Template_talk:Sorting" title="Template talk:Sorting"><abbr title="Discuss this template" style=";;background:none transparent;border:none;-moz-box-shadow:none;-webkit-box-shadow:none;box-shadow:none;">t</abbr></a></li>
+<li class="nv-edit"><a class="external text" href="//en.wikipedia.org/w/index.php?title=Template:Sorting&amp;action=edit"><abbr title="Edit this template" style=";;background:none transparent;border:none;-moz-box-shadow:none;-webkit-box-shadow:none;box-shadow:none;">e</abbr></a></li>
+</ul>
+</div>
+<div id="Sorting_algorithms" style="font-size:114%;margin:0 4em"><a href="/wiki/Sorting_algorithm" title="Sorting algorithm">Sorting algorithms</a></div>
+</th>
+</tr>
+<tr>
+<th scope="row" class="navbox-group" style="width:1%">Theory</th>
+<td class="navbox-list navbox-odd hlist" style="text-align:left;border-left-width:2px;border-left-style:solid;width:100%;padding:0px">
+<div style="padding:0em 0.25em">
+<ul>
+<li><a href="/wiki/Computational_complexity_theory" title="Computational complexity theory">Computational complexity theory</a></li>
+<li><a href="/wiki/Big_O_notation" title="Big O notation">Big O notation</a></li>
+<li><a href="/wiki/Total_order" title="Total order">Total order</a></li>
+<li><a href="/wiki/List_(abstract_data_type)" title="List (abstract data type)">Lists</a></li>
+<li><a href="/wiki/In-place_algorithm" title="In-place algorithm">Inplacement</a></li>
+<li><a href="/wiki/Sorting_algorithm#Stability" title="Sorting algorithm">Stability</a></li>
+<li><a href="/wiki/Comparison_sort" title="Comparison sort">Comparison sort</a></li>
+<li><a href="/wiki/Adaptive_sort" title="Adaptive sort">Adaptive sort</a></li>
+<li><a href="/wiki/Sorting_network" title="Sorting network">Sorting network</a></li>
+<li><a href="/wiki/Integer_sorting" title="Integer sorting">Integer sorting</a></li>
+<li><a href="/wiki/X_%2B_Y_sorting" title="X + Y sorting">X + Y sorting</a></li>
+<li><a href="/wiki/Transdichotomous_model" title="Transdichotomous model">Transdichotomous model</a></li>
+<li><a href="/wiki/Quantum_sort" title="Quantum sort">Quantum sort</a></li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<th scope="row" class="navbox-group" style="width:1%">Exchange sorts</th>
+<td class="navbox-list navbox-even hlist" style="text-align:left;border-left-width:2px;border-left-style:solid;width:100%;padding:0px">
+<div style="padding:0em 0.25em">
+<ul>
+<li><a href="/wiki/Bubble_sort" title="Bubble sort">Bubble sort</a></li>
+<li><a href="/wiki/Cocktail_shaker_sort" title="Cocktail shaker sort">Cocktail shaker sort</a></li>
+<li><a href="/wiki/Odd%E2%80%93even_sort" title="Odd–even sort">Odd–even sort</a></li>
+<li><a href="/wiki/Comb_sort" title="Comb sort">Comb sort</a></li>
+<li><a href="/wiki/Gnome_sort" title="Gnome sort">Gnome sort</a></li>
+<li><a href="/wiki/Quicksort" title="Quicksort">Quicksort</a></li>
+<li><a href="/wiki/Slowsort" title="Slowsort">Slowsort</a></li>
+<li><a href="/wiki/Stooge_sort" title="Stooge sort">Stooge sort</a></li>
+<li><a href="/wiki/Bogosort" title="Bogosort">Bogosort</a></li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<th scope="row" class="navbox-group" style="width:1%"><a href="/wiki/Selection_algorithm" title="Selection algorithm">Selection sorts</a></th>
+<td class="navbox-list navbox-odd hlist" style="text-align:left;border-left-width:2px;border-left-style:solid;width:100%;padding:0px">
+<div style="padding:0em 0.25em">
+<ul>
+<li><a href="/wiki/Selection_sort" title="Selection sort">Selection sort</a></li>
+<li><a href="/wiki/Heapsort" title="Heapsort">Heapsort</a></li>
+<li><a href="/wiki/Smoothsort" title="Smoothsort">Smoothsort</a></li>
+<li><a href="/wiki/Cartesian_tree#Application_in_sorting" title="Cartesian tree">Cartesian tree sort</a></li>
+<li><a href="/wiki/Tournament_sort" title="Tournament sort">Tournament sort</a></li>
+<li><a href="/wiki/Cycle_sort" title="Cycle sort">Cycle sort</a></li>
+<li><a href="/wiki/Weak_heap#Weak-heap_sort" title="Weak heap">Weak-heap sort</a></li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<th scope="row" class="navbox-group" style="width:1%">Insertion sorts</th>
+<td class="navbox-list navbox-even hlist" style="text-align:left;border-left-width:2px;border-left-style:solid;width:100%;padding:0px">
+<div style="padding:0em 0.25em">
+<ul>
+<li><a href="/wiki/Insertion_sort" title="Insertion sort">Insertion sort</a></li>
+<li><a href="/wiki/Shellsort" title="Shellsort">Shellsort</a></li>
+<li><a href="/wiki/Splaysort" title="Splaysort">Splaysort</a></li>
+<li><a href="/wiki/Tree_sort" title="Tree sort">Tree sort</a></li>
+<li><a href="/wiki/Library_sort" title="Library sort">Library sort</a></li>
+<li><a href="/wiki/Patience_sorting" title="Patience sorting">Patience sorting</a></li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<th scope="row" class="navbox-group" style="width:1%">Merge sorts</th>
+<td class="navbox-list navbox-odd hlist" style="text-align:left;border-left-width:2px;border-left-style:solid;width:100%;padding:0px">
+<div style="padding:0em 0.25em">
+<ul>
+<li><a href="/wiki/Merge_sort" title="Merge sort">Merge sort</a></li>
+<li><a href="/wiki/Cascade_merge_sort" title="Cascade merge sort">Cascade merge sort</a></li>
+<li><a href="/wiki/Oscillating_merge_sort" title="Oscillating merge sort">Oscillating merge sort</a></li>
+<li><a href="/wiki/Polyphase_merge_sort" title="Polyphase merge sort">Polyphase merge sort</a></li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<th scope="row" class="navbox-group" style="width:1%">Distribution sorts</th>
+<td class="navbox-list navbox-even hlist" style="text-align:left;border-left-width:2px;border-left-style:solid;width:100%;padding:0px">
+<div style="padding:0em 0.25em">
+<ul>
+<li><a href="/wiki/American_flag_sort" title="American flag sort">American flag sort</a></li>
+<li><a class="mw-selflink selflink">Bead sort</a></li>
+<li><a href="/wiki/Bucket_sort" title="Bucket sort">Bucket sort</a></li>
+<li><a href="/wiki/Burstsort" title="Burstsort">Burstsort</a></li>
+<li><a href="/wiki/Counting_sort" title="Counting sort">Counting sort</a></li>
+<li><a href="/wiki/Pigeonhole_sort" title="Pigeonhole sort">Pigeonhole sort</a></li>
+<li><a href="/wiki/Proxmap_sort" title="Proxmap sort">Proxmap sort</a></li>
+<li><a href="/wiki/Radix_sort" title="Radix sort">Radix sort</a></li>
+<li><a href="/wiki/Flashsort" title="Flashsort">Flashsort</a></li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<th scope="row" class="navbox-group" style="width:1%">Concurrent sorts</th>
+<td class="navbox-list navbox-odd hlist" style="text-align:left;border-left-width:2px;border-left-style:solid;width:100%;padding:0px">
+<div style="padding:0em 0.25em">
+<ul>
+<li><a href="/wiki/Bitonic_sorter" title="Bitonic sorter">Bitonic sorter</a></li>
+<li><a href="/wiki/Batcher_odd%E2%80%93even_mergesort" title="Batcher odd–even mergesort">Batcher odd–even mergesort</a></li>
+<li><a href="/wiki/Pairwise_sorting_network" title="Pairwise sorting network">Pairwise sorting network</a></li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<th scope="row" class="navbox-group" style="width:1%"><a href="/wiki/Hybrid_algorithm" title="Hybrid algorithm">Hybrid sorts</a></th>
+<td class="navbox-list navbox-even hlist" style="text-align:left;border-left-width:2px;border-left-style:solid;width:100%;padding:0px">
+<div style="padding:0em 0.25em">
+<ul>
+<li><a href="/wiki/Block_sort" title="Block sort">Block merge sort</a></li>
+<li><a href="/wiki/Timsort" title="Timsort">Timsort</a></li>
+<li><a href="/wiki/Introsort" title="Introsort">Introsort</a></li>
+<li><a href="/wiki/Spreadsort" title="Spreadsort">Spreadsort</a></li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<th scope="row" class="navbox-group" style="width:1%">Other</th>
+<td class="navbox-list navbox-odd hlist" style="text-align:left;border-left-width:2px;border-left-style:solid;width:100%;padding:0px">
+<div style="padding:0em 0.25em">
+<ul>
+<li><a href="/wiki/Topological_sorting" title="Topological sorting">Topological sorting</a>
+<ul>
+<li><a href="/wiki/Pre-topological_order" title="Pre-topological order">Pre-topological order</a></li>
+</ul>
+</li>
+<li><a href="/wiki/Pancake_sorting" title="Pancake sorting">Pancake sorting</a></li>
+<li><a href="/wiki/Spaghetti_sort" title="Spaghetti sort">Spaghetti sort</a></li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+
+
+<!-- 
+NewPP limit report
+Parsed by mw1279
+Cached time: 20171017162622
+Cache expiry: 1900800
+Dynamic content: false
+CPU time usage: 0.132 seconds
+Real time usage: 0.239 seconds
+Preprocessor visited node count: 358/1000000
+Preprocessor generated node count: 0/1500000
+Post‐expand include size: 27443/2097152 bytes
+Template argument size: 78/2097152 bytes
+Highest expansion depth: 7/40
+Expensive parser function count: 2/500
+Lua time usage: 0.067/10.000 seconds
+Lua memory usage: 2.4 MB/50 MB
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  152.465      1 -total
+ 41.88%   63.856      2 Template:Ambox
+ 37.13%   56.611      1 Template:Refimprove
+ 23.64%   36.049      1 Template:Cite_web
+ 21.49%   32.765      1 Template:Notability
+ 15.87%   24.194      1 Template:Find_sources_mainspace
+ 12.30%   18.754      1 Template:Sorting
+ 10.22%   15.586      1 Template:Navbox
+  3.32%    5.059      1 Template:Small
+-->
+</div>
+<!-- Saved in parser cache with key enwiki:pcache:idhash:1350423-0!canonical!math=5 and timestamp 20171017162632 and revision id 805783241
+ -->
+<noscript><img src="//en.wikipedia.org/wiki/Special:CentralAutoLogin/start?type=1x1" alt="" title="" width="1" height="1" style="border: none; position: absolute;" /></noscript></div>					<div class="printfooter">
+						Retrieved from "<a dir="ltr" href="https://en.wikipedia.org/w/index.php?title=Bead_sort&amp;oldid=805783241">https://en.wikipedia.org/w/index.php?title=Bead_sort&amp;oldid=805783241</a>"					</div>
+				<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/wiki/Help:Category" title="Help:Category">Categories</a>: <ul><li><a href="/wiki/Category:Sorting_algorithms" title="Category:Sorting algorithms">Sorting algorithms</a></li></ul></div><div id="mw-hidden-catlinks" class="mw-hidden-catlinks mw-hidden-cats-hidden">Hidden categories: <ul><li><a href="/wiki/Category:Articles_needing_additional_references_from_October_2017" title="Category:Articles needing additional references from October 2017">Articles needing additional references from October 2017</a></li><li><a href="/wiki/Category:All_articles_needing_additional_references" title="Category:All articles needing additional references">All articles needing additional references</a></li><li><a href="/wiki/Category:Articles_with_topics_of_unclear_notability_from_October_2017" title="Category:Articles with topics of unclear notability from October 2017">Articles with topics of unclear notability from October 2017</a></li><li><a href="/wiki/Category:All_articles_with_topics_of_unclear_notability" title="Category:All articles with topics of unclear notability">All articles with topics of unclear notability</a></li></ul></div></div>				<div class="visualClear"></div>
+							</div>
+		</div>
+		<div id="mw-navigation">
+			<h2>Navigation menu</h2>
+
+			<div id="mw-head">
+									<div id="p-personal" role="navigation" class="" aria-labelledby="p-personal-label">
+						<h3 id="p-personal-label">Personal tools</h3>
+						<ul>
+							<li id="pt-anonuserpage">Not logged in</li><li id="pt-anontalk"><a href="/wiki/Special:MyTalk" title="Discussion about edits from this IP address [n]" accesskey="n">Talk</a></li><li id="pt-anoncontribs"><a href="/wiki/Special:MyContributions" title="A list of edits made from this IP address [y]" accesskey="y">Contributions</a></li><li id="pt-createaccount"><a href="/w/index.php?title=Special:CreateAccount&amp;returnto=Bead+sort" title="You are encouraged to create an account and log in; however, it is not mandatory">Create account</a></li><li id="pt-login"><a href="/w/index.php?title=Special:UserLogin&amp;returnto=Bead+sort" title="You're encouraged to log in; however, it's not mandatory. [o]" accesskey="o">Log in</a></li>						</ul>
+					</div>
+									<div id="left-navigation">
+										<div id="p-namespaces" role="navigation" class="vectorTabs" aria-labelledby="p-namespaces-label">
+						<h3 id="p-namespaces-label">Namespaces</h3>
+						<ul>
+														<li id="ca-nstab-main" class="selected"><span><a href="/wiki/Bead_sort" title="View the content page [c]" accesskey="c">Article</a></span></li>
+							<li id="ca-talk"><span><a href="/wiki/Talk:Bead_sort" rel="discussion" title="Discussion about the content page [t]" accesskey="t">Talk</a></span></li>
+						</ul>
+					</div>
+										<div id="p-variants" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-variants-label">
+												<h3 id="p-variants-label">
+							<span>Variants</span>
+						</h3>
+
+						<div class="menu">
+							<ul>
+															</ul>
+						</div>
+					</div>
+									</div>
+				<div id="right-navigation">
+										<div id="p-views" role="navigation" class="vectorTabs" aria-labelledby="p-views-label">
+						<h3 id="p-views-label">Views</h3>
+						<ul>
+														<li id="ca-view" class="collapsible selected"><span><a href="/wiki/Bead_sort">Read</a></span></li>
+							<li id="ca-edit" class="collapsible"><span><a href="/w/index.php?title=Bead_sort&amp;action=edit" title="Edit this page [e]" accesskey="e">Edit</a></span></li>
+							<li id="ca-history" class="collapsible"><span><a href="/w/index.php?title=Bead_sort&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></span></li>
+						</ul>
+					</div>
+										<div id="p-cactions" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-cactions-label">
+						<h3 id="p-cactions-label"><span>More</span></h3>
+
+						<div class="menu">
+							<ul>
+															</ul>
+						</div>
+					</div>
+										<div id="p-search" role="search">
+						<h3>
+							<label for="searchInput">Search</label>
+						</h3>
+
+						<form action="/w/index.php" id="searchform">
+							<div id="simpleSearch">
+							<input type="search" name="search" placeholder="Search Wikipedia" title="Search Wikipedia [f]" accesskey="f" id="searchInput"/><input type="hidden" value="Special:Search" name="title"/><input type="submit" name="fulltext" value="Search" title="Search Wikipedia for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/><input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>							</div>
+						</form>
+					</div>
+									</div>
+			</div>
+			<div id="mw-panel">
+				<div id="p-logo" role="banner"><a class="mw-wiki-logo" href="/wiki/Main_Page"  title="Visit the main page"></a></div>
+						<div class="portal" role="navigation" id='p-navigation' aria-labelledby='p-navigation-label'>
+			<h3 id='p-navigation-label'>Navigation</h3>
+
+			<div class="body">
+									<ul>
+						<li id="n-mainpage-description"><a href="/wiki/Main_Page" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-contents"><a href="/wiki/Portal:Contents" title="Guides to browsing Wikipedia">Contents</a></li><li id="n-featuredcontent"><a href="/wiki/Portal:Featured_content" title="Featured content – the best of Wikipedia">Featured content</a></li><li id="n-currentevents"><a href="/wiki/Portal:Current_events" title="Find background information on current events">Current events</a></li><li id="n-randompage"><a href="/wiki/Special:Random" title="Load a random article [x]" accesskey="x">Random article</a></li><li id="n-sitesupport"><a href="https://donate.wikimedia.org/wiki/Special:FundraiserRedirector?utm_source=donate&amp;utm_medium=sidebar&amp;utm_campaign=C13_en.wikipedia.org&amp;uselang=en" title="Support us">Donate to Wikipedia</a></li><li id="n-shoplink"><a href="//shop.wikimedia.org" title="Visit the Wikipedia store">Wikipedia store</a></li>					</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id='p-interaction' aria-labelledby='p-interaction-label'>
+			<h3 id='p-interaction-label'>Interaction</h3>
+
+			<div class="body">
+									<ul>
+						<li id="n-help"><a href="/wiki/Help:Contents" title="Guidance on how to use and edit Wikipedia">Help</a></li><li id="n-aboutsite"><a href="/wiki/Wikipedia:About" title="Find out about Wikipedia">About Wikipedia</a></li><li id="n-portal"><a href="/wiki/Wikipedia:Community_portal" title="About the project, what you can do, where to find things">Community portal</a></li><li id="n-recentchanges"><a href="/wiki/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-contactpage"><a href="//en.wikipedia.org/wiki/Wikipedia:Contact_us" title="How to contact Wikipedia">Contact page</a></li>					</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id='p-tb' aria-labelledby='p-tb-label'>
+			<h3 id='p-tb-label'>Tools</h3>
+
+			<div class="body">
+									<ul>
+						<li id="t-whatlinkshere"><a href="/wiki/Special:WhatLinksHere/Bead_sort" title="List of all English Wikipedia pages containing links to this page [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="/wiki/Special:RecentChangesLinked/Bead_sort" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-upload"><a href="/wiki/Wikipedia:File_Upload_Wizard" title="Upload files [u]" accesskey="u">Upload file</a></li><li id="t-specialpages"><a href="/wiki/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-permalink"><a href="/w/index.php?title=Bead_sort&amp;oldid=805783241" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="/w/index.php?title=Bead_sort&amp;action=info" title="More information about this page">Page information</a></li><li id="t-wikibase"><a href="https://www.wikidata.org/wiki/Special:EntityPage/Q1082955" title="Link to connected data repository item [g]" accesskey="g">Wikidata item</a></li><li id="t-cite"><a href="/w/index.php?title=Special:CiteThisPage&amp;page=Bead_sort&amp;id=805783241" title="Information on how to cite this page">Cite this page</a></li>					</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id='p-coll-print_export' aria-labelledby='p-coll-print_export-label'>
+			<h3 id='p-coll-print_export-label'>Print/export</h3>
+
+			<div class="body">
+									<ul>
+						<li id="coll-create_a_book"><a href="/w/index.php?title=Special:Book&amp;bookcmd=book_creator&amp;referer=Bead+sort">Create a book</a></li><li id="coll-download-as-rdf2latex"><a href="/w/index.php?title=Special:ElectronPdf&amp;page=Bead+sort&amp;action=show-download-screen">Download as PDF</a></li><li id="t-print"><a href="/w/index.php?title=Bead_sort&amp;printable=yes" title="Printable version of this page [p]" accesskey="p">Printable version</a></li>					</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id='p-wikibase-otherprojects' aria-labelledby='p-wikibase-otherprojects-label'>
+			<h3 id='p-wikibase-otherprojects-label'>In other projects</h3>
+
+			<div class="body">
+									<ul>
+						<li class="wb-otherproject-link wb-otherproject-commons"><a href="https://commons.wikimedia.org/wiki/Category:Bead_sort" hreflang="en">Wikimedia Commons</a></li>					</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id='p-lang' aria-labelledby='p-lang-label'>
+			<h3 id='p-lang-label'>Languages</h3>
+
+			<div class="body">
+									<ul>
+						<li class="interlanguage-link interwiki-fa"><a href="https://fa.wikipedia.org/wiki/%D9%85%D8%B1%D8%AA%D8%A8%E2%80%8C%D8%B3%D8%A7%D8%B2%DB%8C_%D9%85%D9%87%D8%B1%D9%87%E2%80%8C%D8%A7%DB%8C" title="مرتب‌سازی مهره‌ای – Persian" lang="fa" hreflang="fa" class="interlanguage-link-target">فارسی</a></li><li class="interlanguage-link interwiki-sr"><a href="https://sr.wikipedia.org/wiki/Bead_sort" title="Bead sort – Serbian" lang="sr" hreflang="sr" class="interlanguage-link-target">Српски / srpski</a></li><li class="interlanguage-link interwiki-zh-yue"><a href="https://zh-yue.wikipedia.org/wiki/%E7%8F%A0%E6%8E%92%E5%BA%8F" title="珠排序 – Cantonese" lang="zh-yue" hreflang="zh-yue" class="interlanguage-link-target">粵語</a></li><li class="interlanguage-link interwiki-zh"><a href="https://zh.wikipedia.org/wiki/%E7%8F%A0%E6%8E%92%E5%BA%8F" title="珠排序 – Chinese" lang="zh" hreflang="zh" class="interlanguage-link-target">中文</a></li>					</ul>
+				<div class="after-portlet after-portlet-lang"><span class="wb-langlinks-edit wb-langlinks-link"><a href="https://www.wikidata.org/wiki/Special:EntityPage/Q1082955#sitelinks-wikipedia" title="Edit interlanguage links" class="wbc-editpage">Edit links</a></span></div>			</div>
+		</div>
+				</div>
+		</div>
+		<div id="footer" role="contentinfo">
+							<ul id="footer-info">
+											<li id="footer-info-lastmod"> This page was last edited on 17 October 2017, at 16:26.</li>
+											<li id="footer-info-copyright">Text is available under the <a rel="license" href="//en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License">Creative Commons Attribution-ShareAlike License</a><a rel="license" href="//creativecommons.org/licenses/by-sa/3.0/" style="display:none;"></a>;
+additional terms may apply.  By using this site, you agree to the <a href="//wikimediafoundation.org/wiki/Terms_of_Use">Terms of Use</a> and <a href="//wikimediafoundation.org/wiki/Privacy_policy">Privacy Policy</a>. Wikipedia® is a registered trademark of the <a href="//www.wikimediafoundation.org/">Wikimedia Foundation, Inc.</a>, a non-profit organization.</li>
+									</ul>
+							<ul id="footer-places">
+											<li id="footer-places-privacy"><a href="https://wikimediafoundation.org/wiki/Privacy_policy" class="extiw" title="wmf:Privacy policy">Privacy policy</a></li>
+											<li id="footer-places-about"><a href="/wiki/Wikipedia:About" title="Wikipedia:About">About Wikipedia</a></li>
+											<li id="footer-places-disclaimer"><a href="/wiki/Wikipedia:General_disclaimer" title="Wikipedia:General disclaimer">Disclaimers</a></li>
+											<li id="footer-places-contact"><a href="//en.wikipedia.org/wiki/Wikipedia:Contact_us">Contact Wikipedia</a></li>
+											<li id="footer-places-developers"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/How_to_contribute">Developers</a></li>
+											<li id="footer-places-cookiestatement"><a href="https://wikimediafoundation.org/wiki/Cookie_statement">Cookie statement</a></li>
+											<li id="footer-places-mobileview"><a href="//en.m.wikipedia.org/w/index.php?title=Bead_sort&amp;mobileaction=toggle_view_mobile" class="noprint stopMobileRedirectToggle">Mobile view</a></li>
+									</ul>
+										<ul id="footer-icons" class="noprint">
+											<li id="footer-copyrightico">
+							<a href="https://wikimediafoundation.org/"><img src="/static/images/wikimedia-button.png" srcset="/static/images/wikimedia-button-1.5x.png 1.5x, /static/images/wikimedia-button-2x.png 2x" width="88" height="31" alt="Wikimedia Foundation"/></a>						</li>
+											<li id="footer-poweredbyico">
+							<a href="//www.mediawiki.org/"><img src="/static/images/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/static/images/poweredby_mediawiki_132x47.png 1.5x, /static/images/poweredby_mediawiki_176x62.png 2x" width="88" height="31"/></a>						</li>
+									</ul>
+						<div style="clear:both"></div>
+		</div>
+		<script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.132","walltime":"0.239","ppvisitednodes":{"value":358,"limit":1000000},"ppgeneratednodes":{"value":0,"limit":1500000},"postexpandincludesize":{"value":27443,"limit":2097152},"templateargumentsize":{"value":78,"limit":2097152},"expansiondepth":{"value":7,"limit":40},"expensivefunctioncount":{"value":2,"limit":500},"entityaccesscount":{"value":0,"limit":400},"timingprofile":["100.00%  152.465      1 -total"," 41.88%   63.856      2 Template:Ambox"," 37.13%   56.611      1 Template:Refimprove"," 23.64%   36.049      1 Template:Cite_web"," 21.49%   32.765      1 Template:Notability"," 15.87%   24.194      1 Template:Find_sources_mainspace"," 12.30%   18.754      1 Template:Sorting"," 10.22%   15.586      1 Template:Navbox","  3.32%    5.059      1 Template:Small"]},"scribunto":{"limitreport-timeusage":{"value":"0.067","limit":"10.000"},"limitreport-memusage":{"value":2519348,"limit":52428800}},"cachereport":{"origin":"mw1279","timestamp":"20171017162622","ttl":1900800,"transientcontent":false}}});});</script><script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgBackendResponseTime":70,"wgHostname":"mw1321"});});</script>
+	</body>
+</html>

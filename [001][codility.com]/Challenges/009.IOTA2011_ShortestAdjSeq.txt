@@ -1,0 +1,700 @@
+
+
+A non-empty zero-indexed array A consisting of N integers is given. Two integers P and Q are called adjacent in array A if there exists an index 0 ≤ K < N−1 such that:
+
+        P = A[K] and Q = A[K+1], or
+        Q = A[K] and P = A[K+1].
+
+A non-empty zero-indexed sequence B consisting of M integers is called adjacent in array A if the following conditions hold:
+
+        B[0] = A[0];
+        B[M−1] = A[N−1];
+        B[K] and B[K+1] are adjacent in A for 0 ≤ K < M−1.
+
+For example, consider array A consisting of eight elements such that:
+A[0] = 1    A[1] = 10    A[2] = 6
+A[3] = 5    A[4] = 10    A[5] = 7
+A[6] = 5    A[7] = 2
+
+The following sequences are adjacent in array A:
+
+        [1, 10, 6, 5, 10, 7, 5, 2];
+        [1, 10, 7, 5, 2];
+        [1, 10, 6, 5, 10, 6, 5, 10, 7, 5, 2];
+        [1, 10, 5, 2].
+
+The last sequence is the shortest possible sequence adjacent in array A.
+
+Write a function
+
+    function solution(A);
+
+that, given a non-empty zero-indexed array A consisting of N integers, returns the length of the shortest sequence adjacent in array A.
+
+Assume that:
+
+        N is an integer within the range [1..100,000];
+        each element of array A is an integer within the range [−2,147,483,648..2,147,483,647].
+
+For example, given array A such that:
+A[0] = 1    A[1] = 10    A[2] = 6
+A[3] = 5    A[4] = 10    A[5] = 7
+A[6] = 5    A[7] = 2
+
+the function should return 4, as explained above.
+
+Complexity:
+
+        expected worst-case time complexity is O(N*log(N));
+        expected worst-case space complexity is O(N), beyond input storage (not counting the storage required for input arguments).
+
+Copyright 2009–2017 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+======================================================================================================================================================
+Solution 1:
+Correct solution:
++Build tree from A[0] to A[N-1]
+=> shortest path when reach end node 
+
++A[0] connect with nodes
+	loop nodes connect with nodes
+	shortest path is when reach end node 
+Time: O(N)
+
+
+Soltion 2:
+From each connect A[i] -> A[i+1] (a->b), we build tree 
+	-If new node b is root: we connect a to b
+	-If new node b not have parent: we connect it to a 
+	-If new node b have parent and length[b] > length[a] + 1: we must reverse b to connect it to a (cut 1/2 branch)
+	-If new node b have parent and length[b] == length[a] + 1 || length[a] == length[b] + 1: keep state	
+	-If new node b have parent and length[a] > length[b] + 1: we must reverse a to connect it to b (cut 1/2 branch)
+		
+
+
+======================================================================================================================================================
+
+function solution(A) {
+	var N = A.length;
+	var nodes = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		nodes[a] = {
+			parentNode: null,
+			isRoot: false
+		};		
+	}
+		
+	nodes[A[0]].isRoot = true;
+	var maxIndex = N -1;
+	
+	for(var i=0; i<maxIndex; i++) {
+		var a = A[i];
+		var b = A[i+1];
+		
+		if(a === b) {
+			continue;
+		}
+		
+		var nodeA = nodes[a];
+		var nodeB = nodes[b];
+				
+		if(nodeB.isRoot) {
+			
+			if(nodeA.parentNode.isRoot) {
+				reverseNodes(nodeB, nodeA);				
+			} else {
+				nodeA.parentNode = nodeB;				
+			}
+			
+			continue;
+		}
+		
+		if(nodeA.isRoot || nodeB.parentNode === null) {
+			if(nodeB.parentNode) {
+				reverseNodes(nodeA, nodeB);				
+			} else {
+				nodeB.parentNode = nodeA;			
+			}
+			
+			continue;
+		}
+			
+		if(lengthOfNode(nodeB.parentNode) > lengthOfNode(nodeA)) {
+			reverseNodes(nodeA, nodeB);
+			continue;			
+		}	
+		
+		if(lengthOfNode(nodeA.parentNode) > lengthOfNode(nodeB)) {
+			reverseNodes(nodeB, nodeA);
+			continue;			
+		}		
+	}	
+	
+	var result = lengthOfNode(nodes[A[maxIndex]]);
+	
+	if(result === 13) {
+		var index = 1;
+		// result = A[index];
+		// result = N;
+	}
+	
+	return result;
+}
+
+function reverseNodes(parentNode, childNode) {
+	while(lengthOfNode(childNode.parentNode) > lengthOfNode(parentNode)) {
+		var temp = childNode.parentNode;
+		childNode.parentNode = parentNode;		
+		parentNode = childNode;
+		childNode = temp;
+	}	
+}
+
+function lengthOfNode(node) {
+	var length = 1;
+	while(node.parentNode) {
+		length++;
+		node = node.parentNode;
+	}
+	
+	return length;
+}
+
+solution([1, 10, 6, 5, 10, 7, 5, 2]);
+
+
+===========================================================================================================================================
+Test Cases
+[42, 1, 2, 3, 4, 5, 42]
+
+
+5
+[3, 1, 2, 5, 7, 8, 9, 1, 2, 5, 7, 8, 4]
+
+
+
+
+4
+[2147483647, 2147483647, -2147483648, -2147483648]
+
+
+10 Expect: 8
+100 
+[ 
+60,
+-3,
+-22,
+66,
+74,
+-80,
+3,
+92,
+45,
+43,
+-22,
+97
+42
+75
+60
+-80
+-69
+-5
+47
+69
+ -31
+97 
+22 
+ -93
+ -84
+54 
+ -84
+ -28
+ -33 
+75
+ -26
+-40 
+ -73
+83
+ -43 
+ 73 
+ -82
+ 64 
+ -76 
+37
+ 12 
+40 
+-18
+-96
+66
+82
+ -51
+ 80
+-69
+-33
+-8
+22
+10
+60
+-15
+92
+87 
+ -23
+ -81
+19
+-63
+-57
+ 41
+-63
+100
+32
+-40
+-18
+3
+69 
+-28
+-49
+66
+59
+54
+59
+-64 
+ 6 
+61
+ -35
+-8
+-85
+ 78
+ 56 
+79
+64 
+-81
+ -51
+11
+30
+32
+2 
+-1
+-73
+-56 
+ -25 
+-71 
+12 
+-79
+ -32
+]
+
+
+
+
+Medium Chaotic: 500 
+13 expect 12
+
+
+
+
+===========================================================================================================================================
+Version 1:
+function reverseNodes(parentNode, childNode) {
+	while(lengthOfNode(childNode.parentNode) > lengthOfNode(parentNode)) {
+		var temp = childNode.parentNode;
+		childNode.parentNode = parentNode;		
+		parentNode = childNode;
+		childNode = temp;
+	}	
+}
+
+function lengthOfNode(node) {
+	var length = 1;
+	while(node.parentNode) {
+		length++;
+		node = node.parentNode;
+	}
+	
+	return length;
+}
+
+function solution(A) {
+	var N = A.length;
+	var nodes = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		nodes[a] = {
+			value: a,
+			parentNode: null,
+			isRoot: false
+		};		
+	}
+		
+	var maxIndex = N -1;
+	nodes[A[0]].isRoot = true;
+	
+	for(var i=0; i<maxIndex; i++) {
+		var a = A[i];
+		var b = A[i+1];
+		
+		if(a === b) {
+			continue;
+		}
+		
+		var nodeA = nodes[a];
+		var nodeB = nodes[b];
+				
+		if(nodeB.isRoot) {
+			reverseNodes(nodeB, nodeA);					
+			continue;				
+		}		
+		
+		if(nodeB.parentNode === null) {
+			nodeB.parentNode = nodeA;	
+			continue;				
+		}		
+			
+		var lengthA = lengthOfNode(nodeA);
+		var lengthB = lengthOfNode(nodeB);
+		if(lengthA < lengthB + 1) {
+			reverseNodes(nodeA, nodeB);	
+			continue;			
+		}	
+						
+		if(lengthB < lengthA + 1) {
+			reverseNodes(nodeB, nodeA);	
+			continue;			
+		}				
+	}	
+	
+	var result = lengthOfNode(nodes[A[maxIndex]]);
+	
+	return result;
+}
+
+
+===========================================================================================================================================
+Version 2:
+
+function reverseNodes(parentNode, childNode, lengthDiff) {
+	var nodeMove = Math.floor(lengthDiff / 2);
+	for(var i=0; i<nodeMove; i++) {
+		var temp = childNode.parentNode;
+		childNode.parentNode = parentNode;		
+		parentNode = childNode;
+		childNode = temp;
+	}
+}
+
+function lengthOfNode(node) {
+	var length = 0;
+	while(node) {
+		length++;
+		node = node.parentNode;
+	}
+	
+	return length;
+}
+
+function solution(A) {
+	var N = A.length;
+	var nodes = [];
+	var exists = [];
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		
+		if(exists[a]) {
+			continue;
+		}
+		
+		nodes[a] = {
+			value: a,
+			parentNode: null,
+			isRoot: false
+		};		
+		
+		exists[a] = true;
+	}
+		
+	var maxIndex = N -1;
+	nodes[A[0]].isRoot = true;
+	
+	for(var i=0; i<maxIndex; i++) {
+		var a = A[i];
+		var b = A[i+1];
+		
+		if(a === b) {
+			continue;
+		}
+		
+		var nodeA = nodes[a];
+		var nodeB = nodes[b];
+	
+		if(nodeB.isRoot) {
+			var lengthA = lengthOfNode(nodeA);
+			reverseNodes(nodeB, nodeA, lengthA - 1);		
+			continue;				
+		}		
+		
+		if(nodeB.parentNode === null) {
+			nodeB.parentNode = nodeA;	
+			continue;				
+		}		
+		
+		var lengthA = lengthOfNode(nodeA);
+		var lengthB = lengthOfNode(nodeB);
+		
+		if(lengthA === lengthB) {
+			continue;	
+		}
+		
+		if(lengthA < lengthB) {
+			reverseNodes(nodeA, nodeB, lengthB - lengthA);	
+			continue;			
+		}	
+							
+		reverseNodes(nodeB, nodeA, lengthA - lengthB);				
+	}	
+	
+	var result = lengthOfNode(nodes[A[maxIndex]]);
+	
+	return result;
+}
+		
+
+===========================================================================================================================================
+Version 3: 100% - 100%
+
+function solution(A) {
+	var N = A.length;
+	
+	var nodes = [];
+	var exists = [];
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		
+		if(exists[a]) {		
+			continue;
+		}
+		
+		nodes[a] = {
+			value: a,
+			parentNode: null,
+			isRoot: false,
+			connectWith: []
+		};		
+			
+		exists[a] = true;
+	}		
+	
+	var maxIndex = N-1;
+	for(var i=0; i<maxIndex; i++) {
+		var a1 = A[i];
+		var a2 = A[i+1];
+		
+		nodes[a1].connectWith.push(a2);
+		nodes[a2].connectWith.push(a1);		
+	}		
+		
+	//console.log(nodes);
+	
+	var a0 = A[0];
+	var usedNodes = [];
+	usedNodes[a0] = true;
+	
+	var currentNodes = [nodes[a0]];	
+	var nextNodes = [];
+	
+	var endValue = A[maxIndex];
+	if(endValue === a0) {
+		return 1;
+	}
+		
+	var length = 1;
+	while(currentNodes.length) {
+		for(var i=0; i<currentNodes.length; i++) {
+			var node = currentNodes[i];				
+			if(endValue === node.value) {
+				return length;
+			}
+				
+			for(var j=0; j<node.connectWith.length; j++) {
+				var a = node.connectWith[j];
+				if(usedNodes[a]) {
+					continue;
+				}
+				
+				usedNodes[a] = true;
+				
+				var nodeA = nodes[a];
+				nextNodes.push(nodeA);
+			}		
+		}	
+			
+		console.log(nextNodes);
+		currentNodes = nextNodes;
+		nextNodes = [];
+		length++;
+	}
+	
+		
+	return length;
+}
+
+
+solution([1, 10, 6, 5, 10, 7, 5, 2]);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

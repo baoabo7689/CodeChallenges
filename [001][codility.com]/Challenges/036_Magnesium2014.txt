@@ -1,0 +1,268 @@
+
+AscendingPaths
+START
+Find the longest path in a weighted graph in which the weights are ascending.
+
+
+
+
+You are visiting the Royal Botanical Gardens. In the gardens there are N intersections connected by M roads. The intersections are numbered from 0 to N − 1. Each road connects two intersections and has an attractiveness level, which denotes how beautiful the plants along it are considered to be. The attractiveness level is a positive integer; the greater the better.
+
+You are given a map of the gardens in the form of integer N and three arrays A, B and C. Each of the arrays contains M integers.
+
+        For each I (0 ≤ I < M) there is a road between intersections A[I] and B[I] with an attractiveness level of C[I].
+        There can be multiple roads connecting the same pair of intersections, or a road with both ends entering the same intersection.
+        It is possible for roads to go through tunnels or over bridges (that is, the graph of intersections and roads doesn't have to be planar).
+
+You want to find a walk in the gardens which will be as long as possible. You may start and finish at any intersections, and you may visit an intersection more than once during the walk. However, the walk must be ascending: that is, the attractiveness level of each visited road must be greater than that of the previously visited road.
+
+Write a function:
+
+    function solution(N, A, B, C);
+
+that, given an integer N and arrays A, B and C of M integers, returns the maximal number of roads that can be visited during an ascending walk in the gardens.
+
+For example, given N = 6 and the following arrays:
+    A[0] = 0    B[0] = 1    C[0] = 4
+    A[1] = 1    B[1] = 2    C[1] = 3
+    A[2] = 1    B[2] = 3    C[2] = 2
+    A[3] = 2    B[3] = 3    C[3] = 5
+    A[4] = 3    B[4] = 4    C[4] = 6
+    A[5] = 4    B[5] = 5    C[5] = 6
+    A[6] = 5    B[6] = 0    C[6] = 8
+    A[7] = 3    B[7] = 2    C[7] = 7
+
+the function should return 4. The longest ascending walk visits intersections 3, 1, 2, 3 and 4 (in that order). The attractiveness levels of the visited roads are 2, 3, 5 and 6, respectively.
+
+Assume that:
+
+        N is an integer within the range [1..200,000];
+        M is an integer within the range [0..200,000];
+        each element of arrays A, B is an integer within the range [0..N−1];
+        each element of array C is an integer within the range [1..1,000,000,000].
+
+Complexity:
+
+        expected worst-case time complexity is O(N+M*log(M));
+        expected worst-case space complexity is O(N+M) (not counting the storage required for input arguments).
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+
+
+ 
+======================================================================================================================================================
+-Sort by attractive 
+-nếu attractive khác nhau, maxLength = []
+	.maxLength[PointX]
+	.Xét từng vertex uv từ lớn đến nhỏ
+		Nếu uv có gắn vào => maxLength[u] = maxLength[v] + 1 và maxLength[v] = maxLength[u] + 1
+-nếu có attractive giống nhau 
+	.những cái same nhau => phải xét cùng lúc, update giá trị cùng lúc, tránh update trùng => update tạm vào 1 mảng khác => sau đó lấy max ra 
+	hoặc kiểm trả point đã update thì hok update nữa
+
+======================================================================================================================================================
+
+
+function sort(A) {
+	var N = A.length;
+	
+	if(N === 0) {
+		return A;
+	}
+		
+	var max = A[0];
+	
+	var aInfo = [];
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		
+		if(a.value < 0) {
+			continue;
+		}
+		
+		aInfo.push({ value: a, digit: a.value});
+		
+		if(max.value < a.value) {
+			max = a;
+		}
+	}
+	
+	N = aInfo.length;
+	var M = Math.round(Math.log(max.value)/Math.log(10));
+		
+	for(var i=0; i<=M; i++) {
+		var sortBaskets = initSortBaskets();
+		
+		for(var j=0; j<N;j++) {
+			var a = aInfo[j];
+			var digit = a.digit % 10;
+			a.digit = a.digit ? Math.floor(a.digit / 10) : 0;
+			
+			sortBaskets[digit].push(a);
+		}
+		
+		aInfo = combineSortBaskets(sortBaskets);
+	}	
+	
+	var result = [];	
+	for(var i=0; i<N; i++) {		
+		result.push(aInfo[i].value);
+	}
+	
+	return result;
+}
+
+function initSortBaskets() {
+	var sortBaskets = [];
+	
+	for(var i=0;i<10;i++) {
+		sortBaskets.push([]);
+	}
+	
+	return sortBaskets;
+}
+
+function combineSortBaskets(sortBaskets) {
+	var result = [];
+	
+	for(var i=0;i<10;i++) {
+		var basket = sortBaskets[i];
+		
+		for(var j=0;j<basket.length; j++) {
+			result.push(basket[j]);		
+		}
+	}
+	
+	return result;
+}
+
+function solution(N, A, B, C) {
+	var M = A.length;
+	//console.log(A);
+	//console.log(B);
+	//console.log(C);
+	//console.log(N);
+	
+	var nodes = [];
+	
+	for(var i=0; i<M; i++) {
+		nodes.push({
+			value: C[i],
+			a: A[i],
+			b: B[i]
+		});
+	}
+	
+	nodes = sort(nodes);
+	//console.log(nodes);
+	
+	var weights = [];
+	var max = 0;
+	for(var i=M-1; i>=0;) {
+		var node = nodes[i];
+		
+		var j;
+		for(j=i-1; j>=0 && nodes[j].value == node.value; j--);
+			
+		var tempWeights = [];	
+		for(var k=j+1; k<=i; k++) {
+			node = nodes[k];
+			
+			var weightA = weights[node.a] || 0;
+			var weightB = weights[node.b] || 0;
+			
+			var tempWeightA = tempWeights[node.a] || 0;
+			var tempWeightB = tempWeights[node.b] || 0;
+			
+			var maxB = Math.max(weightA + 1, weightB);
+			maxB = Math.max(tempWeightB, maxB);		
+			
+			var maxA = Math.max(weightB + 1, weightA);
+			maxA = Math.max(tempWeightA, maxA);	
+			
+			tempWeights[node.b] = maxB;
+			tempWeights[node.a] = maxA;
+			
+			max = Math.max(maxB, max);
+			max = Math.max(maxA, max);
+		}	
+		
+		for(var k=j+1; k<=i; k++) {
+			node = nodes[k];
+			
+			var weightA = weights[node.a] || 0;
+			var weightB = weights[node.b] || 0;
+			
+			weights[node.a] = tempWeights[node.a];
+			weights[node.b] = tempWeights[node.b];			
+			// console.log(weights);
+		}	
+		
+		i = j;		
+	}	
+	
+	
+	return max;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

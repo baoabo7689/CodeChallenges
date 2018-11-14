@@ -1,0 +1,130 @@
+
+
+For a given array A of N integers and a sequence S of N integers from the set {−1, 1}, we define val(A, S) as follows:
+
+    val(A, S) = |sum{ A[i]*S[i] for i = 0..N−1 }|
+
+(Assume that the sum of zero elements equals zero.)
+
+For a given array A, we are looking for such a sequence S that minimizes val(A,S).
+
+Write a function:
+
+    function solution(A);
+
+that, given an array A of N integers, computes the minimum value of val(A,S) from all possible values of val(A,S) for all possible sequences S of N integers from the set {−1, 1}.
+
+For example, given array:
+  A[0] =  1
+  A[1] =  5
+  A[2] =  2
+  A[3] = -2
+
+your function should return 0, since for S = [−1, 1, −1, 1], val(A, S) = 0, which is the minimum possible value.
+
+Assume that:
+
+        N is an integer within the range [0..20,000];
+        each element of array A is an integer within the range [−100..100].
+
+Complexity:
+
+        expected worst-case time complexity is O(N*max(abs(A))2);
+        expected worst-case space complexity is O(N+sum(abs(A))), beyond input storage (not counting the storage required for input arguments).
+
+Copyright 2009–2017 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+
+======================================================================================================================================================
+
+function solution(A) {
+	var N = A.length;
+	var max = 0;
+	var sum = 0;
+	
+	var counts = [];
+	for(var i = 0; i < N; i++) {
+		var newValue = Math.abs(A[i]);
+		A[i] = newValue;		
+		max= Math.max(max, newValue);
+		sum += newValue;
+		
+		if(counts[newValue] === undefined) {
+			counts[newValue] = 1;
+			continue;
+		}
+		
+		counts[newValue] = counts[newValue] + 1;
+	}
+	
+	var canSums = [];
+	canSums[0] = 0;
+	for(var j=1; j <= sum; j++) {
+		canSums[j] = -1;
+	}
+		
+	for(var a=1; a<= max; a++) {
+		if(!counts[a]) {
+			continue;
+		}
+		
+		for(var j=0; j<sum; j++) {
+			if(canSums[j] >= 0) {
+				canSums[j] = counts[a];
+				continue;
+			}
+			
+			if(j >= a && canSums[j - a] > 0) {
+				canSums[j] = canSums[j - a] - 1;				
+			}
+		}		
+	}	
+	
+	// 0 -> a1 -> 2*a1 -> ...
+	// 0 -> b1 -> 2*b1, a1+b1, ...
+	// console.log(canSums);
+	var maxSum = sum/2;
+	var result = sum;
+	for(var i = Math.floor(maxSum); i >= 0; i--) {
+		if(canSums[i] >= 0) {
+			// sum - 2 * i = Q - P
+			result = Math.abs(sum - 2 * i);
+			break;
+		}
+	}
+	
+	return result;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,275 @@
+
+
+A non-empty zero-indexed array A consisting of N integers is given. The product of triplet (P, Q, R) equates to A[P] * A[Q] * A[R] (0 ≤ P < Q < R < N).
+
+For example, array A such that:
+  A[0] = -3
+  A[1] = 1
+  A[2] = 2
+  A[3] = -2
+  A[4] = 5
+  A[5] = 6
+
+contains the following example triplets:
+
+        (0, 1, 2), product is −3 * 1 * 2 = −6
+        (1, 2, 4), product is 1 * 2 * 5 = 10
+        (2, 4, 5), product is 2 * 5 * 6 = 60
+
+Your goal is to find the maximal product of any triplet.
+
+Write a function:
+
+    int solution(int A[], int N);
+
+that, given a non-empty zero-indexed array A, returns the value of the maximal product of any triplet.
+
+For example, given array A such that:
+  A[0] = -3
+  A[1] = 1
+  A[2] = 2
+  A[3] = -2
+  A[4] = 5
+  A[5] = 6
+
+the function should return 60, as the product of triplet (2, 4, 5) is maximal.
+
+Assume that:
+
+        N is an integer within the range [3..100,000];
+        each element of array A is an integer within the range [−1,000..1,000].
+
+Complexity:
+
+        expected worst-case time complexity is O(N*log(N));
+        expected worst-case space complexity is O(1), beyond input storage (not counting the storage required for input arguments).
+
+Elements of input arrays can be modified.
+Copyright 2009–2017 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+=================================================================================================================================================================================================================
+
+For A 
+	-Sort A:
+		a_1 < a_2 < ... < a_n 
+
+	-If max<0
+		=> maxProduct = negative of(min) = (a_n-2, a_n-1, a_n)
+	-If min > 0	
+		=> maxProduct = positive of(max) = (a_n-2, a_n-1, a_n)
+	-If min <= 0 <= max	
+		=> maxProduct = positive of(max)
+			.a_n 
+			. a1*a2 or a_n-1*a_n-2
+	
+		
+
+=================================================================================================================================================================================================================
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+
+function solution(A) {	
+	var N = A.length;
+	
+	var positive = [];
+	var negative = [];
+	
+	for(var i=0; i<N; i++) {		
+		var value = A[i];
+		if(value < 0) {
+			negative.push(value);
+		}else{
+			positive.push(value);
+		}
+	}
+	
+	positive = sort(positive);
+	negative = sort(negative, true);
+	var sortedA = negative.concat(positive);	
+	// console.log(sortedA);
+	
+	if(sortedA[N-1] <= 0 || 0 <= sortedA[0]) {
+		return sortedA[N-3]*sortedA[N-2]*sortedA[N-1];
+	}
+	
+	return sortedA[N-1]*Math.max(sortedA[N-3]*sortedA[N-2], sortedA[0]*sortedA[1]);
+}
+
+
+function sort(A, isNegative) {
+	var N = A.length;
+	
+	if(N === 0) {
+		return A;
+	}
+		
+	var max = Math.abs(A[0]);
+	
+	var aInfo = [];
+	
+	for(var i=0; i<N; i++) {
+		var value = isNegative ? -A[i] : A[i];
+		
+		aInfo.push({ value:  value, digit: value});
+		
+		if(max < value) {
+			max = value;
+		}
+	}
+	
+	N = aInfo.length;
+	var M = Math.round(Math.log(max)/Math.log(10));
+		
+	for(var i=0; i<=M; i++) {
+		var sortBaskets = initSortBaskets();
+		
+		for(var j=0; j<N;j++) {
+			var a = aInfo[j];
+			var digit = a.digit % 10;	
+			a.digit = a.digit ? Math.floor(a.digit / 10) : 0;
+			
+			sortBaskets[digit].push(a);
+		}
+					
+		aInfo = combineSortBaskets(sortBaskets);
+	}	
+	
+	var result = [];	
+	
+	if(isNegative) {
+		for(var i=N-1; i>=0; i--) {		
+			result.push(-aInfo[i].value);
+		}		
+	} else {
+		for(var i=0; i<N; i++) {		
+			result.push(aInfo[i].value);
+		}		
+	}
+	
+	return result;
+}
+
+
+function initSortBaskets() {
+	var sortBaskets = [];
+	
+	for(var i=0;i<10;i++) {
+		sortBaskets.push([]);
+	}
+	
+	return sortBaskets;
+}
+
+
+function combineSortBaskets(sortBaskets) {
+	var result = [];
+	
+	for(var i=0;i<10;i++) {
+		var basket = sortBaskets[i];
+		
+		for(var j=0;j<basket.length; j++) {
+			result.push(basket[j]);		
+		}
+	}	
+	
+	return result;
+}
+
+sort([-5, -6, -4, -7, -10], true);
+
+solution([-5, -6, -4, -7, -10]);
+solution( [-3, 1, 2, -2, 5, 6]);
+sort([1,7, 5, 6, 9, 10]);
+
+
+
+
+[-5, -6, -4, -7, -10]
+
+-10, -7, -6, -5, -4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

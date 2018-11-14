@@ -1,0 +1,260 @@
+StringModification 
+
+
+
+A long time ago, when the most basic model of an HP3000 computer used to cost $95,000 (over half a million in today's dollars), a very wise man called Gordon Moore made predictions about how computers would become cheaper and more powerful each year. According to Moore, the number of components per integrated circuit would double every two years. Thanks to the creative, determined engineers working in circuit printing technology, we do indeed have smaller, cheaper and more powerful computers today.
+
+Circuit printing, as we call photolithography, is an extremely complex yet rewarding field, and ASML needs the best software engineers in the world to make this magic happen. We work closely with our clients to help them print their circuits in the most effective way. One of our clients requests us to write a method to optimize their circuit efficiency. The circuit is represented as a string consisting of the letters "M" and "L", where M represents Memory units and L represents Logic units. The efficiency of the circuit is measured as the length of the longest interval of letters "M". For example, given input string "LMMMLMMMMLLLM", the longest interval is 4.
+
+Our customer wants to change the circuit in such a way that the longest M-interval will be equal to K. We can change any unit at any position in the circuit, i.e. either we can change any "M" to "L" or any "L" to "M". The objective of this challenge is to calculate the minimum number of changes we have to make in order to achieve the desired longest M-interval length K.
+
+Write a function:
+
+    function solution(S, K);
+
+where the first argument, S, represents the circuit as a string of length N that consists of only characters "M" and/or "L" and the second argument, K, is the desired longest M-interval in the string. The return value shall be the minimum number of changes to achieve K as the longest M-interval in the input string.
+
+For example, given S = "MLMMLLM" and K = 3, your function should return 1. We can change the letter at position 4 (counting from 0) to obtain "MLMMMLM", in which the longest interval of letters "M" is exactly three characters long.
+
+For another example, given S = "MLMMMLMMMM" and K = 2, your function should return 2. We can, for example, modify the letters at positions 2 and 7 to get the string "MLLMMLMLMM", which satisfies the desired property.
+
+Assume that:
+
+        string S consists only of the characters "M" and/or "L";
+        N is an integer within the range [1..100,000];
+        K is an integer within the range [0..N].
+
+Complexity:
+
+        expected worst-case time complexity is O(N);
+        expected worst-case space complexity is O(N) (not counting the storage required for input arguments).
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+======================================================================================================================================================
+
+function solution(S, K) {
+	console.log(S + " " + K);
+	
+	var N = S.length;
+	var sums = [];
+	var maxM = 0;
+	
+	for(var i=0; i<N;) {
+		var sum = 0;
+		var s = S[i];
+		var val = s == 'M' ? 1 : -1;
+		while(S[i] == s) {
+			sum += val;
+			i++;
+		}
+		
+		sums.push(sum);
+		maxM = Math.max(maxM, sum);
+	}
+	
+	console.log(sums);
+	
+	if(maxM == K) {
+		return 0;
+	}
+	
+	var changes = 0;
+	
+	if(maxM > K) {
+		for(var i=0; i<sums.length; i++) {
+			var sum = sums[i];
+			changes += sum > K ? Math.floor(sum/(K + 1)) : 0;
+		}
+		
+		return changes;
+	}
+	
+	var minChanges = undefined;
+	var sumML = 0;
+	var lastSum = 0;
+	var sumL = 0;
+	var sumI = 0;	
+	var prevJ = 0;
+	var additionalStep;
+	
+	// debugger;
+	for(var i=0; i<sums.length; i++) {
+		sumI = sums[i];
+		var j=prevJ;
+		
+		for(; j<sums.length && sumML<K; j++) {
+			lastSum = sums[j];
+			sumL -= lastSum<0 ? lastSum : 0;
+			sumML += Math.abs(lastSum);
+		}
+				
+		if(sumML < K) {
+			break;
+		}
+		
+		changes = 0;
+		
+		if(sumML == K) {	
+			changes = sumL;		
+			changes += sumI < 0 && i > 0 ?  1 : 0;
+			
+			if(j == sums.length) {
+				minChanges = minChanges ? Math.min(minChanges, changes) : changes;			
+				break;					
+			}
+		
+			changes += lastSum < 0 ?  1 : 0;
+			minChanges = minChanges ? Math.min(minChanges, changes) : changes;
+			
+			sumML -=  Math.abs(sumI);
+			sumL += sumI<0 ? sumI : 0;
+			
+			prevJ = j;
+			continue;
+		}
+				
+		if(sumML == K+1) {		
+			if(sumI>0 && lastSum>0) {
+				changes = sumL + 1;	
+			}			
+			
+			if((sumI>0 && lastSum<0) ||
+			   (sumI<0 && lastSum>0)) {
+				changes = sumL - 1;						
+			}
+			
+			if(sumI<0 && lastSum<0) {
+				changes = sumL - (i==0 || j==sums.length ? 1 : 0);								
+			}	
+			
+			sumML -=  Math.abs(sumI);			
+			sumL +=  sumI<0 ? sumI : 0;
+			
+			sumL += lastSum<0 ? lastSum : 0;
+			sumML -= Math.abs(lastSum);	
+			minChanges = minChanges ? Math.min(minChanges, changes) : changes;	
+			prevJ = j-1;
+			
+			continue;
+		}
+		
+			
+		if(sumI>0 && lastSum>0) {
+			changes = sumL + 1;	
+		}	
+		
+		if((sumI>0 && lastSum<0) ||
+			(sumI<0 && lastSum<0)) {
+			changes = K - (sumML - sumL);						
+		}
+				
+		if(sumI<0 && lastSum>0) {
+			while(sumML>K && i < sums.length) {
+				sumML -=  Math.abs(sumI);			
+				sumL +=  sumI<0 ? sumI : 0;
+				i++;
+				sumI = sums[i];				
+			}
+			
+			if(sumI < 0) {
+				changes = sumL + 1;
+			} else {
+				changes = sumL + K - sumML;				
+			}
+			
+			i--;
+		} else {
+			sumML -=  Math.abs(sumI);			
+			sumL +=  sumI<0 ? sumI : 0;	
+		}
+		
+		sumL += lastSum<0 ? lastSum : 0;
+		sumML -= Math.abs(lastSum);		
+		minChanges = minChanges ? Math.min(minChanges, changes) : changes;	
+			prevJ = j-1;
+	}
+	
+	return minChanges;
+}
+
+solution('LLLMMLLLLLLMMMLLLLL', 5); 
+
+[-3, 2, -6, 3, -5]
+
+
+got 3 expected 2
+
+
+
+solution('MMMMLLLLLLLLLLLLLMMMMMLLLLLLLLLLLLLLMMMMMMLLLLLLLLLLLLLLLLLLLLLLLLLLLMMLLLLLLLLLLLLMM', 11); got 6 expected 5
+
+
+
+solution('LLMMLLMMMMLLMMMLLLMM', 9); 
+[-2, 2, -2, 4, -2, 3, -3, 2]
+
+solution('MLMMLLM', 3);
+
+MLMMLLM
+[ 1, -1, 2, -2, 1 ]
+WRONG ANSWER (got 2 expected 1)
+
+
+only_add 
+solution('LLMMLLMMMMLLMMMLLLMM', 9); 		timeout
+solution('LLLMMLLLLLLMMMLLLLL', 5);  		got 3 expected 2
+solution('LLMMLLMMMLLLLLMMMMLLLL', 7);		timeout
+solution('LLMMMLLLMMMLLLLLLMMM', 7);		timeout
+
+intervals_close 
+solution('LLMMLLLMLLMMMMMLLLMMMLLMMLLLMMMMLLLLLMMMMMLMMLLMMMM', 14); 		timeout
+solution('LMMMLMMLMMMMLLLMMMMMMMMMMMMLLMMMMMMMMMMLLMMMMMMMMMLMMMMMMMMLLMMLMMMMMMLMMMMMMMMMMMMMMMMMMMMLLMMMMMMMMMMMMMMMMMMMLLMMMMMMMMMMLLLMMMMMMMMLMMMMMMLLLMMMMMMMLMMMLMMMMMMMMMMMMMMMMMLLLMMMMMLLMMMMMMMMMMMLMMMMMMLLLMLMMMMMMMLLMMMLLLMMMMMMMMMMMMMMMMLLLMMMMMMMMMMMMMMMMLLLMMMMMMMMMMMLLLMMMMMMMMMMMMMLLMMLMMMLMMLL', 60); 		timeout
+solution('LMMMMLLLLMMLLLMMMMMLLMMLLLLMMMMLLMMLLMMMMMLLLMMMLMMMLLLMLLLMMLLLLMMMMLLMMMMLLLMMLLLLMMMMLLLLMMMMMLMMMLLLLMMMLLLMMMMMLLLMMMMLLLLMMMMLLLLMMMMMLLLMMLMLLMMMMMLMMLLLMMMMLLMLLLLMMLLLMMMMMLLMMMMMLLLLMMMLMMMMMLLLMMLMMMMLMMMLMMMMLLLLMMMMLLLMLLLLMMMMLLLLMLLLMMLLMMMMLLLMMLLMMMLLMMLLLMLLLMMMMMLLMMMMLMMMLLLLMMML', 40); 		timeout
+solution('MMMMLLLLLLLLLLLLLMMMMMLLLLLLLLLLLLLLMMMMMMLLLLLLLLLLLLLLLLLLLLLLLLLLLMMLLLLLLLLLLLLMM', 11); 		 got 6 expected 5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

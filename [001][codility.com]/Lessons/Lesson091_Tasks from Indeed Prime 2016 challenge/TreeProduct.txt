@@ -1,0 +1,1822 @@
+Elves in the forest of Glandishar are preparing for an Orc invasion. They have a network of N + 1 guard posts located on the open platforms in the treetops. The posts are numbered from 0 to N and are connected by N bridges, so that one can get from any one guard post to any other guard post in a unique way. In other words, guard posts and bridges form a tree graph.
+
+The Elves are afraid that if the Orcs manage to get hold of one of the guard posts, then they will have easy access to all the other guard posts. Therefore, the Elves have decided to destroy at most two bridges and split the guard posts into at most three separate areas, so that the guards can move within each area but it's not possible to move between the areas.
+
+In each area there will be one guard who will move from guard post to guard post during the night. If the Orcs attack, the guards will raise an alarm. However, if the Orcs manage to guess the guard post in which the guards are currently located, they may manage to take out the guards without raising the alarm. The Elves want to avoid the situation that all guard posts fail this way, by maximizing:
+
+        X * Y * Z, if the guard posts have been divided into three areas consisting of X, Y and Z guard posts, respectively;
+        X * Y, if the guard posts have been divided into two areas consisting of X and Y posts, respectively;
+        N + 1, if the guard posts haven't been divided;
+
+depending on which option gives the largest result.
+
+You are given a map of the network in the form of two arrays A, B of length N. For each K (0 ≤ K < N) there is a bridge between posts A[K] and B[K].
+
+Write a function:
+
+    function solution(A, B);
+
+that, given two zero-indexed arrays A and B of N integers, returns the largest possible result. Since the result can be large, you should return it as a string.
+
+For example, given the following arrays:
+  A[0] = 0    B[0] = 1
+  A[1] = 1    B[1] = 2
+  A[2] = 1    B[2] = 3
+  A[3] = 3    B[3] = 4
+  A[4] = 3    B[4] = 5
+  A[5] = 6    B[5] = 3
+  A[6] = 7    B[6] = 5
+
+the function should return "18" since the Elves can destroy bridges 1−3 and 3−5 (marked as dashed lines in the image above). The created areas consist of 3, 3 and 2 guard posts.
+
+Therefore, the result is 3 * 3 * 2 = 18. It is not possible to obtain a better result.
+
+Given the following arrays:
+  A[0] = 0    B[0] = 1
+  A[1] = 1    B[1] = 2
+
+the function should return "3" (it is optimal not to destroy any bridge).
+
+Assume that:
+
+        N is an integer within the range [1..50,000];
+        each element of arrays A, B is an integer within the range [0..N];
+        distance from guard post 0 to any other post is not greater than 900 bridges.
+
+Complexity:
+
+        expected worst-case time complexity is O(N*log(N));
+        expected worst-case space complexity is O(N), beyond input storage (not counting the storage required for input arguments).
+
+Elements of input arrays can be modified.
+Copyright 2009–2017 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+======================================================================================================================================================
+
+
+https://math.stackexchange.com/questions/1523551/number-of-paths-from-root-to-a-node-in-a-tree
+
+
+
+
+
+-Create tree from (A,B)
+	+Create nodes
+	+Each line A->B: make connection from nodes[a]->b 
+	+Each node: loop through its connections and mark (it = parent of child node)
+	+Loop from leaves to root: bubble group length
+	+O(N)
+
+-Group nodes by group length of that node can make (From 1->N)
+	+Each node => correct group[its.groupLength]	
+	+O(N)
+-
+
+
+======================================================================================================================================================
+
+function multiplyBigResult(a, b) {
+	if(a > b) {
+		var t= a;
+		a = b;
+		b = t;
+	}
+	
+	var multiplies = [];
+	while(a != 0) {		
+		var aUnit = a%10;		
+		multiplies.push(aUnit*b);			
+		a = Math.floor(a/10);		
+	}
+	
+	var remain = 0;
+	var result = [];
+	
+	for(var i=0; i<multiplies.length; i++) {
+		var multiply = multiplies[i] + remain;
+		var unit = multiply%10;
+		remain = Math.floor(multiply/10);
+		result.push(unit);
+	}
+	
+	
+	return remain + result.reverse().join("");
+}
+
+solution ([0, 1], [1, 2]);
+solution([0, 1, 1, 3, 3, 6, 7], [1, 2, 3, 4, 5, 3, 5]);
+
+multiplyBigResult(11, 25);
+multiplyBigResult(2500000000, 50001);
+multiplyBigResult(2500000000, 50000);
+
+
+
+Case 1:
+ 0:1,1:2,2:3,3:4,4:5,5:6,6:7,7:8,8:9, 
+
+Case 2:
+0:1,0:2,1:3,3:4,3:5,3:6,2:7,7:8,7:9, 
+
+
+======================================================================================================================================================
+	var abc= "abc";
+}
+
+function joinArrays(nextNodes) {
+	var results = [];
+	
+	for(var i=0; i<nextNodes.length; i++) {
+		var nodes = nextNodes[i];
+		for(var j=0; j<nodes.length; j++) {
+			results.push(nodes[j]);
+		}		
+	}
+	
+	return results;	
+}
+
+function log(A, B, index) {
+	var N = A.length;
+	var result = "";
+	var count = 3;
+	
+	for(var i=index; i<index+count && i<N; i++) {
+		result += A[i]+ ":" + B[i] + ",";
+	}
+	
+	return result;
+}
+
+function log(A, index) {
+	var N = A.length;
+	var result = "";
+	var count = 5;
+	
+	for(var i=index; i<index+count && i<N; i++) {
+		result += A[i]+ ",";
+	}
+	
+	return result;
+}
+
+
+solution(
+[0,2,4,7,9,10,15,26,29,31,32,33,34,36,8,37,42,44,45,46,51,56,57,60,61,41,63,67,68,71,72,73,78,80,81,16,84,85,86,87,90,91,93,59,98,99,105,106,77,107,117,118,115,124,129,132,122,133,134,142,143,149,150,48,152,159,156,165,11,166,168,128,92,169,170,171,172,174,176,179,181,183,160,186,154,22,187,189,167,191,192,39,195,196,197,52,96,199,74,200,158,182,201,139,164,202,193,161,203,204,206,211,217,38,220,221,222,108,223,225,62,226,125,227,54,229,230,231,237,238,239,82,243,147,246,250,3,153,76,251,252,254,19,255,40,257,261,137,190,30,262,146,47,126,265,266,120,14,269,236,270,173,271,210,273,163,274,276,97,101,278,109,281,282,283,111,13,287,289,35,100,290,188,178,291,1,209,277,293,17,141,43,198,21,194,218,294,184,151,247,295,103,296,235,127,298,268,299,88,212,6,70,275,302,303,208,116,69,155,27,241,148,140,304,12,145,306,305,307,28,18,259,284,308,301,83,75,310,89,144,58,311,313,53,94,66,314,300,65,64,214,24,253,112,234,286,249,180,315,130,316,131,135,288,317,219,138,79,228,5,216,175,185,205,263,104,123,232,110,25,245,215,157,285,256,318,102,258,233,55,121,264,23,177,20,319,207,114,49,213,244,312,224,162,260,95,280,248,267,113,309,50,242,292,240,119,279,136,297,272],
+[124,175,250,108,147,230,17,115,61,122,41,118,310,8,280,183,261,80,80,115,137,251,72,175,41,43,271,186,264,235,207,147,300,221,16,210,20,201,123,176,65,228,59,192,110,309,235,77,53,275,156,115,141,208,299,122,38,269,108,269,277,70,48,139,168,156,53,11,136,259,128,92,318,240,246,227,5,83,137,289,243,160,53,154,22,264,114,167,21,110,39,193,316,254,52,96,273,74,97,158,182,238,139,164,260,193,161,130,259,144,146,65,38,27,219,112,108,299,282,62,208,125,75,54,121,130,147,94,290,47,82,319,147,205,180,3,153,76,114,297,300,19,119,40,177,266,137,190,30,47,146,47,126,104,23,120,14,185,236,208,173,23,210,50,163,148,234,97,101,290,109,135,282,287,111,13,69,308,35,100,317,188,178,155,1,209,277,180,17,141,43,198,21,194,218,185,184,151,247,95,103,79,235,127,58,268,135,88,212,6,70,275,65,279,208,116,69,155,27,241,148,140,317,12,145,213,305,259,28,18,259,284,267,301,83,75,20,89,144,58,215,316,53,94,66,112,300,65,64,214,24,253,112,234,286,249,180,121,130,245,131,135,288,5,219,138,79,228,5,216,175,185,205,263,104,123,232,110,25,245,215,157,285,256,272,102,258,233,55,121,264,23,177,20,213,207,114,49,213,244,312,224,162,260,95,280,248,267,113,309,50,242,292,240,119,279,136,297,272,320]
+);
+
+
+got 29 expected 900
+solution([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28], [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,21,22,23,24,26,27]);
+
+solution([0,1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8,9]);
+
+
+
+
+
+20
+49
+
+1222776=216*9*17*37
+1580 = 79*2*10
+
+got 1580 expected 1222776
+N = 320
+
+A = 0,2,4,7,9,										B= 124,175,250,108,147, 
+10,15,26,29,31,										230,17,115,61,122, 
+32,33,34,36,8,										41,118,310,8,280,  
+37,42,44,45,46,										183,261,80,80,115, 
+51,56,57,60,61,										137,251,72,175,41,
+41,63,67,68,71, 									43,271,186,264,235, 
+72,73,78,80,81, 									207,147,300,221,16,	
+16,84,85,86,87,										210,20,201,123,176, 
+90,91,93,59,98, 									65,228,59,192,110, 	
+99,105,106,77,107									309,235,77,53,275, 	
+117,118,115,124,129,								156,115,141,208,299,		
+132,122,133,134,142,								122,38,269,108,269, 		
+143,149,150,48,152, 								277,70,48,139,168,		
+159,156,165,11,166,									156,53,11,136,259, 	
+168,128,92,169,170,									128,92,318,240,246,	
+171,172,174,176,179, 								227,5,83,137,289, 		
+181,183,160,186,154,								243,160,53,154,22,		
+22,187,189,167,191,									264,114,167,21,110,	
+192,39,195,196,197,									39,193,316,254,52,	
+52,96,199,74,200, 									96,273,74,97,158,	
+158,182,201,139,164, 								182,238,139,164,260,
+202,193,161,203,204, 								193,161,130,259,144,		
+206,211,217,38,220,									146,65,38,27,219, 	
+221,222,108,223,225,								112,108,299,282,62,		
+62,226,125,227,54, 									208,125,75,54,121,	
+229,230,231,237,238,								130,147,94,290,47, 		
+239,82,243,147,246,									82,319,147,205,180,	
+250,3,153,76,251, 									3,153,76,114,297,	
+252,254,19,255,40, 									300,19,119,40,177,	
+257,261,137,190,30, 								266,137,190,30,47,		
+262,146,47,126,265, 								146,47,126,104,23,		
+266,120,14,269,236,									120,14,185,236,208, 	
+270,173,271,210,273,								173,23,210,50,163, 		
+163,274,276,97,101, 								148,234,97,101,290, 		
+278,109,281,282,283,								109,135,282,287,111,		
+111,13,287,289,35, 									13,69,308,35,100, 	
+100,290,188,178,291, 								317,188,178,155,1,		
+1,209,277,293,17, 									209,277,180,17,141,	
+141,43,198,21,194,									43,198,21,194,218,	
+218,294,184,151,247,								185,184,151,247,95,		
+295,103,296,235,127,								103,79,235,127,58,		
+298,268,299,88,212,									268,135,88,212,6, 	
+6,70,275,302,303,									70,275,65,279,208,	
+208,116,69,155,27, 									116,69,155,27,241,	
+241,148,140,304,12, 								148,140,317,12,145,		
+145,306,305,307,28,									213,305,259,28,18, 	
+18,259,284,308,301, 								259,284,267,301,83,		
+83,75,310,89,144, 									75,20,89,144,58, 	
+58,311,313,53,94,									215,316,53,94,66,	
+66,314,300,65,64, 									112,300,65,64,214,	
+214,24,253,112,234,									24,253,112,234,286, 	
+286,249,180,315,130,								249,180,121,130,245,		
+316,131,135,288,317,								131,135,288,5,219, 		
+219,138,79,228,5, 									138,79,228,5,216,	
+216,175,185,205,263, 								175,185,205,263,104,		
+104,123,232,110,25,									123,232,110,25,245, 	
+245,215,157,285,256,								215,157,285,256,272,		
+318,102,258,233,55, 								102,258,233,55,121,		
+121,264,23,177,20, 									264,23,177,20,213,	
+319,207,114,49,213, 								207,114,49,213,244, 		
+244,312,224,162,260, 								312,224,162,260,95, 		
+95,280,248,267,113, 								280,248,267,113,309, 		
+309,50,242,292,240, 								50,242,292,240,119,		
+119,279,136,297,272,								279,136,297,272,320, 		
+
+
+
+
+
+solution(
+[0,2,4,7,9,10,15,26,29,31,32,33,34,36,8,37,42,44,45,46,51,56,57,60,61,41,63,67,68,71,72,73,78,80,81,16,84,85,86,87,90,91,93,59,98,99,105,106,77,107,117,118,115,124,129,132,122,133,134,142,143,149,150,48,152,159,156,165,11,166,168,128,92,169,170,171,172,174,176,179,181,183,160,186,154,22,187,189,167,191,192,39,195,196,197,52,96,199,74,200,158,182,201,139,164,202,193,161,203,204,206,211,217,38,220,221,222,108,223,225,62,226,125,227,54,229,230,231,237,238,239,82,243,147,246,250,3,153,76,251,252,254,19,255,40,257,261,137,190,30,262,146,47,126,265,266,120,14,269,236,270,173,271,210,273,163,274,276,97,101,278,109,281,282,283,111,13,287,289,35,100,290,188,178,291,1,209,277,293,17,141,43,198,21,194,218,294,184,151,247,295,103,296,235,127,298,268,299,88,212,6,70,275,302,303,208,116,69,155,27,241,148,140,304,12,145,306,305,307,28,18,259,284,308,301,83,75,310,89,144,58,311,313,53,94,66,314,300,65,64,214,24,253,112,234,286,249,180,315,130,316,131,135,288,317,219,138,79,228,5,216,175,185,205,263,104,123,232,110,25,245,215,157,285,256,318,102,258,233,55,121,264,23,177,20,319,207,114,49,213,244,312,224,162,260,95,280,248,267,113,309,50,242,292,240,119,279,136,297,272],
+[124,175,250,108,147,230,17,115,61,122,41,118,310,8,280,183,261,80,80,115,137,251,72,175,41,43,271,186,264,235,207,147,300,221,16,210,20,201,123,176,65,228,59,192,110,309,235,77,53,275,156,115,141,208,299,122,38,269,108,269,277,70,48,139,168,156,53,11,136,259,128,92,318,240,246,227,5,83,137,289,243,160,53,154,22,264,114,167,21,110,39,193,316,254,52,96,273,74,97,158,182,238,139,164,260,193,161,130,259,144,146,65,38,27,219,112,108,299,282,62,208,125,75,54,121,130,147,94,290,47,82,319,147,205,180,3,153,76,114,297,300,19,119,40,177,266,137,190,30,47,146,47,126,104,23,120,14,185,236,208,173,23,210,50,163,148,234,97,101,290,109,135,282,287,111,13,69,308,35,100,317,188,178,155,1,209,277,180,17,141,43,198,21,194,218,185,184,151,247,95,103,79,235,127,58,268,135,88,212,6,70,275,65,279,208,116,69,155,27,241,148,140,317,12,145,213,305,259,28,18,259,284,267,301,83,75,20,89,144,58,215,316,53,94,66,112,300,65,64,214,24,253,112,234,286,249,180,121,130,245,131,135,288,5,219,138,79,228,5,216,175,185,205,263,104,123,232,110,25,245,215,157,285,256,272,102,258,233,55,121,264,23,177,20,213,207,114,49,213,244,312,224,162,260,95,280,248,267,113,309,50,242,292,240,119,279,136,297,272,320]
+);
+
+
+
+======================================================================================================================================================
+Correct value but slow:
+
+function createNode(a) {
+	return {
+		value: a,
+		parentNode: null,
+		directChilds: [],
+		connectWithValues: [],
+		childCount: 0,
+		max2: -1,
+		max3: -1
+	};	
+}
+
+function createTree(A, B) {
+	var N = A.length;
+	var nodes = [];
+	var exists = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];	
+		if(!exists[a]) {
+			nodes[a] = createNode(a);
+			exists[a] = true;
+		}
+		
+		if(!exists[b]) {
+			nodes[b] = createNode(b);
+			exists[b] = true;
+		}
+		
+		nodes[a].connectWithValues.push(b);
+		nodes[b].connectWithValues.push(a);
+	}
+	
+	var rootValue = A[0];
+	var root =  nodes[rootValue];
+	var usedList = [];
+	usedList[rootValue] = true;
+		
+	var levels = [[root]];	
+	for(var level = 0;;level++) {
+		var currentNodes = levels[level]; 
+		var nextNodes = [];
+		for(var i=0; i<currentNodes.length; i++) {
+			var node = currentNodes[i];				
+			for(var j=0; j<node.connectWithValues.length; j++) {
+				var childValue = node.connectWithValues[j];
+				if(usedList[childValue]) {
+					continue;
+				}
+				
+				var childNode = nodes[childValue];
+				node.directChilds.push(childNode);
+				childNode.parentNode = node;
+				nextNodes.push(childNode);
+				usedList[childValue] = true;
+			}
+			
+			node.connectWithValues = undefined;
+		}	
+
+		if(nextNodes.length === 0) {
+			break;
+		}
+		
+		levels[level + 1] = nextNodes;
+	}
+	
+	//N
+	for(var i=levels.length - 1; i>0; i--) {
+		var nodes = levels[i];
+		for(var j=0; j<nodes.length; j++) {
+			var node = nodes[j];
+			node.parentNode.childCount += 1 + node.childCount;
+		}
+	}
+
+	return levels;
+}
+
+function increaseCount(node, subCount) {
+	var currentNode = node.parentNode;
+	while(currentNode) {
+		currentNode.childCount += subCount;
+		currentNode = currentNode.parentNode;
+	}		
+}
+
+function log(A, B, index) {
+	var N = A.length;
+	var result = "";
+	var count = 3;
+	
+	for(var i=index; i<index+count && i<N; i++) {
+		result += A[i]+ ":" + B[i] + ",";
+	}
+	
+	return result;
+}
+
+function log(A, index) {
+	var N = A.length;
+	var result = "";
+	var count = 5;
+	
+	for(var i=index; i<index+count && i<N; i++) {
+		result += A[i]+ ",";
+	}
+	
+	return result;
+}
+
+function solution(A, B) {
+	var N = A.length + 1;		
+	var levels = createTree(A,B);		
+	// console.log(levels);
+	
+	var nodes = [];
+	for(var i=levels.length - 1; i>=0; i--) {
+		var level = levels[i];
+		for(var j=0; j<level.length; j++) {
+			var node = level[j];
+			nodes.push(node);
+		}
+	}
+	
+	// console.log(nodes.length);
+	var max3 = N;
+	var maxIndex = nodes.length-1;
+	
+	for(var i=0; i<maxIndex; i++) {
+		var node = nodes[i];
+		var subCount = node.childCount+1;
+		var remainCount = N - subCount;		
+		increaseCount(node, -subCount);
+		
+		var max2 = remainCount;
+		for(var j=i+1; j<nodes.length; j++) {
+			var node1 = nodes[j];
+			var group1 =  node1.childCount+1;
+			max2 = Math.max(max2, group1*(remainCount - group1));
+		}
+		
+		max3 = Math.max(max3, subCount*max2);			
+		increaseCount(node, subCount);
+	}
+		
+	return max3.toString();
+}
+
+
+======================================================================================================================================================
+Correct value but slow 1:
+
+function createNode(a) {
+	return {
+		value: a,
+		parentNode: null,
+		directChilds: [],
+		connectWithValues: [],
+		childCount: 0,
+		max2: -1,
+		max3: -1,
+		indirectCount: 0
+	};	
+}
+
+function createTree(A, B) {
+	var N = A.length;
+	var nodes = [];
+	var exists = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];	
+		if(!exists[a]) {
+			nodes[a] = createNode(a);
+			exists[a] = true;
+		}
+		
+		if(!exists[b]) {
+			nodes[b] = createNode(b);
+			exists[b] = true;
+		}
+		
+		nodes[a].connectWithValues.push(b);
+		nodes[b].connectWithValues.push(a);
+	}
+	
+	var rootValue = A[0];
+	var root =  nodes[rootValue];
+	var usedList = [];
+	usedList[rootValue] = true;
+		
+	var levels = [[root]];	
+	for(var level = 0;;level++) {
+		var currentNodes = levels[level]; 
+		var nextNodes = [];
+		for(var i=0; i<currentNodes.length; i++) {
+			var node = currentNodes[i];				
+			for(var j=0; j<node.connectWithValues.length; j++) {
+				var childValue = node.connectWithValues[j];
+				if(usedList[childValue]) {
+					continue;
+				}
+				
+				var childNode = nodes[childValue];
+				node.directChilds.push(childNode);
+				childNode.parentNode = node;
+				nextNodes.push(childNode);
+				usedList[childValue] = true;
+			}
+			
+			node.connectWithValues = undefined;
+		}	
+
+		if(nextNodes.length === 0) {
+			break;
+		}
+		
+		levels[level + 1] = nextNodes;
+	}
+	
+	//N
+	for(var i=levels.length - 1; i>0; i--) {
+		var nodes = levels[i];
+		for(var j=0; j<nodes.length; j++) {
+			var node = nodes[j];
+			node.parentNode.childCount += 1 + node.childCount;
+		}
+	}
+
+	return levels;
+}
+
+function flattenLevels(levels) {
+	var nodes = [];
+	for(var i=levels.length - 2; i>=0; i--) {
+		var level = levels[i];
+		for(var j=0; j<level.length; j++) {
+			var node = level[j];
+			nodes.push(node);
+		}
+	}
+	
+	return nodes;
+}
+
+function solution(A, B) {
+	var N = A.length + 1;	
+	var levels = createTree(A,B);	
+	var nodes = flattenLevels(levels);
+	// nodes: not include leaves
+	
+	var max3 = N;
+	var maxIndex = nodes.length-1;
+	
+	for(var i=0; i<maxIndex; i++) {
+		var node = nodes[i];
+		var subCount = node.childCount+1;
+		var remainCount = N - subCount;				
+		var affectedNode =  node.parentNode;
+		
+		var max2 = remainCount;
+		for(var j=i+1; j<nodes.length; j++) {
+			var node1 = nodes[j];
+			var group1 =  node1.childCount+1;
+			
+			if(affectedNode && affectedNode.value === node1.value) {
+				group1 -= subCount;
+				affectedNode = node1.parentNode;
+			}
+			
+			max2 = Math.max(max2, group1*(remainCount - group1));
+		}
+		
+		max3 = Math.max(max3, subCount*max2);	
+	}
+		
+	return max3.toString();
+}
+======================================================================================================================================================
+
+Correct value but slow 2:
+
+function createNode(a) {
+	return {
+		value: a,
+		parentNode: null,
+		directChilds: [],
+		connectWithValues: [],
+		childCount: 0,
+		max2: -1,
+		max3: -1,
+		indirectCount: 0
+	};	
+}
+
+function createTree(A, B) {
+	var N = A.length;
+	var nodes = [];
+	var exists = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];	
+		if(!exists[a]) {
+			nodes[a] = createNode(a);
+			exists[a] = true;
+		}
+		
+		if(!exists[b]) {
+			nodes[b] = createNode(b);
+			exists[b] = true;
+		}
+		
+		nodes[a].connectWithValues.push(b);
+		nodes[b].connectWithValues.push(a);
+	}
+	
+	var rootValue = A[0];
+	var root =  nodes[rootValue];
+	var usedList = [];
+	usedList[rootValue] = true;
+		
+	var levels = [[root]];	
+	for(var level = 0;;level++) {
+		var currentNodes = levels[level]; 
+		var nextNodes = [];
+		for(var i=0; i<currentNodes.length; i++) {
+			var node = currentNodes[i];				
+			for(var j=0; j<node.connectWithValues.length; j++) {
+				var childValue = node.connectWithValues[j];
+				if(usedList[childValue]) {
+					continue;
+				}
+				
+				var childNode = nodes[childValue];
+				node.directChilds.push(childNode);
+				childNode.parentNode = node;
+				nextNodes.push(childNode);
+				usedList[childValue] = true;
+			}
+			
+			node.connectWithValues = undefined;
+		}	
+
+		if(nextNodes.length === 0) {
+			break;
+		}
+		
+		levels[level + 1] = nextNodes;
+	}
+	
+	//N
+	for(var i=levels.length - 1; i>0; i--) {
+		var nodes = levels[i];
+		for(var j=0; j<nodes.length; j++) {
+			var node = nodes[j];
+			node.parentNode.childCount += 1 + node.childCount;
+		}
+	}
+
+	return levels;
+}
+
+function flattenLevels(levels) {
+	var nodes = [];
+	for(var i=levels.length - 2; i>=0; i--) {
+		var level = levels[i];
+		for(var j=0; j<level.length; j++) {
+			var node = level[j];
+			nodes.push(node);
+		}
+	}
+	
+	return nodes;
+}
+
+function solution(A, B) {
+	var N = A.length + 1;	
+	var levels = createTree(A,B);	
+	var nodes = flattenLevels(levels);
+	// nodes: not include leaves
+	
+	var max3 = N;
+	var maxIndex = nodes.length-1;
+	
+	for(var i=0; i<maxIndex; i++) {
+		var node = nodes[i];
+		var subCount = node.childCount+1;
+		var remainCount = N - subCount;		
+		
+		// Math.floor may cause slow
+		var middle = Math.floor(remainCount / 2);
+		
+		var affectedNode =  node.parentNode;		
+			
+		var maxSplit = 1;
+		for(var j=i+1; j<nodes.length; j++) {
+			var node1 = nodes[j];
+			var group1 =  node1.childCount+1;
+			
+			if(affectedNode && affectedNode.value === node1.value) {
+				group1 -= subCount;
+				affectedNode = node1.parentNode;
+			}
+			
+			var group2 = remainCount - group1;
+			maxSplit = Math.max(maxSplit, Math.min(group1, group2));
+			
+			if(maxSplit === middle) {
+				break;
+			}
+		}
+		
+		var max2 = Math.max(remainCount, maxSplit*(remainCount-maxSplit));
+		max3 = Math.max(max3, subCount*max2);	
+	}
+		
+	return max3.toString();
+}
+
+
+======================================================================================================================================================
+
+Correct value but slow 3:
+
+function createNode(a) {
+	return {
+		value: a,
+		parentNode: null,
+		directChilds: [],
+		connectWithValues: [],
+		childCount: 0,
+		max2: -1,
+		max3: -1,
+		indirectCount: 0
+	};	
+}
+
+function createTree(A, B) {
+	var N = A.length;
+	var nodes = [];
+	var exists = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];	
+		if(!exists[a]) {
+			nodes[a] = createNode(a);
+			exists[a] = true;
+		}
+		
+		if(!exists[b]) {
+			nodes[b] = createNode(b);
+			exists[b] = true;
+		}
+		
+		nodes[a].connectWithValues.push(b);
+		nodes[b].connectWithValues.push(a);
+	}
+	
+	var rootValue = A[0];
+	var root =  nodes[rootValue];
+	var usedList = [];
+	usedList[rootValue] = true;
+		
+	var levels = [[root]];	
+	for(var level = 0;;level++) {
+		var currentNodes = levels[level]; 
+		var nextNodes = [];
+		for(var i=0; i<currentNodes.length; i++) {
+			var node = currentNodes[i];				
+			for(var j=0; j<node.connectWithValues.length; j++) {
+				var childValue = node.connectWithValues[j];
+				if(usedList[childValue]) {
+					continue;
+				}
+				
+				var childNode = nodes[childValue];
+				node.directChilds.push(childNode);
+				childNode.parentNode = node;
+				nextNodes.push(childNode);
+				usedList[childValue] = true;
+			}
+			
+			node.connectWithValues = undefined;
+		}	
+
+		if(nextNodes.length === 0) {
+			break;
+		}
+		
+		levels[level + 1] = nextNodes;
+	}
+	
+	//N
+	for(var i=levels.length - 1; i>0; i--) {
+		var nodes = levels[i];
+		for(var j=0; j<nodes.length; j++) {
+			var node = nodes[j];
+			node.parentNode.childCount += 1 + node.childCount;
+		}
+	}
+
+	return levels;
+}
+
+function flattenLevels(levels) {
+	var nodes = [];
+	for(var i=levels.length - 2; i>=0; i--) {
+		var level = levels[i];
+		for(var j=0; j<level.length; j++) {
+			var node = level[j];
+			nodes.push(node);
+		}
+	}
+	
+	return nodes;
+}
+
+function solution(A, B) {
+	var N = A.length + 1;	
+	var levels = createTree(A,B);	
+	var nodes = flattenLevels(levels);
+	// nodes: not include leaves
+	
+	var max3 = N;
+	var maxIndex = nodes.length-1;
+	
+	for(var i=0; i<maxIndex; i++) {
+		var node = nodes[i];
+		var subCount = node.childCount+1;
+		var remainCount = N - subCount;		
+		var affectedNode =  node.parentNode;		
+			
+		var maxSplit = 1;
+		for(var j=i+1; j<nodes.length; j++) {
+			var node1 = nodes[j];
+			var group1 =  node1.childCount+1;
+			
+			if(affectedNode && affectedNode.value === node1.value) {
+				group1 -= subCount;
+				affectedNode = node1.parentNode;
+			}
+			
+			var group2 = remainCount - group1;
+			maxSplit = Math.max(maxSplit, Math.min(group1, group2));
+		}
+		
+		var max2 = Math.max(remainCount, maxSplit*(remainCount-maxSplit));
+		max3 = Math.max(max3, subCount*max2);	
+	}
+		
+	return max3.toString();
+}
+
+======================================================================================================================================================
+Wrong
+
+function createNode(a) {
+	return {
+		value: a,
+		parentNode: null,
+		connectWithValues: [],
+		childCount: 0,
+		max2: -1,
+		max3: -1,
+		directChilds: [],
+		isBridge: false,
+		indirectCount: 0
+	};	
+}
+
+function createTree(A, B) {
+	var N = A.length;
+	var nodes = [];
+	var exists = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];	
+		if(!exists[a]) {
+			nodes[a] = createNode(a);
+			exists[a] = true;
+		}
+		
+		if(!exists[b]) {
+			nodes[b] = createNode(b);
+			exists[b] = true;
+		}
+		
+		nodes[a].connectWithValues.push(b);
+		nodes[b].connectWithValues.push(a);
+	}
+	
+	var rootValue = A[0];
+	var root =  nodes[rootValue];
+	var usedList = [];
+	usedList[rootValue] = true;
+		
+	var levels = [[root]];	
+	for(var level = 0;;level++) {
+		var currentNodes = levels[level]; 
+		var nextNodes = [];
+		for(var i=0; i<currentNodes.length; i++) {
+			var node = currentNodes[i];				
+			for(var j=0; j<node.connectWithValues.length; j++) {
+				var childValue = node.connectWithValues[j];
+				if(usedList[childValue]) {
+					continue;
+				}
+				
+				var childNode = nodes[childValue];
+				childNode.parentNode = node;
+				node.directChilds.push(childNode);
+				nextNodes.push(childNode);
+				usedList[childValue] = true;
+			}
+			
+			node.connectWithValues = undefined;
+		}	
+
+		if(nextNodes.length === 0) {
+			break;
+		}
+		
+		levels[level + 1] = nextNodes;
+	}
+	
+	//N
+	for(var i=levels.length - 1; i>0; i--) {
+		var nodes = levels[i];
+		for(var j=0; j<nodes.length; j++) {
+			var node = nodes[j];
+			node.parentNode.childCount += 1 + node.childCount;
+		}
+	}
+
+	return levels;
+}
+
+function flattenLevels(levels) {
+	var nodes = [];
+	for(var i=levels.length - 1; i>=0; i--) {
+		var level = levels[i];
+		for(var j=0; j<level.length; j++) {
+			var node = level[j];
+			
+			if(node.isBridge || (node.indirectCount === 0 && node.childCount === 0)) {
+				continue;
+			}
+			
+			nodes.push(node);
+		}
+	}
+	
+	return nodes;
+}
+
+function reduceBridge(levels) {
+	var maxIndex = levels.length - 1;
+	for(var i=1; i<maxIndex; i++) {
+		var nodes = levels[i];
+		for(var j=0; j<nodes.length; j++) {
+			var node = nodes[j];
+			if(node.directChilds.length !== 1) {
+				continue;
+			}
+			
+			node.isBridge = true;
+			var child = node.directChilds[0];
+			child.parentNode = node.parentNode;
+			child.indirectCount = node.indirectCount + 1;
+		}
+	}
+	
+	// directChilds of each node maybe not correct after this
+	// must loop from leaves to top to correct
+	// O(N)
+}
+
+function log(A, index) {
+	var N = A.length;
+	var result = "";
+	var count = 5;
+	
+	for(var i=index; i<index+count && i<N; i++) {
+		result += A[i]+ ",";
+	}
+	
+	return result;
+}
+
+function solution(A, B) {
+	var N = A.length + 1;
+	if(N>100) {
+		return "";
+	}	
+	
+	var levels = createTree(A,B);	
+	reduceBridge(levels);
+	
+	var nodes = flattenLevels(levels);
+	// nodes: not include leaves
+	// console.log(nodes);
+	 
+	var max3 = N;
+	var maxIndex = nodes.length-1;
+	
+	// debugger;
+	for(var i=0; i<maxIndex; i++) {
+		var node = nodes[i];
+		var subCount = node.childCount+1;
+		var remainCount = N - subCount;		
+		
+		for(var k=0; k<=node.indirectCount; k++, subCount++, remainCount--) {
+			var middle = Math.floor(remainCount / 2);
+					
+			var affectedNode =  node.parentNode;			
+			var maxSplit = 1;
+			
+			for(var j=i+1; j<nodes.length; j++) {
+				var node1 = nodes[j];
+				var group1 =  node1.childCount+1;
+				
+				if(affectedNode && affectedNode.value === node1.value) {
+					group1 -= subCount;
+					affectedNode = node1.parentNode;
+				}
+				
+				var min = group1;
+				var max = group1 + node1.indirectCount;
+				if(max <= middle) {
+					group1 = max;
+				} else if(min < middle && middle < max) {
+					group1 = middle;
+				}
+				
+				var group2 = remainCount - group1;
+				maxSplit = Math.max(maxSplit, Math.min(group1, group2));
+				
+				 if(group1 === middle) {
+					 break;
+				}
+			}
+			
+			var max2 = Math.max(remainCount, maxSplit*(remainCount-maxSplit));
+			max3 = Math.max(max3, subCount*max2);
+		}		
+	}
+	
+	return max3.toString();
+}
+
+
+
+solution ([0, 2, 3, 4, 4, 6, 7], [1, 1, 1, 1, 5, 3, 5]);
+
+solution ([0, 1, 1, 3, 3, 6, 7], [1, 2, 3, 4, 5, 3, 5]);
+
+
+
+solution ([0, 1, 1, 3, 3, 6, 7], [1, 2, 3, 4, 5, 3, 5]);
+
+======================================================================================================================================================
+
+Wrong value but fast:
+
+function createNode(a) {
+	return {
+		value: a,
+		parentNode: null,
+		connectWithValues: [],
+		childCount: 0,
+		groupLength: 0
+	};	
+}
+
+function createTree(A, B) {
+	var N = A.length;
+	var nodes = [];
+	var exists = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];	
+		if(!exists[a]) {
+			nodes[a] = createNode(a);
+			exists[a] = true;
+		}
+		
+		if(!exists[b]) {
+			nodes[b] = createNode(b);
+			exists[b] = true;
+		}
+		
+		nodes[a].connectWithValues.push(b);
+		nodes[b].connectWithValues.push(a);
+	}
+	
+	var rootValue = A[0];
+	var root =  nodes[rootValue];
+	var usedList = [];
+	usedList[rootValue] = true;
+		
+	var levels = [[root]];	
+	for(var level = 0;;level++) {
+		var currentNodes = levels[level]; 
+		var nextNodes = [];
+		for(var i=0; i<currentNodes.length; i++) {
+			var node = currentNodes[i];				
+			for(var j=0; j<node.connectWithValues.length; j++) {
+				var childValue = node.connectWithValues[j];
+				if(usedList[childValue]) {
+					continue;
+				}
+				
+				var childNode = nodes[childValue];
+				childNode.parentNode = node;
+				nextNodes.push(childNode);
+				usedList[childValue] = true;
+			}
+			
+			node.connectWithValues = undefined;
+		}	
+
+		if(nextNodes.length == 0) {
+			break;
+		}
+		
+		levels[level + 1] = nextNodes;
+	}
+	
+	//N
+	for(var i=levels.length - 1; i>0; i--) {
+		var level = levels[i];
+		for(var j=0; j<level.length; j++) {
+			var node = level[j];
+			node.parentNode.childCount += 1 + node.childCount;
+		}
+	}
+
+	return [levels, nodes];
+}
+
+function groupNodes(nodes, N) {
+	var nodesGroupByGroupLengths = [];
+	for(var i=0; i<=N; i++) {
+		nodesGroupByGroupLengths[i] = {
+			nextValue: -1, 
+			prevValue: -1, 
+			nodes: [], 
+			value: i,
+			nodeLength: 0
+		};
+	}
+	
+	for(var i=0; i<N; i++) {
+		var node = nodes[i];
+		var groupLength = node.childCount + 1;
+		
+		node.groupLength = groupLength;
+		var nodesGroupByGroupLength = nodesGroupByGroupLengths[groupLength];
+		
+		nodesGroupByGroupLength.nodes.push(node);
+		nodesGroupByGroupLength.nodeLength++;
+	}
+	
+	var nodesGroupByGroupLength = nodesGroupByGroupLengths[1];
+	for(var i=2; i<=N; i++) {
+		var nextNode = nodesGroupByGroupLengths[i];
+		if(nextNode.nodeLength == 0) {
+			nextNode.prevValue = nodesGroupByGroupLength.value;
+			continue;			
+		}
+		
+		nodesGroupByGroupLength.nextValue = i;
+		nextNode.prevValue = nodesGroupByGroupLength.value;
+		nodesGroupByGroupLength = nextNode;
+	}
+	
+	var nodesGroupByGroupLength = nodesGroupByGroupLengths[N];
+	for(var i=N; i>=1; i--) {
+		var prevNode = nodesGroupByGroupLengths[i];
+		if(prevNode.nodeLength == 0) {
+			prevNode.nextValue = nodesGroupByGroupLength.value;
+			continue;			
+		}
+		
+		nodesGroupByGroupLength = prevNode;
+	}
+	
+	return nodesGroupByGroupLengths;
+}
+
+function cutNode(node, i, nodesGroupByGroupLengths) {
+	var affectedNode = node;
+	var affectedNodes = [];
+	while(affectedNode) {		
+		nodesGroupByGroupLengths[affectedNode.groupLength].nodeLength--;
+		
+		var groupLength = affectedNode.groupLength - i;		
+		var nodesGroupByGroupLength = nodesGroupByGroupLengths[groupLength];
+		nodesGroupByGroupLength.nodeLength++;
+		
+		if(nodesGroupByGroupLength.nodeLength > 1) {
+			affectedNode = affectedNode.parentNode;
+			continue;
+		}
+		
+		var prevValue=nodesGroupByGroupLength.prevValue;
+		var nextValue=nodesGroupByGroupLength.nextValue;
+		if(prevValue != -1) {
+			nodesGroupByGroupLengths[prevValue].nextValue = groupLength;			
+		}		
+		
+		if(nextValue != -1) {
+			nodesGroupByGroupLengths[nextValue].prevValue = groupLength;
+		}
+		
+		affectedNode = affectedNode.parentNode;
+	}
+}
+
+function rejoinNode(node, i, nodesGroupByGroupLengths) {
+	var affectedNode = node;
+	while(affectedNode) {	
+		nodesGroupByGroupLengths[affectedNode.groupLength].nodeLength++;
+		
+		var groupLength = affectedNode.groupLength - i;		
+		var nodesGroupByGroupLength = nodesGroupByGroupLengths[groupLength];
+		nodesGroupByGroupLength.nodeLength--;
+		
+		if(nodesGroupByGroupLength.nodeLength >= 1) {
+			affectedNode = affectedNode.parentNode;
+			continue;
+		}
+		
+		var prevValue=nodesGroupByGroupLength.prevValue;
+		var nextValue=nodesGroupByGroupLength.nextValue;
+		if(prevValue != -1) {
+			nodesGroupByGroupLengths[prevValue].nextValue = nodesGroupByGroupLengths[nextValue].value;			
+		}		
+		
+		if(nextValue != -1) {
+			nodesGroupByGroupLengths[nextValue].prevValue = nodesGroupByGroupLengths[prevValue].value;		
+		}
+		
+		affectedNode = affectedNode.parentNode;
+	}
+}
+
+function solution(A, B) {
+	var N = A.length + 1;	
+	var treeInfo = createTree(A,B);	
+	var levels = treeInfo[0];
+	var nodes = treeInfo[1];
+	var nodesGroupByGroupLengths = groupNodes(nodes, N);		
+	var max3 = N;
+	
+	// debugger;
+	for(var i=2; i<N - 1; i++) {
+		var nodesGroupByGroupLength = nodesGroupByGroupLengths[i];
+		if(nodesGroupByGroupLength.nodeLength == 0) {
+			continue;
+		}
+		
+		var remain = N - i;
+		
+		max3 = Math.max(max3, remain*i);
+		
+		var remainMiddle = Math.floor(remain/ 2);
+		var middleGroup = nodesGroupByGroupLengths[remainMiddle];
+		
+		if(middleGroup.nodeLength > 1) {
+			max3 = Math.max(max3, remainMiddle*(remain - remainMiddle)*i);
+			continue;
+		}
+			
+		var max2 = remain;
+		for(var j=0; j<nodesGroupByGroupLength.nodes.length; j++) {
+			var node = nodesGroupByGroupLength.nodes[j];
+			cutNode(node, i, nodesGroupByGroupLengths);	
+			
+			var maxSplit = middleGroup.nodeLength ? remainMiddle : findMaxSplit(nodesGroupByGroupLengths, i, remainMiddle, N, remain);
+			
+			max2 = Math.max(max2, maxSplit*(remain - maxSplit));
+			//console.log(node.value + " " + maxSplit + " " + max2);
+			//console.log(nodesGroupByGroupLengths);
+		
+			rejoinNode(node, i, nodesGroupByGroupLengths);
+			
+			nodesGroupByGroupLengths[node.groupLength].nodeLength--;	
+		}	
+		
+		max3 = Math.max(max3, max2*i);	
+	}
+	
+	
+	return max3.toString();
+}
+
+function findMaxSplit(nodesGroupByGroupLengths, i, middle, N, remain) {		
+	for(var prev=middle-1,next=middle+1; ;) {
+		if(0<=prev && nodesGroupByGroupLengths[prev].nodeLength > 0) {
+			return prev;
+		}
+		
+		if(next <=N && nodesGroupByGroupLengths[next].nodeLength > 0) {
+			return remain - next;
+		}
+		
+		prev--;
+		next++;
+		
+		if(prev < 0 && next> N) {
+			break;
+		}
+	}
+	
+	return -1;
+}
+
+
+function log(A, index) {
+	var N = A.length;
+	var result = "";
+	var count = 5;
+	
+	for(var i=index; i<index+count && i<N; i++) {
+		result += A[i]+ ",";
+	}
+	
+	return result;
+}
+
+
+solution ([0, 0, 0, 2, 2, 4, 4], [1, 2, 3, 4, 5, 6, 7]);
+
+solution ([0, 0, 0, 0, 0, 5, 6, 7, 8], [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+solution ([0, 0, 0, 0, 0, 0, 0, 6, 7], [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+
+
+
+solution ([0, 1, 1, 3, 3, 6, 7], [1, 2, 3, 4, 5, 3, 5]);
+solution ([0, 2, 3, 4, 4, 6, 7], [1, 1, 1, 1, 5, 3, 5]);
+
+
+	
+	if(max3 == 32) {
+		var index=0;
+		max3= log(B,index);
+	}
+
+
+	if(N>100) {
+		return "";
+	}
+	
+
+
+======================================================================================================================================================
+
+Fast 2:
+
+
+function createNode(a) {
+	return {
+		value: a,
+		parentNode: null,
+		connectWithValues: [],
+		groupLength: 1
+	};	
+}
+
+function createGroup(i) {
+	return  {
+		nextValue: -1, 
+		prevValue: -1, 
+		nodes: [], 
+		value: i,
+		nodeLength: 0
+	};
+}
+
+function initNodes(A, B, N, groups) {
+	var nodes = [];
+	var exists = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];	
+		if(!exists[a]) {
+			nodes[a] = createNode(a);
+			exists[a] = true;
+		}
+		
+		if(!exists[b]) {
+			nodes[b] = createNode(b);
+			exists[b] = true;
+		}
+		
+		nodes[a].connectWithValues.push(b);
+		nodes[b].connectWithValues.push(a);
+				
+		groups[i] = createGroup(i);
+	}
+	
+	return nodes;
+}
+
+function createGroups(A, B, nodeCount) {
+	var N = A.length;
+	
+	var groups = [];
+	var nodes =  initNodes(A, B, N, groups);
+	groups[N] = createGroup(N);
+	groups[nodeCount] = createGroup(nodeCount);
+	
+	var rootValue = A[0];
+	var root =  nodes[rootValue];
+	var usedList = [];
+	usedList[rootValue] = true;
+		
+	var currentNodes = [rootValue];	
+	var sortedNodesByLevel = [];
+	
+	while(currentNodes.length) {
+		var nextNodes = [];
+		for(var i=0; i<currentNodes.length; i++) {
+			var node = nodes[currentNodes[i]];	
+			sortedNodesByLevel.push(node);	
+			
+			for(var j=0; j<node.connectWithValues.length; j++) {
+				var childValue = node.connectWithValues[j];
+				if(usedList[childValue]) {
+					continue;
+				}
+				
+				nodes[childValue].parentNode = node;				
+				nextNodes.push(childValue);
+				usedList[childValue] = true;
+			}
+		}	
+		
+		currentNodes = nextNodes;
+	}
+		
+	for(var i=N; i >= 1; i--) {
+		var node = sortedNodesByLevel[i];
+		var groupLength = node.groupLength;
+		node.parentNode.groupLength += groupLength;
+		groups[groupLength].nodes.push(node);
+	}
+	
+	var group = groups[1];
+	group.nodeLength = group.nodes.length;
+	
+	for(var i=2; i<=nodeCount; i++) {
+		var nextNode = groups[i];		
+		nextNode.prevValue = group.value;		
+		nextNode.nodeLength = nextNode.nodes.length;
+		
+		if(nextNode.nodeLength) {
+			group.nextValue = i;
+			group = nextNode;		
+		}
+	}	
+	
+	var group = groups[nodeCount];
+	for(var i=nodeCount-1; i>=1; i--) {
+		var prevNode = groups[i];
+		prevNode.nextValue = group.value;
+		
+		if(prevNode.nodeLength) {		
+			group = prevNode;		
+		}
+	}
+	
+	return groups;
+}
+
+
+function cutNode(node, i, groups) {
+	groups[node.groupLength].nodeLength--;
+	
+	var affectedNode = node.parentNode;
+	while(affectedNode) {		
+		groups[affectedNode.groupLength].nodeLength--;
+		
+		var groupLength = affectedNode.groupLength - i;		
+		var group = groups[groupLength];
+		group.nodeLength++;
+		
+		affectedNode = affectedNode.parentNode;
+	}
+}
+
+function rejoinNode(node, i, groups) {
+	groups[node.groupLength].nodeLength++;
+	
+	var affectedNode = node.parentNode;
+	while(affectedNode) {	
+		groups[affectedNode.groupLength].nodeLength++;
+		
+		var groupLength = affectedNode.groupLength - i;		
+		var group = groups[groupLength];
+		group.nodeLength--;
+		
+		affectedNode = affectedNode.parentNode;
+	}
+}
+
+function findMaxSplit(groups, i, middle, N, remain) {		
+	for(var prev=middle-1,next=middle+1; ;) {
+		if(0<prev && groups[prev].nodeLength > 0) {
+			return prev;
+		}
+		
+		if(next<remain && groups[next].nodeLength > 0) {
+			return remain - next;
+		}
+		
+		prev--;
+		next++;
+		
+		if(prev <= 0 && next >= remain) {
+			break;
+		}
+	}
+	
+	return -1;
+}
+
+function solution(A, B) {
+	var N = A.length;	
+	var nodeCount = N + 1;
+	var groups = createGroups(A,B, nodeCount);	
+	
+	var max3 = nodeCount;
+	
+	// debugger;
+	for(var i=2; i<N; i++) {
+		var group = groups[i];
+		if(group.nodeLength == 0) {
+			continue;
+		}
+		
+		var remain = nodeCount - i;		
+		max3 = Math.max(max3, remain*i);
+		
+		var remainMiddle = Math.floor(remain/ 2);
+		var middleGroup = groups[remainMiddle];
+		
+		if(middleGroup.nodeLength > 1) {
+			max3 = Math.max(max3, remainMiddle*(remain - remainMiddle)*i);
+			continue;
+		}
+			
+		var maxSplit = -1;
+		for(var j=0; j<group.nodes.length; j++) {
+			var node = group.nodes[j];
+			cutNode(node, i, groups);	
+			
+			var groupSplit = middleGroup.nodeLength ? remainMiddle : findMaxSplit(groups, i, remainMiddle, nodeCount, remain);
+			
+			maxSplit = Math.max(maxSplit, groupSplit);
+		
+			rejoinNode(node, i, groups);
+			
+			groups[node.groupLength].nodeLength--;	
+		}	
+		
+		max3 = Math.max(max3, maxSplit*(remain - maxSplit)*i);	
+	}
+	
+	
+	return max3.toString();
+}
+
+
+
+
+======================================================================================================================================================
+
+Fast 3:
+
+
+function createNode(a) {
+	return {
+		value: a,
+		parentNode: null,
+		connectWithValues: [],
+		groupLength: 1
+	};	
+}
+
+function createGroup(i) {
+	return  {
+		nextValue: -1, 
+		prevValue: -1, 
+		nodes: [], 
+		value: i,
+		nodeLength: 0
+	};
+}
+
+function initNodes(A, B, N, groups) {
+	var nodes = [];
+	var exists = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];	
+		if(!exists[a]) {
+			nodes[a] = createNode(a);
+			exists[a] = true;
+		}
+		
+		if(!exists[b]) {
+			nodes[b] = createNode(b);
+			exists[b] = true;
+		}
+		
+		nodes[a].connectWithValues.push(b);
+		nodes[b].connectWithValues.push(a);
+				
+		groups[i] = createGroup(i);
+	}
+	
+	return nodes;
+}
+
+function createGroups(A, B, nodeCount) {
+	var N = A.length;
+	
+	var groups = [];
+	var nodes =  initNodes(A, B, N, groups);
+	groups[N] = createGroup(N);
+	groups[nodeCount] = createGroup(nodeCount);
+	
+	var rootValue = A[0];
+	var root =  nodes[rootValue];
+	var usedList = [];
+	usedList[rootValue] = true;
+		
+	var currentNodes = [rootValue];	
+	var sortedNodesByLevel = [];
+	
+	while(currentNodes.length) {
+		var nextNodes = [];
+		for(var i=0; i<currentNodes.length; i++) {
+			var node = nodes[currentNodes[i]];	
+			sortedNodesByLevel.push(node);	
+			
+			for(var j=0; j<node.connectWithValues.length; j++) {
+				var childValue = node.connectWithValues[j];
+				if(usedList[childValue]) {
+					continue;
+				}
+				
+				nodes[childValue].parentNode = node;				
+				nextNodes.push(childValue);
+				usedList[childValue] = true;
+			}
+		}	
+		
+		currentNodes = nextNodes;
+	}
+		
+	for(var i=N; i >= 1; i--) {
+		var node = sortedNodesByLevel[i];
+		var groupLength = node.groupLength;
+		node.parentNode.groupLength += groupLength;
+		groups[groupLength].nodes.push(node);
+	}
+	
+	var group = groups[1];
+	group.nodeLength = group.nodes.length;
+	
+	for(var i=2; i<=nodeCount; i++) {
+		var nextNode = groups[i];		
+		nextNode.prevValue = group.value;		
+		nextNode.nodeLength = nextNode.nodes.length;
+		
+		if(nextNode.nodeLength) {
+			group.nextValue = i;
+			group = nextNode;		
+		}
+	}	
+	
+	var group = groups[nodeCount];
+	for(var i=nodeCount-1; i>=1; i--) {
+		var prevNode = groups[i];
+		prevNode.nextValue = group.value;
+		
+		if(prevNode.nodeLength) {		
+			group = prevNode;		
+		}
+	}
+	
+	return groups;
+}
+
+function cutNode(node, i, groups) {
+	groups[node.groupLength].nodeLength--;
+	
+	var affectedNode = node.parentNode;
+	while(affectedNode) {		
+		groups[affectedNode.groupLength].nodeLength--;
+		
+		var groupLength = affectedNode.groupLength - i;	
+		groups[groupLength].nodeLength++;
+		
+		affectedNode = affectedNode.parentNode;
+	}
+}
+
+function rejoinNode(node, i, groups) {
+	groups[node.groupLength].nodeLength++;
+	
+	var affectedNode = node.parentNode;
+	while(affectedNode) {	
+		groups[affectedNode.groupLength].nodeLength++;
+		
+		var groupLength = affectedNode.groupLength - i;		
+		groups[groupLength].nodeLength--;
+		
+		affectedNode = affectedNode.parentNode;
+	}
+}
+
+function findMaxSplit(groups, i, middle, N, remain) {		
+	for(var prev=middle-1,next=middle+1; ;) {
+		if(0<prev && groups[prev].nodeLength > 0) {
+			return prev;
+		}
+		
+		if(next<remain && groups[next].nodeLength > 0) {
+			return remain - next;
+		}
+		
+		prev--;
+		next++;
+		
+		if(prev <= 0 && next >= remain) {
+			break;
+		}
+	}
+	
+	return -1;
+}
+
+function solution(A, B) {
+	var N = A.length;	
+	var nodeCount = N + 1;	
+	var max3 = nodeCount;
+	
+	var groups = createGroups(A,B, nodeCount);	
+	var group;
+	for(var i=groups[1].nextValue; i<N; i=group.nextValue) {
+		group = groups[i];
+		
+		var remain = nodeCount - i;		
+		max3 = Math.max(max3, remain*i);
+		
+		var remainMiddle = Math.floor(remain/ 2);
+		var middleGroup = groups[remainMiddle];		
+		if(middleGroup.nodeLength > 1) {
+			max3 = Math.max(max3, remainMiddle*(remain - remainMiddle)*i);	
+			continue;			
+		}
+			
+		var maxSplit = -1;		
+		for(var j=0; j<group.nodes.length; j++) {
+			var node = group.nodes[j];				
+			cutNode(node, i, groups);	
+			
+			var groupSplit = middleGroup.nodeLength ? remainMiddle : findMaxSplit(groups, i, remainMiddle, nodeCount, remain);			
+			if(maxSplit < groupSplit) {
+				maxSplit = groupSplit;
+			}
+		
+			rejoinNode(node, i, groups);				
+			groups[node.groupLength].nodeLength--;	
+		}	
+		
+		max3 = Math.max(max3, maxSplit*(remain - maxSplit)*i);	
+	}
+	
+	
+	return max3.toString();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

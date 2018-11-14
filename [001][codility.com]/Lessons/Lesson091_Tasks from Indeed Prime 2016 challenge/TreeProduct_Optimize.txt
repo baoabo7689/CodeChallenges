@@ -1,0 +1,213 @@
+
+function createNode(a) {
+	return {
+		value: a,
+		parentNode: null,
+		connectWithValues: [],
+		groupLength: 1
+	};	
+}
+
+function createGroup(i) {
+	return  {
+		nextValue: -1, 
+		prevValue: -1, 
+		nodes: [], 
+		value: i,
+		nodeLength: 0
+	};
+}
+
+function initNodes(A, B, N, groups) {
+	var nodes = [];
+	var exists = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var b = B[i];	
+		if(!exists[a]) {
+			nodes[a] = createNode(a);
+			exists[a] = true;
+		}
+		
+		if(!exists[b]) {
+			nodes[b] = createNode(b);
+			exists[b] = true;
+		}
+		
+		nodes[a].connectWithValues.push(b);
+		nodes[b].connectWithValues.push(a);
+				
+		groups[i] = createGroup(i);
+	}
+	
+	return nodes;
+}
+
+function createGroups(A, B, nodeCount) {
+	var N = A.length;
+	
+	var groups = [];
+	var nodes =  initNodes(A, B, N, groups);
+	groups[N] = createGroup(N);
+	groups[nodeCount] = createGroup(nodeCount);
+	
+	var rootValue = A[0];
+	var root =  nodes[rootValue];
+	var usedList = [];
+	usedList[rootValue] = true;
+		
+	var currentNodes = [rootValue];	
+	var sortedNodesByLevel = [];
+	
+	while(currentNodes.length) {
+		var nextNodes = [];
+		for(var i=0; i<currentNodes.length; i++) {
+			var node = nodes[currentNodes[i]];	
+			sortedNodesByLevel.push(node);	
+			
+			for(var j=0; j<node.connectWithValues.length; j++) {
+				var childValue = node.connectWithValues[j];
+				if(usedList[childValue]) {
+					continue;
+				}
+				
+				nodes[childValue].parentNode = node;				
+				nextNodes.push(childValue);
+				usedList[childValue] = true;
+			}
+		}	
+		
+		currentNodes = nextNodes;
+	}
+		
+	for(var i=N; i >= 1; i--) {
+		var node = sortedNodesByLevel[i];
+		var groupLength = node.groupLength;
+		node.parentNode.groupLength += groupLength;
+		groups[groupLength].nodes.push(node);
+	}
+	
+	var group = groups[1];
+	group.nodeLength = group.nodes.length;
+	
+	for(var i=2; i<=nodeCount; i++) {
+		var nextNode = groups[i];		
+		nextNode.prevValue = group.value;		
+		nextNode.nodeLength = nextNode.nodes.length;
+		
+		if(nextNode.nodeLength) {
+			group.nextValue = i;
+			group = nextNode;		
+		}
+	}	
+	
+	var group = groups[nodeCount];
+	for(var i=nodeCount-1; i>=1; i--) {
+		var prevNode = groups[i];
+		prevNode.nextValue = group.value;
+		
+		if(prevNode.nodeLength) {		
+			group = prevNode;		
+		}
+	}
+	
+	return groups;
+}
+
+function cutNode(node, i, groups) {
+	groups[node.groupLength].nodeLength--;
+	
+	var affectedNode = node.parentNode;
+	while(affectedNode) {		
+		groups[affectedNode.groupLength].nodeLength--;
+		
+		var groupLength = affectedNode.groupLength - i;	
+		groups[groupLength].nodeLength++;
+		
+		affectedNode = affectedNode.parentNode;
+	}
+}
+
+function rejoinNode(node, i, groups) {
+	groups[node.groupLength].nodeLength++;
+	
+	var affectedNode = node.parentNode;
+	while(affectedNode) {	
+		groups[affectedNode.groupLength].nodeLength++;
+		
+		var groupLength = affectedNode.groupLength - i;		
+		groups[groupLength].nodeLength--;
+		
+		affectedNode = affectedNode.parentNode;
+	}
+}
+
+function findMaxSplit(groups, i, middle, N, remain) {		
+	for(var prev=middle-1,next=middle+1; ;) {
+		if(0<prev && groups[prev].nodeLength > 0) {
+			return prev;
+		}
+		
+		if(next<remain && groups[next].nodeLength > 0) {
+			return remain - next;
+		}
+		
+		prev--;
+		next++;
+		
+		if(prev <= 0 && next >= remain) {
+			break;
+		}
+	}
+	
+	return -1;
+}
+
+function solution(A, B) {
+	var N = A.length;	
+	var nodeCount = N + 1;	
+	var max3 = nodeCount;
+	
+	var groups = createGroups(A,B, nodeCount);	
+	var group;
+	for(var i=groups[1].nextValue; i<N; i=group.nextValue) {
+		group = groups[i];
+		
+		var remain = nodeCount - i;		
+		max3 = Math.max(max3, remain*i);
+		
+		var remainMiddle = Math.floor(remain/ 2);
+		var middleGroup = groups[remainMiddle];		
+		if(middleGroup.nodeLength > 1) {
+			max3 = Math.max(max3, remainMiddle*(remain - remainMiddle)*i);	
+			continue;			
+		}
+			
+		var maxSplit = -1;		
+		for(var j=0; j<group.nodes.length; j++) {
+			var node = group.nodes[j];				
+			cutNode(node, i, groups);	
+			
+			var groupSplit = middleGroup.nodeLength ? remainMiddle : findMaxSplit(groups, i, remainMiddle, nodeCount, remain);			
+			if(maxSplit < groupSplit) {
+				maxSplit = groupSplit;
+			}
+		
+			rejoinNode(node, i, groups);				
+			groups[node.groupLength].nodeLength--;	
+		}	
+		
+		max3 = Math.max(max3, maxSplit*(remain - maxSplit)*i);	
+	}
+	
+	
+	return max3.toString();
+}
+
+
+
+
+
+
+
+

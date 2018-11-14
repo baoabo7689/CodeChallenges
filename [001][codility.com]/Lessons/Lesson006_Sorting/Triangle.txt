@@ -1,0 +1,258 @@
+
+
+A zero-indexed array A consisting of N integers is given. A triplet (P, Q, R) is triangular if 0 ≤ P < Q < R < N and:
+
+        A[P] + A[Q] > A[R],
+        A[Q] + A[R] > A[P],
+        A[R] + A[P] > A[Q].
+
+For example, consider array A such that:
+  A[0] = 10    A[1] = 2    A[2] = 5
+  A[3] = 1     A[4] = 8    A[5] = 20
+
+Triplet (0, 2, 4) is triangular.
+
+Write a function:
+
+    int solution(int A[], int N);
+
+that, given a zero-indexed array A consisting of N integers, returns 1 if there exists a triangular triplet for this array and returns 0 otherwise.
+
+For example, given array A such that:
+  A[0] = 10    A[1] = 2    A[2] = 5
+  A[3] = 1     A[4] = 8    A[5] = 20
+
+the function should return 1, as explained above. Given array A such that:
+  A[0] = 10    A[1] = 50    A[2] = 5
+  A[3] = 1
+
+the function should return 0.
+
+Assume that:
+
+        N is an integer within the range [0..100,000];
+        each element of array A is an integer within the range [−2,147,483,648..2,147,483,647].
+
+Complexity:
+
+        expected worst-case time complexity is O(N*log(N));
+        expected worst-case space complexity is O(N), beyond input storage (not counting the storage required for input arguments).
+
+Elements of input arrays can be modified.
+Copyright 2009–2017 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+=================================================================================================================================================================================================================
+
+For A 
+	-Sort A:
+		a_1 < a_2 < ... < a_n 
+
+	-If exist (a_i, a_k, a_l) makes Triangle
+		<=> a_i + a_k > a_l
+		<=> a_k-1 + a_k > a_l >= a_k+1
+		<=> a_k-1 + a_k > a_k+1
+		<=> choose (k-1, k, k+1)
+	
+
+=================================================================================================================================================================================================================
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+
+function solution(A) {	
+	var sortedA = sort(A);
+	
+	var N = sortedA.length;
+	if(N === 0) {
+		return 0;
+	}	
+	
+	var maxIndex = N - 2;
+	for(var i=0; i<maxIndex;i++) {
+		if(sortedA[i] + sortedA[i+1] > sortedA[i+2]) {
+			return 1;
+		}
+	}
+	
+	return 0;
+}
+
+
+function sort(A) {
+	var N = A.length;
+	
+	if(N === 0) {
+		return A;
+	}
+		
+	var max = A[0];
+	
+	var aInfo = [];
+	
+	for(var i=0; i<N; i++) {
+		var value = A[i];
+		
+		if(value <= 0) {
+			continue;
+		}
+		
+		aInfo.push({ value: value, digit: value});
+		
+		if(max < value) {
+			max = value;
+		}
+	}
+	
+	N = aInfo.length;
+	var M = Math.round(Math.log(max)/Math.log(10));
+		
+	for(var i=0; i<=M; i++) {
+		var sortBaskets = initSortBaskets();
+		
+		for(var j=0; j<N;j++) {
+			var a = aInfo[j];
+			var digit = a.digit % 10;
+			a.digit = a.digit ? Math.floor(a.digit / 10) : 0;
+			
+			sortBaskets[digit].push(a);
+		}
+		
+		aInfo = combineSortBaskets(sortBaskets);
+	}	
+	
+	var result = [];	
+	for(var i=0; i<N; i++) {		
+		result.push(aInfo[i].value);
+	}
+	
+	return result;
+}
+
+
+function initSortBaskets() {
+	var sortBaskets = [];
+	
+	for(var i=0;i<10;i++) {
+		sortBaskets.push([]);
+	}
+	
+	return sortBaskets;
+}
+
+
+function combineSortBaskets(sortBaskets) {
+	var result = [];
+	
+	for(var i=0;i<10;i++) {
+		var basket = sortBaskets[i];
+		
+		for(var j=0;j<basket.length; j++) {
+			result.push(basket[j]);		
+		}
+	}
+	
+	return result;
+}
+
+
+solution([-2, -2, -2]);
+sort([1,7, 5, 6, 9, 10]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,193 @@
+
+
+A string is balanced if it consists of exactly two different characters and both of those characters appear exactly the same number of times. For example: "aabbab" is balanced (both 'a' and 'b' occur three times) but "aabba" is not balanced ('a' occurs three times, 'b' occurs two times). String "aabbcc" is also not balanced (it contains three different letters).
+
+A substring of string S is a string that consists of consecutive letters in S. For example: "ompu" is a substring of "computer" but "cmptr" is not.
+
+Write a function solution that, given a string S, returns the length of the longest balanced substring of S.
+
+Examples:
+
+1. Given S = "cabbacc", the function should return 4 ("abba" is the longest balanced substring).
+
+2. Given S = "abababa", the function should return 6 ("ababab" and "bababa" are the longest balanced substrings).
+
+3. Given S = "aaaaaaa", the function should return 0 (S does not contain a balanced substring).
+
+Write an efficient algorithm for the following assumptions:
+
+        N is an integer within the range [1..100,000];
+        string S consists only of lowercase letters (a−z).
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+======================================================================================================================================================
+
+O(N)
+
+-Separate each substring has 2 characters, then count max length 
+
+
+======================================================================================================================================================
+
+
+function solution(S) {
+	console.log(S);
+	
+	var N = S.length;
+	var counts = [];
+	for(var i=0; i<N; i++) {
+		var sI =  S[i];
+		if(counts[sI] == undefined) {
+			counts[sI] = 0;
+		}
+	}
+	
+	var j=0;
+	var usedCharacters = "";
+	var result = 0;
+	
+	for(var i=0; i<N; i++) {
+		var sI =  S[i];
+		
+		for(; j<N; j++) {
+			var sJ = S[j];
+			if(usedCharacters.length == 2 && usedCharacters.indexOf(sJ) == -1) {
+				break;
+			}
+			
+			if(usedCharacters.indexOf(sJ) == -1) {
+				usedCharacters += sJ;
+			}
+			
+			counts[sJ]++;
+		}
+				
+		// console.log(usedCharacters);
+		// console.log(j);
+		if(usedCharacters.length < 2 && j == N) {
+			break;
+		}
+			
+		// debugger;		
+		var prefixSums = [];
+		for(var left=i; left<j; left++) {
+			prefixSums[left] = 0;			
+		}
+		
+		var start = S[i];
+		prefixSums[i-1] = 0; 
+		var maxSum = 0;
+		var minSum = j-i+1;
+		
+		for(var left=i; left<j; left++) {
+			var sLeft = S[left];
+			if(sLeft == start) {
+				var next =  prefixSums[left-1] + 1;
+			} else {
+				var next =  prefixSums[left-1] - 1;
+			}	
+			
+			prefixSums[left] = next;
+			maxSum = Math.max(next, maxSum);
+			minSum = Math.min(next, minSum);				
+		}
+		
+		var startSum = [];
+		for(var left=i; left<j; left++) {
+			var prefixSum = prefixSums[left];
+			if(startSum[prefixSum] == undefined) {
+				startSum[prefixSum] = left;
+			}			
+		}
+		
+		var endSum = [];
+		for(var left=j-1; left>=i; left--) {
+			var prefixSum = prefixSums[left];
+			if(endSum[prefixSum] == undefined) {
+				endSum[prefixSum] = left;
+			}			
+		}
+				
+		console.log(startSum);	
+		console.log(endSum);		
+		
+		for(var sum=minSum; sum<=maxSum; sum++) {
+			if(sum == 0 && endSum[0] != undefined && endSum[0] - i >= 1) {
+				result = Math.max(result, endSum[0] - i + 1);
+				continue;
+			}
+			
+			var length = endSum[sum] - startSum[sum];
+			if(length == 1) {
+				continue;
+			}
+			
+			result = Math.max(result, length);			
+		}
+		
+		if(j == N) {
+			break;
+		}
+		
+		for(; i<j; i++) {
+			var sI =  S[i];
+			
+			counts[sI]--;	
+			if(counts[sI] == 0) {
+				var remainCharacter = usedCharacters.indexOf(sI) == 0 ? 1 : 0;
+				usedCharacters = usedCharacters[remainCharacter] + sJ;				
+				break;				
+			}					
+		}	
+		
+		//console.log(counts);
+		//console.log(i + " " + j);			
+	}	
+	
+	return result;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

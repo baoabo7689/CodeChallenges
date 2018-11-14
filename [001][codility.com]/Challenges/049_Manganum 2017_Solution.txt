@@ -1,0 +1,317 @@
+
+function sort(A) {	
+	var N = A.length;
+	
+	var positive = [];
+	var negative = [];
+	
+	for(var i=0; i<N; i++) {		
+		var value = A[i];
+		if(value < 0) {
+			negative.push(value);
+		}else{
+			positive.push(value);
+		}
+	}
+	
+	positive = sortBySignIndicator(positive);
+	negative = sortBySignIndicator(negative, true);
+	var sortedA = negative.concat(positive);	
+	
+	return sortedA;
+}
+
+function sortBySignIndicator(A, isNegative) {
+	var N = A.length;
+	
+	if(N === 0) {
+		return A;
+	}
+		
+	var max = Math.abs(A[0]);
+	
+	var aInfo = [];
+	
+	for(var i=0; i<N; i++) {
+		var value = isNegative ? -A[i] : A[i];
+		
+		aInfo.push({ value:  value, digit: value});
+		
+		if(max < value) {
+			max = value;
+		}
+	}
+	
+	N = aInfo.length;
+	var M = Math.round(Math.log(max)/Math.log(10));
+		
+	for(var i=0; i<=M; i++) {
+		var sortBaskets = initSortBaskets();
+		
+		for(var j=0; j<N;j++) {
+			var a = aInfo[j];
+			var digit = a.digit % 10;	
+			a.digit = a.digit ? Math.floor(a.digit / 10) : 0;
+			
+			sortBaskets[digit].push(a);
+		}
+					
+		aInfo = combineSortBaskets(sortBaskets);
+	}	
+	
+	var result = [];	
+	
+	if(isNegative) {
+		for(var i=N-1; i>=0; i--) {		
+			result.push(-aInfo[i].value);
+		}		
+	} else {
+		for(var i=0; i<N; i++) {		
+			result.push(aInfo[i].value);
+		}		
+	}
+	
+	return result;
+}
+
+function initSortBaskets() {
+	var sortBaskets = [];
+	
+	for(var i=0;i<10;i++) {
+		sortBaskets.push([]);
+	}
+	
+	return sortBaskets;
+}
+
+function combineSortBaskets(sortBaskets) {
+	var result = [];
+	
+	for(var i=0;i<10;i++) {
+		var basket = sortBaskets[i];
+		
+		for(var j=0;j<basket.length; j++) {
+			result.push(basket[j]);		
+		}
+	}	
+	
+	return result;
+}
+
+function createNode(point, x, y, turnLeft, turnRight) {
+	return  {
+		x: x,
+		y: y,
+		point: point,
+		turnLeft: turnLeft,
+		turnRight: turnRight
+	};
+}
+
+function createLine(value) {
+	return {
+		value: value,
+		nodes: [],
+		canAccess: false,
+		maxPoint: 0
+	};
+}
+
+function parseTable(X, Y, T) {
+	var chinQueen;
+	
+	var pointValues = {
+		p: 1,
+		q: 10,
+		X: 0
+	};
+	
+	var lValues = [];
+	var rValues = [];
+	var yValues = [];
+	
+	var lExists = [];
+	var rExists = [];
+	var yExists = [];
+	
+	var nodes = [];	
+	var lLines = [];	
+	var rLines = [];	
+	var yLines = [];
+	
+	for(var i=0; i<T.length; i++) {
+		var chess = T[i];
+		var x = X[i];
+		var y = Y[i];		
+		var point = pointValues[chess];
+		var turnLeft = x + y;
+		var turnRight = y - x;
+		var node = createNode(point, x, y, turnLeft, turnRight);
+		
+		if(point === 0) {
+			chinQueen = node;
+			continue;
+		}
+				
+		nodes[x + "_" + y] = node;
+		
+		if(!lExists[turnLeft]) {
+			lValues.push(turnLeft);
+			lLines[turnLeft] = createLine(turnLeft);
+			lExists[turnLeft] = true;
+		}
+		
+		if(!rExists[turnRight]) {
+			rValues.push(turnRight);
+			rLines[turnRight] = createLine(turnRight);
+			rExists[turnRight] = true;
+		}
+		
+		if(!yExists[y]) {
+			yValues.push(y);
+			yLines[y] = createLine(y);
+			yExists[y] = true;
+		}
+	}	
+	
+	lValues = removeUnaccessibleValues(lValues, chinQueen.turnLeft);
+	rValues = removeUnaccessibleValues(rValues, chinQueen.turnRight);
+	yValues = removeUnaccessibleValues(yValues, chinQueen.y);
+	
+	//console.log(chinQueen);
+	//console.log(lValues);
+	//console.log(rValues);
+	//console.log(yValues);
+	
+	for(var i=0; i<T.length; i++) {
+		var chess = T[i];
+		var x = X[i];
+		var y = Y[i];
+		var point = pointValues[chess];
+			
+		if(point === 0) {
+			continue;
+		}
+		
+		var node = nodes[x + "_" + y];
+		if(node.turnLeft < chinQueen.turnLeft || 
+		   node.turnRight < chinQueen.turnRight) {	
+			continue;
+		}
+		
+		yLines[y].nodes.push(x);		
+	}
+	
+	// console.log(yLines);
+	
+	for(var i=0; i<yValues.length; i++) {
+		var y = yValues[i];
+		var yLine = yLines[y];
+		yLine.nodes = sort(yLine.nodes);
+		
+		for(var j=0; j<yLine.nodes.length; j++) {
+			var x = yLine.nodes[j];	
+			var node=nodes[x + "_" + y];
+			
+			lLines[node.turnLeft].nodes.push(node);		
+			rLines[node.turnRight].nodes.push(node);
+		}		
+	}	
+
+	initStartNode(lValues, rValues, lLines, rLines);
+	// console.log(chinQueen);
+	// console.log(lValues);
+	// console.log(rValues);
+	// console.log(yValues);
+	// console.log(lLines);
+	// console.log(rLines);
+	// console.log(yLines);
+		
+	
+	for(var i=0; i<lValues.length || i<rValues.length; i++) {
+		if(i<rValues.length) {
+			var value = rValues[i];	
+			updateLine(rLines[value], lLines, i. lValues);		
+		}
+		
+		if(i<lValues.length) {
+			var value = lValues[i];
+			updateLine(lLines[value], rLines, i, rValues);
+		}		
+	}
+}
+
+function solution(X, Y, T) {
+	parseTable(X, Y, T);
+}
+
+function removeUnaccessibleValues(values, minValue) {
+	var result = [];
+	
+	for(var i=0; i<values.length; i++) {
+		var value = values[i];
+		if(value < minValue) {
+			continue;
+		}
+		
+		result.push(value);
+	}
+	
+	result = sort(result);
+	return result;
+}
+
+function initStartNode(lValues, rValues, lLines, rLines) {
+	var lLine = lLines[lValues[0]];	
+	var point = 0;
+	for(var i=0; i<lLine.nodes.length;i++) {
+		var node = lLine.nodes[i];
+		point += node.point;
+		node.maxLeft = point;
+	}
+	
+	var rLine = rLines[rValues[0]];
+	for(var i=0; i<rLine.nodes.length;i++) {
+		var node = rLine.nodes[i];
+		point += node.point;
+		node.maxRight = point;
+	}
+}
+
+function updateLine(line, turnLines, lineIndex, turnValues) {
+	var startIndex = findStartIndex(line.value, turnValues, lineIndex);
+	
+	for(var i=0; i<line.nodes.length; i++) {
+		var node = line.nodes[i];
+	}
+}
+	
+function findStartIndex(lineValue, turnValues, startIndex) {
+	return 0;
+}
+
+solution( [0, 6, 2, 5, 3, 0], [4, 8, 2, 3, 1, 6], "ppqpXp");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

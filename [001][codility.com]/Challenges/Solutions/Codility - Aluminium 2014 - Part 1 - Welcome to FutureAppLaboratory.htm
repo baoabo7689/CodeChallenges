@@ -1,0 +1,589 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Codility - Aluminium 2014 - Part 1 - Welcome to FutureAppLaboratory</title>
+  <meta name="author" content="viennakanon">
+
+  
+  <meta name="description" content="Introduction This is an analysis of Codility - Aluminium 2014 Challenge, Part 1. The problem is, finding the maximum sum of a compact subsequence of &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zh-wang.github.io/blog/2014/06/18/codility-aluminium-2014">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Welcome to FutureAppLaboratory" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!-- Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=Noto+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Noto+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- Load Google Noto Font from local -->
+<link href="/stylesheets/google-noto-fonts.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+</script>
+
+<!-- open new tab for jumping -->
+<script language="javaScript">
+$(document).ready( function () { $("a[href^='http']:not([href*='" + location.hostname + "'])").attr('target', '_blank'); })
+</script>
+
+<!-- enable inline MathJax formula -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-50285032-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+  <meta property="og:title" content="Codility - Aluminium 2014 - Part 1 - Welcome to FutureAppLaboratory" />
+<meta property="og:description" content="Introduction This is an analysis of Codility - Aluminium 2014 Challenge, Part 1. The problem is, finding the maximum sum of a compact subsequence of &hellip;" />
+<meta property="og:url" content="http://zh-wang.github.io/blog/2014/06/18/codility-aluminium-2014/" />
+<meta property="og:image" content="http://zh-wang.github.io/images/psi_storm.jpeg" />
+<meta property="og:author" content="viennakanon" />
+<meta property="og:site_name" content="Welcome to FutureAppLaboratory" />
+<meta property="og:locale" content="ja_JP" />
+<meta property="og:type" content="article" />
+<meta property="fb:app_id" content="749935801705374" />
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Welcome to FutureAppLaboratory</a></h1>
+  
+    <h2>v=（*＾ワ＾*）=v</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zh-wang.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories/swift">Swift</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Codility - Aluminium 2014 - Part 1</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-18T15:54:12+09:00" pubdate data-updated="true"></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://zh-wang.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Introduction</h2>
+
+<p>This is an analysis of <a href="https://codility.com/programmers/challenges/">Codility - Aluminium 2014 Challenge</a>, Part 1.</p>
+
+<ul>
+<li>The problem is, finding the maximum sum of a compact subsequence of array elements after performing a single swap operation. It&rsquo;s a little tricky <a href="http://en.wikipedia.org/wiki/Maximum_subarray_problem">maximal subarray</a> problem.</li>
+<li>For example, given an array {3, -10, 4, 5}, we can swap 3 and -10 to get a compact subsequence {3, 4, 5}, which has the maximum sum 12</li>
+<li>Time bound and space bound are both O(n)</li>
+<li>There exists many algorithms to solve maximal subarray problems, but they cannot directly applied to this problem.</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h2>Analysis</h2>
+
+<ul>
+<li>First, we will take a look at the solution of a CLASSIC maximal subarray problem, which means <strong>swap is not allowed</strong>.</li>
+</ul>
+
+
+<p>For a given array <script type="math/tex"> a_0, a_1, \cdots, a_n-1 </script>,</p>
+
+<p>The maximum sum of a compact subsequence can be expressed by the following formula.</p>
+
+<script type="math/tex; mode=display">
+    \max \{ \sum_{k=i}^j a_k, 0 \leq i < j \leq n - 1 \}
+</script>
+
+
+<p>Beca$use we want the maximal part from <script type="math/tex"> i </script> to <script type="math/tex"> j </script>, by thinking reversely, we can calculate the minimal <a href="http://mathworld.wolfram.com/PartialSum.html">partial sum</a> of sub array <script type="math/tex"> a_0, a_1, \cdots, a_x-1 </script> as <script type="math/tex"> f(x) </script>, minimal partial sum of sub array <script type="math/tex"> a_x+1, a_x+2, \cdots, a_n-1 </script> as <script type="math/tex"> g(x) </script>. Then use the whole sum to subtract them if them are minus values.</p>
+
+<p>let <script type="math/tex"> S </script> to be the accumulation of the given array.</p>
+
+<p>let</p>
+
+<script type="math/tex; mode=display">
+    f(x) = \min \{ \min \{ partial\_sum(p), 0 \leq p \leq x - 1 \} , 0 \}
+</script>
+
+
+<p>to be the minimal partial sum of sub array <script type="math/tex"> a_0, a_1, \cdots, a_x-1 </script>.</p>
+
+<p>let</p>
+
+<script type="math/tex; mode=display">
+    g(x) = \min \{ \min \{ partial\_sum(q), x + 1 \leq q \leq n - 1 \} , 0 \}
+</script>
+
+
+<p>to be the minimal partial sum of sub array <script type="math/tex"> a_x+1, a_x+2, \cdots, a_n-w </script>.</p>
+
+<p>Then we calculate the following formula.</p>
+
+<script type="math/tex; mode=display"> 
+    \max \{ S - f(x) - g(x), 0 \leq x \leq n - 1 \}
+</script>
+
+
+<ul>
+<li>OK, then write above thought into Java, we get the following codes</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">solution</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">inputs</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">inputs</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="n">data</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">inputs</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nf">cal</span><span class="o">(</span><span class="n">data</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">cal</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">S</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">Integer</span> <span class="n">integer</span> <span class="o">:</span> <span class="n">A</span><span class="o">)</span> <span class="n">S</span> <span class="o">+=</span> <span class="n">integer</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">B</span> <span class="o">=</span> <span class="n">partial_sum</span><span class="o">(</span><span class="n">A</span><span class="o">,</span> <span class="n">compAdd</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">F</span> <span class="o">=</span> <span class="n">partial_sum</span><span class="o">(</span><span class="n">B</span><span class="o">,</span> <span class="n">compMin</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Collections</span><span class="o">.</span><span class="na">reverse</span><span class="o">(</span><span class="n">A</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">D</span> <span class="o">=</span> <span class="n">partial_sum</span><span class="o">(</span><span class="n">A</span><span class="o">,</span> <span class="n">compAdd</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">G</span> <span class="o">=</span> <span class="n">partial_sum</span><span class="o">(</span><span class="n">D</span><span class="o">,</span> <span class="n">compMin</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Collections</span><span class="o">.</span><span class="na">reverse</span><span class="o">(</span><span class="n">A</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Collections</span><span class="o">.</span><span class="na">reverse</span><span class="o">(</span><span class="n">G</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kt">int</span> <span class="n">f</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">F</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>            <span class="kt">int</span> <span class="n">g</span> <span class="o">=</span> <span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="n">n</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">G</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">));</span>
+</span><span class='line'>            <span class="n">res</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">res</span><span class="o">,</span> <span class="n">S</span> <span class="o">-</span> <span class="o">(</span><span class="n">f</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">f</span> <span class="o">:</span> <span class="mi">0</span><span class="o">)</span> <span class="o">-</span> <span class="o">(</span><span class="n">g</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">g</span> <span class="o">:</span><span class="mi">0</span><span class="o">));</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">partial_sum</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">data</span><span class="o">,</span> <span class="n">Comparator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">comparator</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">res</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">data</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">res</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">data</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">));</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">Integer</span> <span class="n">lastValue</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">Integer</span> <span class="n">currentValue</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">res</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">comparator</span><span class="o">.</span><span class="na">compare</span><span class="o">(</span><span class="n">lastValue</span><span class="o">,</span> <span class="n">currentValue</span><span class="o">));</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Comparator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">compAdd</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Comparator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compare</span><span class="o">(</span><span class="n">Integer</span> <span class="n">o1</span><span class="o">,</span> <span class="n">Integer</span> <span class="n">o2</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">o1</span> <span class="o">+</span> <span class="n">o2</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Comparator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">compMax</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Comparator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compare</span><span class="o">(</span><span class="n">Integer</span> <span class="n">o1</span><span class="o">,</span> <span class="n">Integer</span> <span class="n">o2</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">o1</span><span class="o">,</span> <span class="n">o2</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Comparator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">compMin</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Comparator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compare</span><span class="o">(</span><span class="n">Integer</span> <span class="n">o1</span><span class="o">,</span> <span class="n">Integer</span> <span class="n">o2</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">o1</span><span class="o">,</span> <span class="n">o2</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<script language="javaScript">
+$(document).ready( function () { $("a[href^='http']:not([href*='" + location.hostname + "'])").attr('target', '_blank'); })
+</script>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">viennakanon</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-18T15:54:12+09:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/algorithm/'>algorithm</a>, <a class='category' href='/blog/categories/codility/'>codility</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://zh-wang.github.io/blog/2014/06/18/codility-aluminium-2014/" data-via="viennakanon" data-counturl="http://zh-wang.github.io/blog/2014/06/18/codility-aluminium-2014/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/05/27/codility-magnesium-2014-challenge-report/" title="Previous Post: Codility - Magnesium 2014">&laquo; Codility - Magnesium 2014</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/06/20/codility-aluminium-2014-p2/" title="Next Post: Codility - Aluminium 2014 - Part 2">Codility - Aluminium 2014 - Part 2 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/10/27/learning-rxswifts-github-sample/">Learning RxSwift&#8217;s Github Sample</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/23/update-ui-with-observer/">Update UI With Observer</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/09/functor-monad-applicative-in-swift/">Functor, Monad, Applicative in Swift</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/25/remove-border-from-android-dialog/">Remove Border From Android Dialog</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/14/codility-calcium-2015/">Codility Calcium 2015</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/algorithm/'>algorithm (12)</a></li><li><a href='/blog/categories/android/'>android (8)</a></li><li><a href='/blog/categories/codility/'>codility (6)</a></li><li><a href='/blog/categories/cpp/'>cpp (1)</a></li><li><a href='/blog/categories/csv/'>csv (1)</a></li><li><a href='/blog/categories/functional-programming/'>functional programming (1)</a></li><li><a href='/blog/categories/ios/'>ios (1)</a></li><li><a href='/blog/categories/jni/'>jni (1)</a></li><li><a href='/blog/categories/mac/'>mac (1)</a></li><li><a href='/blog/categories/mozc/'>mozc (3)</a></li><li><a href='/blog/categories/octopress/'>octopress (2)</a></li><li><a href='/blog/categories/perl/'>perl (1)</a></li><li><a href='/blog/categories/ruby/'>ruby (6)</a></li><li><a href='/blog/categories/rxswift/'>rxswift (1)</a></li><li><a href='/blog/categories/swift/'>swift (19)</a></li><li><a href='/blog/categories/vim/'>vim (2)</a></li><li><a href='/blog/categories/zsh/'>zsh (1)</a></li></ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 97.89473684210526%'>algorithm(12)</a> <a href='/blog/categories/android' style='font-size: 85.26315789473685%'>android(8)</a> <a href='/blog/categories/codility' style='font-size: 78.94736842105263%'>codility(6)</a> <a href='/blog/categories/cpp' style='font-size: 63.1578947368421%'>cpp(1)</a> <a href='/blog/categories/csv' style='font-size: 63.1578947368421%'>csv(1)</a> <a href='/blog/categories/functional-programming' style='font-size: 63.1578947368421%'>functional programming(1)</a> <a href='/blog/categories/ios' style='font-size: 63.1578947368421%'>ios(1)</a> <a href='/blog/categories/jni' style='font-size: 63.1578947368421%'>jni(1)</a> <a href='/blog/categories/mac' style='font-size: 63.1578947368421%'>mac(1)</a> <a href='/blog/categories/mozc' style='font-size: 69.47368421052632%'>mozc(3)</a> <a href='/blog/categories/octopress' style='font-size: 66.3157894736842%'>octopress(2)</a> <a href='/blog/categories/perl' style='font-size: 63.1578947368421%'>perl(1)</a> <a href='/blog/categories/ruby' style='font-size: 78.94736842105263%'>ruby(6)</a> <a href='/blog/categories/rxswift' style='font-size: 63.1578947368421%'>rxswift(1)</a> <a href='/blog/categories/swift' style='font-size: 120.0%'>swift(19)</a> <a href='/blog/categories/vim' style='font-size: 66.3157894736842%'>vim(2)</a> <a href='/blog/categories/zsh' style='font-size: 63.1578947368421%'>zsh(1)</a> </span>
+</section>
+<section>
+      <h1>Latest Tweets</h1>
+      <div id="latest_tweets_seperator" style="clear: both; padding-top: 5px;"></div>
+      <a class="twitter-timeline" href="https://twitter.com/viennakanon" data-widget-id="458542348645830656">Tweets by @viennakanon</a>
+      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+<section>
+  <h1>About Me</h1>
+  <div id="gravatar-aside-profile" style="clear: both; padding-top: 5px;"></div>
+  <div style="clear:both"></div>
+  <script type="text/javascript">
+    $(function(){
+      var url = "http://www.gravatar.com/23650956f68b532003138fb2bec1bbe6.json?callback=?";
+      var $box = $("#gravatar-aside-profile")
+      var $msg = $box.children().children()
+
+      var blink = function(a){a.fadeOut(400).fadeIn(400)};
+      var intervalID = window.setInterval(blink, 1500, $msg)
+
+      var setupProfile = function(data) {
+        var entry = data.entry[0]
+        $box
+          .empty()
+          .css("padding-top", 5)
+          .append($("<img>")
+            .attr("src", entry.thumbnailUrl)
+            .attr("alt", "thumbnail from Gravatar")
+            .css("float", "left")
+            .css("margin-right", 5)
+          )
+          .append($("<div>")
+            .css("padding", "5px 0px")
+            .append($("<h2>")
+              .css("margin-bottom", 5)
+              .append("(<a href='" + entry.profileUrl + "'>@" +
+                  entry.preferredUsername + "<\/a>)")
+            )
+            .append($("<p>")
+              .css("padding-left",90)
+              .css("margin", 0)
+              .css("font-size", "90%")
+              .html(entry.aboutMe.replace(/\n/g, "<br/>"))
+            )
+          )
+      }
+
+      var clearInterval = function(){window.clearInterval(intervalID)}
+      var updateMessageToError = function(){$msg.stop().fadeOut().text("profile load failed.").fadeIn()}
+
+      jQuery.getJSON(url)
+        .always(clearInterval)
+        .done(setupProfile)
+        .fail(updateMessageToError)
+    })
+  
+  </script>
+</section>
+<section>
+    <h1>License</h1>
+    <div id="license_seperator" style="clear: both; padding-top: 5px;"></div>
+    <div class="widget-content" style="font-size: 100%">
+        <img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png">
+        <br>
+        <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type"> The contents in this blog </span>
+        by 
+        <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"> viennakanon </span>
+        is licensed under a 
+        <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"> Creative Commons 表示 - 非営利 - 改変禁止 3.0 Unported License </a>
+        .
+    </div>
+</section>
+<section>
+  <h1>Find me on Github</h1>
+  <div id="github_profile_seperator" style="clear: both; padding-top: 5px;"></div>
+  <iframe src="http://lab.lepture.com/github-cards/card.html?user=zh-wang" frameborder="0" scrolling="1" width="300" height="200" allowtransparency></iframe>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - viennakanon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'viennakanon';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://zh-wang.github.io/blog/2014/06/18/codility-aluminium-2014/';
+        var disqus_url = 'http://zh-wang.github.io/blog/2014/06/18/codility-aluminium-2014/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/ja_JP/all.js#appId=749935801705374&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

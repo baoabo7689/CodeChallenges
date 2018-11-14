@@ -1,0 +1,250 @@
+
+
+You are presented with a rectangular cake whose sides are of length X and Y. The cake has been cut into (N + 1)2 pieces by making N straight cuts along the first side and N straight cuts along the second side.
+
+The cuts are represented by two non-empty arrays A and B consisting of N integers. More precisely, A[I] such that 0 ≤ I < N represents the position of a cut along the first side, and B[I] such that 0 ≤ I < N represents the position of a cut along the second side.
+
+The goal is to find the K-th piece of cake in order of size, starting with the largest piece first. We will consider the size of a piece to be its area.
+
+For example, a cake with sides X = 6, Y = 7 and arrays A and B such that:
+    A[0] = 1    B[0] = 1
+    A[1] = 3    B[1] = 5
+
+is represented by the figure below.
+
+There are nine pieces of cake, and their consecutive sizes are: 12, 8, 6, 4, 4, 3, 2, 2, 1. In the figure above, the third piece of cake is highlighted; its size equals 6.
+
+Write a function:
+
+    function solution(X, Y, K, A, B);
+
+that, given three integers X, Y, K and two non-empty arrays A and B of N integers, returns the size of the K-th piece of cake.
+
+For example, given:
+    X = 6   Y = 7   K = 3
+    A[0] = 1    B[0] = 1
+    A[1] = 3    B[1] = 5
+
+the function should return 6, as explained above.
+
+Assume that:
+
+        N is an integer within the range [1..40,000];
+        X and Y are integers within the range [2..400,000,000];
+        K is an integer within the range [1..(N+1)*(N+1)];
+        each element of array A is an integer within the range [1..X−1];
+        each element of array B is an integer within the range [1..Y−1];
+        A[I − 1] < A[I] and B[I − 1] < B[I], for every I such that 0 < I < N;
+        1 ≤ A[I] − A[I − 1], B[I] − B[I − 1] ≤ 10,000, for every I such that 0 < I < N;
+        1 ≤ A[0], B[0], X − A[N − 1], Y − B[N − 1] ≤ 10,000.
+
+Complexity:
+
+        expected worst-case time complexity is O(N*log(N+X+Y));
+        expected worst-case space complexity is O(N) (not counting the storage required for input arguments).
+
+Copyright 2009–2018 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
+
+
+ 
+======================================================================================================================================================
+-K từ 1-> max(X*Y) => search log(X + Y)
+	.Nếu K1 đếm count>K => K1 tăng lên 
+	.Nếu K1 đếm count<K => K1 nhỏ xuống
+-Count big:
+	.Với 1 x1: với y1: x1*y1 >= size => với x1, y2 lớn hơn cũng thỏa => với x2>x1, chỉ xét y2<y1 
+	
+
+======================================================================================================================================================
+
+function sort(A) {
+	var N = A.length;
+	
+	if(N === 0) {
+		return A;
+	}
+		
+	var max = A[0];
+	
+	var aInfo = [];
+	
+	for(var i=0; i<N; i++) {
+		var value = A[i];
+		
+		if(value < 0) {
+			continue;
+		}
+		
+		aInfo.push({ value: value, digit: value});
+		
+		if(max < value) {
+			max = value;
+		}
+	}
+	
+	N = aInfo.length;
+	var M = Math.round(Math.log(max)/Math.log(10));
+		
+	for(var i=0; i<=M; i++) {
+		var sortBaskets = initSortBaskets();
+		
+		for(var j=0; j<N;j++) {
+			var a = aInfo[j];
+			var digit = a.digit % 10;
+			a.digit = a.digit ? Math.floor(a.digit / 10) : 0;
+			
+			sortBaskets[digit].push(a);
+		}
+		
+		aInfo = combineSortBaskets(sortBaskets);
+	}	
+	
+	var result = [];	
+	for(var i=0; i<N; i++) {		
+		result.push(aInfo[i].value);
+	}
+	
+	return result;
+}
+
+
+function initSortBaskets() {
+	var sortBaskets = [];
+	
+	for(var i=0;i<10;i++) {
+		sortBaskets.push([]);
+	}
+	
+	return sortBaskets;
+}
+
+
+function combineSortBaskets(sortBaskets) {
+	var result = [];
+	
+	for(var i=0;i<10;i++) {
+		var basket = sortBaskets[i];
+		
+		for(var j=0;j<basket.length; j++) {
+			result.push(basket[j]);		
+		}
+	}
+	
+	return result;
+}
+
+
+function countGreaterThanMiddle(aLength, bLength, size) {
+	var N = aLength.length;
+	var result = 0;
+	var j = N-1;
+	for(var i=0; i<N; i++) {
+		var x = aLength[i];
+		
+		for(; j >=0 && x * bLength[j] >= size; j--);		
+		
+		result += N - j - 1;
+	}
+	
+	return result;
+}
+
+
+function solution(X, Y, K, A, B) {
+	var N = A.length;
+	A[-1] = 0;
+	A[N] = X;
+	B[-1] = 0;
+	B[N] = Y;
+	
+	//console.log(X + ", " + Y + ", " + K);
+	//console.log(A);
+	//console.log(B);
+	
+	var aLength = [];
+	var bLength = [];
+	for(var i=0; i<=N; i++) {
+		aLength[i] = A[i] - A[i-1];
+		bLength[i] = B[i] - B[i-1];
+	}
+	
+	aLength = sort(aLength);
+	bLength = sort(bLength);	
+	//console.log(aLength);
+	//console.log(bLength);
+	
+	var left = 1;
+	var right = aLength[N]*bLength[N];
+	var size;
+	
+	//debugger;
+	var result; 
+	while(left <= right) {
+		size = Math.floor((left + right)/2);
+		var countBig = countGreaterThanMiddle(aLength, bLength, size);
+		if(countBig < K) {
+			right = size - 1;
+		} else {
+			left = size + 1;
+			result = size;
+		}		
+	}	
+	
+	return result;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

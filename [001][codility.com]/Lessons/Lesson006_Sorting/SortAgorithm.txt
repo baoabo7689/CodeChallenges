@@ -1,0 +1,417 @@
+-Digital Sort: O(N)
+
+function sort(A) {
+	var N = A.length;
+	
+	if(N === 0) {
+		return A;
+	}
+		
+	var max = A[0];
+	
+	var aInfo = [];
+	
+	for(var i=0; i<N; i++) {
+		var value = A[i];
+		
+		if(value <= 0) {
+			continue;
+		}
+		
+		aInfo.push({ value: value, digit: value});
+		
+		if(max < value) {
+			max = value;
+		}
+	}
+	
+	N = aInfo.length;
+	var M = Math.round(Math.log(max)/Math.log(10));
+		
+	for(var i=0; i<=M; i++) {
+		var sortBaskets = initSortBaskets();
+		
+		for(var j=0; j<N;j++) {
+			var a = aInfo[j];
+			var digit = a.digit % 10;
+			a.digit = a.digit ? Math.floor(a.digit / 10) : 0;
+			
+			sortBaskets[digit].push(a);
+		}
+		
+		aInfo = combineSortBaskets(sortBaskets);
+	}	
+	
+	var result = [];	
+	for(var i=0; i<N; i++) {		
+		result.push(aInfo[i].value);
+	}
+	
+	return result;
+}
+
+
+function initSortBaskets() {
+	var sortBaskets = [];
+	
+	for(var i=0;i<10;i++) {
+		sortBaskets.push([]);
+	}
+	
+	return sortBaskets;
+}
+
+
+function combineSortBaskets(sortBaskets) {
+	var result = [];
+	
+	for(var i=0;i<10;i++) {
+		var basket = sortBaskets[i];
+		
+		for(var j=0;j<basket.length; j++) {
+			result.push(basket[j]);		
+		}
+	}
+	
+	return result;
+}
+
+
+sort([1,7, 5, 6, 9, 10]);
+======================================================================================================================================================
+Radix sort: O(NlogN)
+
+function sort(A) {
+	var counts = [];
+	var existingNumbers = [];	
+	count_mark(A, counts, existingNumbers);
+		
+	var baskets = [];
+	var existingBaskets = [];
+	splitToBaskets(existingNumbers, baskets, existingBaskets);
+	
+	for(var i=0; i<existingBaskets.length; i++) {
+		// baskets[i] = sort_basket(baskets[i], N);
+	}
+	
+	console.log(baskets);
+	
+	return combine(counts, existingNumbers);	
+}
+
+
+function count_mark(A, counts, existingNumbers) {
+	// Count+Find Exist: O(n)
+	var N = A.length;	
+	
+	for(var i = 0; i<N; i++) {
+		var a = A[i];
+		var count = counts[a];
+		
+		if(count === undefined) {
+			counts[a] =  1;		
+			existingNumbers.push(a);			
+		}else {
+			counts[a] =  count+1;			
+		}
+	}
+	
+	// console.log(counts);
+	// console.log(existingNumbers);
+}
+
+function combine( counts, existingNumbers) {
+	// Combine: O(n)
+	N = existingNumbers.length;
+	var result = [];
+	for(var i = 0; i<N; i++) {
+		var a = existingNumbers[i];
+		var count = counts[a];
+		for(var j=0; j < count; j++) {
+			result.push(a);
+		}	
+	}	
+	
+	return result;
+}
+
+function splitToBaskets(existingNumbers, baskets, existingBaskets) {
+	// Split to baskets: O(n)
+	var N = existingNumbers.length;
+	console.log(N);
+	for(var i=0; i<N; i++) {
+		var a = existingNumbers[i];
+		var basketIndex = Math.floor(a / N);
+		
+		if(baskets[basketIndex] === undefined) {
+			baskets[basketIndex] = [];
+			existingBaskets.push(basketIndex);
+		}
+		
+		baskets[basketIndex].push({ orignalValue: a, subValue: a % N});
+	}
+}
+
+function sort_basket(basket, maxValue) {
+	var result = [];
+	
+	return result;	
+}
+
+sort([1,3,3,5,3,6,3,8,9,9,10, 21, 13, 22, 33]);
+
+sort([1,3,3,5,6,8,9,9,10]);
+
+
+https://en.wikipedia.org/wiki/Bead_sort
+n= 10^x => cần 10^x poles 
+To mark poles: need max => O(max + n)
+
+http://www.ann.ece.ufl.edu/pubs_and_talks/ISOCC14_abdel-hafeez_sort.pdf
+Hamming
+NxN matrix
+Dòng i, cột (value-1) = 1
+Example: N[1] = 5, N.length = 3 then:
+O(N*logN)
+
+
+https://betterexplained.com/articles/sorting-algorithms/
+https://en.wikipedia.org/wiki/Counting_sort
+https://en.wikipedia.org/wiki/Bucket_sort
+Laser Domino Sorting
+https://en.wikipedia.org/wiki/Sorting_algorithm
+https://betterexplained.com/articles/sorting-algorithms/
+
+======================================================================================================================================================
+range_count_sort
+	-Count sort: reduce each element to only 1, count number contained in counts[]
+	-Range sort: sort array with distinct value
+	-Multiply sorted array x counts[] => result array
+range_sort:
+	-Each element: check before and after to get start and end of its ranges => update start and end 
+	-Each element: if it start: mark starts[x] = true, exists[x] = true
+	-For each starts[i] => output range to end 
+	Max = 7*n operations
+count_sort
+	Max = 2.5*n operations
+	
+Around = 10*n operations
+Compare with radix sort:
+	4*n*logM 
+=> 10 with 4logM
+10^(5/2) with M
+=> If M > 10^(5/2)	4logM > 10 
+Usally M not to small like that 
+=> choose range_count_sort is better with O(10*n) = O(n)
+
+-Space Complexity:
+	+Count sort: Counts, Exists, Result = 3*n
+	+Range sort: Exists, Starts, Ends, StartNodes, Result = 5*N 
+	=> = 8*N = O(N)
+
+======================================================================================================================================================
+-Insertion sort
+	+each a in A 
+		Insert to previous List by binary search 
+	+previous = [];	
+		
+# log1 + log2 + ... + logn = O(NlogN)
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+
+
+function range_count_sort(A) {
+	var counts = [];
+	var existingNumbers = [];	
+	count_mark(A, counts, existingNumbers);
+	existingNumbers = range_sort(existingNumbers);
+	
+	return combine(counts, existingNumbers);	
+}
+
+
+function count_mark(A, counts, existingNumbers) {
+	// Count+Find Exist: O(n)
+	var N = A.length;	
+	
+	for(var i = 0; i<N; i++) {
+		var a = A[i];
+		var count = counts[a];
+		
+		if(count === undefined) {
+			counts[a] =  1;		
+			existingNumbers.push(a);			
+		}else {
+			counts[a] =  count+1;			
+		}
+	}
+	
+	// console.log(counts);
+	// console.log(existingNumbers);
+}
+
+function combine( counts, existingNumbers) {
+	// Combine: O(n)
+	N = existingNumbers.length;
+	var result = [];
+	for(var i = 0; i<N; i++) {
+		var a = existingNumbers[i];
+		var count = counts[a];
+		for(var j=0; j < count; j++) {
+			result.push(a);
+		}	
+	}	
+	
+	return result;
+}
+
+
+function range_sort(A) {
+	var N = A.length;
+	
+	var exists = [];
+	var starts = [];
+	var ends = [];
+	var startNodes = [];
+	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		var previous = a - 1;
+		var next = a + 1;
+		
+		var start = exists[previous] ? starts[previous] : a;
+		var end =  exists[next] ? ends[next] : a;
+	
+		startNodes[previous] = false;
+		startNodes[next] = false;
+		
+		startNodes[start] = true;
+		starts[start] = start;	
+		starts[end] = start;	
+		
+		ends[start] = end;	
+		ends[end] = end;	
+		
+		exists[a] = true;	
+	}
+	
+	var nodes = [];	
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		if(startNodes[a]) {
+			nodes.push(a);
+		}
+	}
+	
+	// console.log(nodes);
+	// console.log(ends);
+	
+	var result = [];
+	for(var i=0; i<nodes.length; i++) {
+		var start = nodes[i];
+		var end = ends[start];
+		for(var j=start;j<=end; j++) {
+			result.push(j);
+		}
+	}
+			
+	console.log(result);
+	return result;
+}
+
+
+range_count_sort([1,3,3,5,6,8,9,3,8,9,10]);
+
+
+range_count_sort([1,3,5,7,9,11]);
+range_count_sort([1,3,3,5,6,8,9,9,10]);
+
+
+[1, 3, 5, 6, 8, 9, 10]
+
+
+[1, 3, 5, 8]
+[empty, 1, empty, 3, empty, 6, 6, empty, 10, 9, 10]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
