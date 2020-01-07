@@ -382,6 +382,7 @@ function solution(T) {
 
 
 ======================================================================================================================================================
+Gold 
 
 function checkValidRange(i, j, nodes) {
 	var nodeI = nodes[i];	
@@ -404,7 +405,7 @@ function checkValidRange(i, j, nodes) {
 		}		
 	}
 	
-	return count == (j - i)*2; 
+	return count == (j - i); 
 }	
 
 function createNodes(T) {
@@ -493,7 +494,7 @@ function solution(T) {
 	var N = T.length;
 	var result = N;
 	
-	// debugger;
+	debugger;
 	for(var i=N-1; i>=0; i--) {
 		updateNodes(nodes, i);	
 	}
@@ -536,9 +537,6 @@ function solution(T) {
 
 solution([2, 0, 2, 2, 1, 0]);
 
-
-
-
 solution([2, 2, 2]);
 
 
@@ -547,9 +545,7 @@ solution([2, 2, 2]);
 
 
 
-
-
-
+======================================================================================================================================================
 
 
 
