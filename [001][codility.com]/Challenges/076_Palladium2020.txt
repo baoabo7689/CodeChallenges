@@ -57,10 +57,6 @@ Copyright 2009–2020 by Codility Limited. All Rights Reserved. Unauthorized cop
 
 
 
-
-
-
-
 ======================================================================================================================================================
 
 
@@ -69,11 +65,36 @@ Copyright 2009–2020 by Codility Limited. All Rights Reserved. Unauthorized cop
 
 function solution(H) {
     // write your code in JavaScript (Node.js 8.9.4)
+    var N = H.length;
+    if(N == 1) {
+        return H[0];
+    }
+    
+    var max = H[0];
+    var prev = [];
+    for(var i=0; i<N; i++) {
+        var h = H[i];
+        max = Math.max(max, h);
+        prev[i] = max * (i + 1);
+    }
+    
+    //console.log(prev);
+    max = H[N-1];
+    var next = [];
+    for(var i=N-1; i>=0; i--) {
+        var h = H[i];
+        max = Math.max(max, h);
+        next[i] = max * (N - i);
+    }
+    
+   // console.log(next);
+    var min = prev[0] + next[1];
+    for(var i=0; i<N-1; i++) {
+        min = Math.min(min,  prev[i] + next[i+1]);
+    }
+    
+    return min;
 }
-
-
-
-
 
 
 
