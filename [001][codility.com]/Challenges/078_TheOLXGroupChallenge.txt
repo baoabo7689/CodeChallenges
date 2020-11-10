@@ -62,6 +62,11 @@ solution([1, 2], [4, 3]);
 
 
 
+	console.log(preS);
+	console.log(lasts);
+	console.log(remains);
+	
+	
 ======================================================================================================================================================
 
 
@@ -72,25 +77,31 @@ solution([1, 2], [4, 3]);
 function solution(juice, capacity) {
     // write your code in JavaScript (Node.js 8.9.4)
 	var N = capacity.length;
-	var remains = [];
+	var remains = [];	
 	for(var i=0; i<N; i++) {
 		var j = juice[i];
 		remains[i] = {
 			r: capacity[i] - j,
 			j: j,
-			maxM: 1
+			maxM: 0
 		};
 	}
 	
+	var lasts = [];
+	var ordJuice = juice.sort(function(a, b) { return a - b; });
+	//console.log(ordJuice);	
+	for(var i=0; i<N; i++) {
+		var j = ordJuice[i];
+		lasts[j] = i;
+	}
+	
 	remains = remains.sort(function(a, b) { return a.r - b.r; });
-	juice = juice.sort(function(a, b) { return a - b; });
 	//console.log(remains);
-	//console.log(juice);
 	
 	var preS = [];
 	preS[-1] = 0;
 	for(var i=0; i<N; i++) {
-		preS[i] = preS[i-1] + juice[i];
+		preS[i] = preS[i-1] + ordJuice[i];
 	}
 	
 	var b=0;
@@ -107,35 +118,102 @@ function solution(juice, capacity) {
 	
 	var result = 0;
 	for(var i=0; i<N; i++) {
-		if(remains[i].maxM > result) {
-			result = remains[i].maxM;
+		var r = remains[i];
+		var isAdd = (r.maxM < lasts[r.j]) || 
+			(r.maxM>0 && r.r >= preS[r.maxM - 1] - r.j + ordJuice[r.maxM]);
+			
+		if(isAdd) {
+			r.maxM++;
 		}
+		
+		result = Math.max(r.maxM, result);
 	}
 	
-	return result + 1;
+	return result;
 }
 
 
 
 
+Example test:   ([1, 1, 5], [6, 5, 8])
+Output:
+[ 1, 2, 7, '-1': 0 ]
+[ <1 empty item>, 1, <3 empty items>, 2 ]
+[ { r: 3, j: 5, maxM: 0 },
+  { r: 4, j: 1, maxM: 0 },
+  { r: 5, j: 1, maxM: 0 } ]
+  
+[ { r: 3, j: 5, maxM: 2 },
+  { r: 4, j: 1, maxM: 2 },
+  { r: 5, j: 1, maxM: 2 } ]
+  
+[ { r: 3, j: 5, maxM: 2 },
+  { r: 4, j: 1, maxM: 2 },
+  { r: 5, j: 1, maxM: 2 } ]
+  
+WRONG ANSWER (got 2 expected 3)
 
 
+======================================================================================================================================================
 
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function solution(juice, capacity) {
+    // write your code in JavaScript (Node.js 8.9.4)
+	var N = capacity.length;
+	var remains = [];	
+	
+	var lasts = [];
+	var ordJuice = [...juice];
+	ordJuice.sort(function(a, b) { return a - b; });
+	
+	var preS = [];
+	preS[-1] = 0;
+	
+	for(var i=0; i<N; i++) {
+		var j = juice[i];
+		remains[i] = {
+			r: capacity[i] - j,
+			j: j
+		};
+		
+		j = ordJuice[i];
+		lasts[j] = i;
+		preS[i] = preS[i-1] + ordJuice[i];
+	}
+	
+	remains = remains.sort(function(a, b) { return a.r - b.r; });
+	
+	//console.log(ordJuice);	
+	//console.log(remains);	
+	//console.log(juice);
+	//console.log(preS);	
+	
+	var b=0;
+	var result = 0;
+	
+	for(var a = 0; a<N; a++) {	
+		var r = remains[a];
+		for(; b<N; b++) {
+			if(preS[b] > r.r) {
+				break;
+			}
+		}
+		
+		var maxM = b;		
+		var isAdd = (maxM < lasts[r.j]) || 
+			(maxM>0 && r.r >= preS[maxM - 1] - r.j + ordJuice[maxM]);
+			
+		if(isAdd) {
+			maxM++;
+		}
+		
+		result = Math.max(maxM, result);
+	}
+	
+	return result;
+}
 
 
 
