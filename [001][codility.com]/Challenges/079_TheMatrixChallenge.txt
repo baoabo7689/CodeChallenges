@@ -45,25 +45,100 @@ Copyright 2009–2021 by Codility Limited. All Rights Reserved. Unauthorized cop
 	
 	
 ======================================================================================================================================================
-// you can write to stdout for debugging purposes, e.g.
-// console.log('this is a debug message');
-
 function solution(A) {
     // write your code in JavaScript (Node.js 8.9.4)
+	console.log(A);
     var N = A.length;
 	var result = 1;
 	
-	for(var i=0; i<N; i++) {
+	var bef = [];
+	bef[-1] = 0;	
+	bef[0] = 0;	
+	for(var i=1; i<N; i++) {
 		var ai = A[i];
-		for(var j=i+1; j<N && A[j] >= A[i]; j++);
+		if(ai == A[i-1]) {
+			bef[i] = bef[i-1];
+			continue;			
+		}
+				
+		if(ai > A[i-1]) {
+			bef[i] = i;
+			continue;
+		}
 		
-		var wid = j-i;
-		var r = Math.min(ai, wid);
-		result = Math.max(result, r);		
+		for(j=i-1; j>=0 && A[j] > ai; j--);
+		
+		bef[i] = bef[j+1];
+	}
+	
+	console.log(bef);	
+	var aft = [];	
+	aft[N] = N-1;	
+	aft[N-1] = N-1;
+	for(var i=N-2; i>=0; i--) {
+		var ai = A[i];
+		if(ai == A[i+1]) {
+			aft[i] = aft[i+1];
+			continue;				
+		}
+		
+		if(ai > A[i+1]) {
+			aft[i] = i;
+			continue;			
+		}
+		
+		for(j=i+1; j<N && A[j] > ai; j++);
+		aft[i] = aft[j-1];
+	}
+	
+	console.log(aft);
+	for(var i=0; i<N; i++) {
+		var wid = aft[i] - bef[i] + 1;
+		var len = A[i];
+		var r = Math.min(wid, len);
+		result = Math.max(result, r);
 	}
 	
     return result;
 }
+
+
+
+
+
+
+7.
+0.072 s
+WRONG ANSWER, got 2 expected 3
+stdout:
+
+[ 1, 2, 3, 4, 3, 2, 1 ]
+[ 0, 1, 2, 3, 3, 3, 3 ]
+[ 3, 3, 3, 3, 4, 5, 6 ]
+
+
+
+8.
+0.072 s
+WRONG ANSWER, got 2 expected 3
+stdout:
+
+[ 2, 2, 3, 5, 3, 2, 2 ]
+[ 0, 0, 2, 3, 3, 3, 3 ]
+[ 0, 3, 3, 3, 4, 5, 6 ]
+
+
+
+4.
+0.076 s
+WRONG ANSWER, got 3 expected 4
+stdout:
+
+[ 4, 8, 10, 7, 5, 2, 6, 1, 9, 3 ]
+[ 0, 1, 2, 2, 2, 2, 6, 6, 8, 8 ]
+[ 2, 2, 2, 3, 4, 6, 6, 8, 8, 9 ]
+
+
 
 
 
