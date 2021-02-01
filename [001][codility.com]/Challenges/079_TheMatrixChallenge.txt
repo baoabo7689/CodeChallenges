@@ -35,17 +35,7 @@ Copyright 2009–2021 by Codility Limited. All Rights Reserved. Unauthorized cop
 
 ======================================================================================================================================================
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
@@ -63,34 +53,12 @@ function solution(A) {
     var N = A.length;
 	var result = 1;
 	
-	debugger;
-	var lastI = -1;
-	var lastBase = [];
-	var lastBaseI = [];
-	lastBase[-1] = 0;
-	lastBaseI[-1] = 0;
-	A[-1] = 1;
-	
 	for(var i=0; i<N; i++) {
 		var ai = A[i];
-		if(ai == lastBase[lastI]) {
-			continue;
-		}
+		for(var j=i+1; j<N && A[j] >= A[i]; j++);
 		
-		if(ai > lastBase[lastI]) {
-			lastI++;
-			lastBase[lastI] = ai;
-			lastBaseI[lastI] = i;
-			continue;
-		}
-		
-		// ai < lastBase[lastI]
-		for(var j=lastI-1; j>=0 && A[j] >= ai; j--);
-		lastI = j;
-		
-		var wid = i-lastBaseI[j];
-		var len = Math.min(ai, A[j]);
-		var r = Math.min(wid, len);
+		var wid = j-i;
+		var r = Math.min(ai, wid);
 		result = Math.max(result, r);		
 	}
 	
@@ -98,8 +66,6 @@ function solution(A) {
 }
 
 
-
-solution( [1, 2, 5, 3, 1, 3]);
 
 
 
