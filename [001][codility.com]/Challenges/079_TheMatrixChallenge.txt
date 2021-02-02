@@ -37,6 +37,18 @@ Copyright 2009–2021 by Codility Limited. All Rights Reserved. Unauthorized cop
 
 
 	
+[1, 2, 5, 3, 1, 3]
+[3, 3, 3, 5, 4]
+[6, 5, 5, 6, 2, 2]
+
+
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -45,67 +57,94 @@ Copyright 2009–2021 by Codility Limited. All Rights Reserved. Unauthorized cop
 	
 	
 ======================================================================================================================================================
+
 function solution(A) {
     // write your code in JavaScript (Node.js 8.9.4)
 	console.log(A);
     var N = A.length;
 	var result = 1;
 	
-	var bef = [];
-	bef[-1] = 0;	
-	bef[0] = 0;	
-	for(var i=1; i<N; i++) {
-		var ai = A[i];
-		if(ai == A[i-1]) {
-			bef[i] = bef[i-1];
-			continue;			
+	A[-1] = 0;
+	var i = 0;	
+	var lastBase = [];
+	var lastBaseI = [];
+	var lastI = 0;
+		
+		
+	debugger;
+	while(i < N) {
+		var start = i;
+		
+		// upward
+		var j= i;
+		for(; j<N; j++) {
+			var ap = A[j-1];
+			var aj = A[j];
+			if(aj == ap) {
+				continue;
+			}
+			
+			if(aj < ap) {
+				break;
+			}	
+			
+			lastBase[lastI] = aj;
+			lastBaseI[lastI] = j;
+			lastI++;					
 		}
 				
-		if(ai > A[i-1]) {
-			bef[i] = i;
+		if(j == N) {
+			break;
+		}
+		
+		// cut upward
+		var aj = A[j];
+		while(lastI > 0 && lastBase[lastI-1] > aj) {
+			var len = j - lastBaseI[lastI-1];
+			var wid = lastBase[lastI-1];
+			var r = Math.min(len, wid);
+			result = Math.max(result, r);					
+			lastI--;
+		}		
+
+		// exist lastBase[lastI-1] <= aj
+		if(lastI > 0 && lastBase[lastI-1]==aj) {
+			i = j+1;
 			continue;
 		}
 		
-		for(j=i-1; j>=0 && A[j] > ai; j--);
+		if(lastI > 0 && lastBase[lastI-1] < aj) {		
+			var preTall = lastBaseI[lastI];
+			
+			lastBase[lastI] = aj;
+			lastBaseI[lastI] = preTall;
+			lastI++;
+			i = j + 1;
+			continue;
+		}		
 		
-		bef[i] = bef[j+1];
-	}
+		// lastI == 0 => all > aj
+		lastBase[lastI] = aj;
+		lastBaseI[lastI] = 0;
+		lastI++;		
+		i = j + 1;
+	}	
 	
-	console.log(bef);	
-	var aft = [];	
-	aft[N] = N-1;	
-	aft[N-1] = N-1;
-	for(var i=N-2; i>=0; i--) {
-		var ai = A[i];
-		if(ai == A[i+1]) {
-			aft[i] = aft[i+1];
-			continue;				
-		}
-		
-		if(ai > A[i+1]) {
-			aft[i] = i;
-			continue;			
-		}
-		
-		for(j=i+1; j<N && A[j] > ai; j++);
-		aft[i] = aft[j-1];
-	}
-	
-	console.log(aft);
-	for(var i=0; i<N; i++) {
-		var wid = aft[i] - bef[i] + 1;
-		var len = A[i];
-		var r = Math.min(wid, len);
-		result = Math.max(result, r);
-	}
+	for(var k=0; k<lastI; k++) {
+		var len = N - lastBaseI[k];
+		var wid = lastBase[k];
+		var r = Math.min(len, wid);
+		result = Math.max(result, r);				
+	}			
 	
     return result;
 }
 
 
 
+solution([ 1, 6, 3, 10, 1, 2, 1, 2, 2, 2 ]);
 
-
+solution([1, 2, 5, 3, 1, 3]);
 
 7.
 0.072 s
