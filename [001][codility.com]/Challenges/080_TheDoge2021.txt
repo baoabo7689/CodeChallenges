@@ -80,13 +80,155 @@ Test Output
 
 ======================================================================================================================================================
 
-
-	
-	
-	
+Chia nhóm, trong 1 nhóm: Số Pet = Số toy của Pet đó
 	
 	
 ======================================================================================================================================================
+
+[ 2, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 1, 1, 2, 2, 2, 1, 2, 1, 1, 2, 1, 2, 2, 1, 1 ]
+[ 2, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 1, 1, 2, 2, 2, 1, 2, 1, 1, 2, 1, 2, 2, 1, 1 ]
+[]
+[]
+	
+======================================================================================================================================================
+
+
+
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+
+function solution(P, T, A, B) {
+    // write your code in JavaScript (Node.js 8.9.4)
+	//console.log(P);
+	//console.log(T);
+	//console.log(A);
+	//console.log(B);
+	
+	var M = A.length;
+	var connections = [];
+	
+	for(var i=0; i<M; i++) {
+		var a = A[i];
+		var b = B[i];
+		if(connections[a] == undefined) {
+			connections[a] = []; 	
+		}	
+		
+		if(connections[b] == undefined) {
+			connections[b] = []; 	
+		}
+		
+		
+		connections[a].push(b);
+		connections[b].push(a);		
+	}
+	
+	for(var i=0; i<P.length; i++) {
+		if((connections[i] == undefined || connections[i].length == 0) && P[i] != T[i]) {
+			return false;
+		}	
+	}
+	
+	
+    //console.log(connections);
+	
+	
+	var usedNodes = [];	
+	var groups = [];
+	for(var i=0; i<M; i++) {
+		var a = A[i];
+		if(usedNodes[a]) {
+			continue;
+		}
+		
+		var nextNodes = [a];
+		var newGroup = [];
+		
+		while(nextNodes.length)
+		{
+			var temp = [];
+			
+			for(var j=0; j<nextNodes.length; j++) {
+				var nj = nextNodes[j];
+				if(usedNodes[nj]) {
+					continue;
+				}
+				
+				var cj = connections[nj];
+				for(var k=0; k<cj.length; k++) {
+					temp.push(cj[k]);
+				}	
+		
+				usedNodes[nj] = true;	
+				newGroup.push(nj);				
+			}
+			 
+			nextNodes = temp;
+		}
+		
+		groups.push(newGroup);
+	}
+		
+    //console.log(groups);
+	var countMems = [];
+	for(var i=0; i<groups.length; i++) {
+		var group = groups[i];
+		var c = 0;
+		var d = 0;
+		var cT = 0;
+		var dT = 0;
+		
+		for(var j=0; j<group.length ; j++) {
+			var m = group[j];
+			if(countMems[m]) {
+				continue;
+			}
+			
+			d += P[m] == 1;
+			c += P[m] == 2;
+			dT += T[m] == 1;
+			cT += T[m] == 2;			
+			countMems[m] = true;
+		}
+		
+       // console.log(d+":"+dT+" ; "+c+":"+cT);
+		if(d != dT || c != cT) {
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
