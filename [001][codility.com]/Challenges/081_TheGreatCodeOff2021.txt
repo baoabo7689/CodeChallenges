@@ -2,6 +2,63 @@
 The Great Code Off 2021
 
 
+There is a cake factory producing K-flavored cakes. Flavors are numbered from 1 to K. A cake should consist of exactly K layers, each of a different flavor. It is very important that every flavor appears in exactly one cake layer and that the flavor layers are ordered from 1 to K from bottom to top. Otherwise the cake doesn't taste good enough to be sold. For example, for K = 3, cake [1, 2, 3] is well-prepared and can be sold, whereas cakes [1, 3, 2] and [1, 2, 3, 3] are not well-prepared.
+
+The factory has N cake forms arranged in a row, numbered from 1 to N. Initially, all forms are empty. At the beginning of the day a machine for producing cakes executes a sequence of M instructions (numbered from 0 to M−1) one by one. The J-th instruction adds a layer of flavor C[J] to all forms from A[J] to B[J], inclusive.
+
+What is the number of well-prepared cakes after executing the sequence of M instructions?
+
+Write a function:
+
+    function solution(N, K, A, B, C);
+
+that, given two integers N and K and three arrays of integers A, B, C describing the sequence, returns the number of well-prepared cakes after executing the sequence of instructions.
+
+Examples:
+
+1. Given N = 5, K = 3, A = [1, 1, 4, 1, 4], B = [5, 2, 5, 5, 4] and C = [1, 2, 2, 3, 3].
+
+There is a sequence of five instructions:
+
+        The 0th instruction puts a layer of flavor 1 in all forms from 1 to 5.
+        The 1st instruction puts a layer of flavor 2 in all forms from 1 to 2.
+        The 2nd instruction puts a layer of flavor 2 in all forms from 4 to 5.
+        The 3rd instruction puts a layer of flavor 3 in all forms from 1 to 5.
+        The 4th instruction puts a layer of flavor 3 in the 4th form.
+
+The picture describes the first example test.
+
+The function should return 3. The cake in form 3 is missing flavor 2, and the cake in form 5 has additional flavor 3. The well-prepared cakes are forms 1, 2 and 5.
+
+2. Given N = 6, K = 4, A = [1, 2, 1, 1], B = [3, 3, 6, 6] and C = [1, 2, 3, 4],
+
+The picture describes the second example test.
+
+the function should return 2. The 2nd and 3rd cakes are well-prepared.
+
+3. Given N = 3, K = 2, A = [1, 3, 3, 1, 1], B = [2, 3, 3, 1, 2] and C = [1, 2, 1, 2, 2],
+
+The picture describes the third example test.
+
+the function should return 1. Only the 2nd cake is well-prepared.
+
+4. Given N = 5, K = 2, A = [1, 1, 2], B = [5, 5, 3] and C = [1, 2, 1],
+
+The picture describes the fourth example test.
+
+the function should return 3. The 1st, 4th and 5th cakes are well-prepared.
+
+Write an efficient algorithm for the following assumptions:
+
+        N is an integer within the range [1..100,000];
+        M is an integer within the range [1..200,000];
+        each element of arrays A, B is an integer within the range [1..N];
+        each element of array C is an integer within the range [1..K];
+        for every integer J, A[J] ≤ B[J];
+        arrays A, B and C have the same length, equal to M.
+
+Copyright 2009–2021 by Codility Limited. All Rights Reserved. Unauthorized copying, publication or disclosure prohibited. 
+
 
 
 
@@ -10,6 +67,311 @@ The Great Code Off 2021
 	
 	
 ======================================================================================================================================================
+
+
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+
+function solution(N, K, A, B, C) {
+    // write your code in JavaScript (Node.js 8.9.4)
+	var forms = [];
+	for(var i=0; i<N; i++) {
+		forms[i] =  [];
+	}
+		
+	var M = C.length;
+	for(var i=0; i<M; i++) {
+		var a = A[i]-1;
+		var b = B[i]-1;
+		var c = C[i];
+		
+		for(var j=a; j<=b; j++) {
+			var form = forms[j];
+			
+			if(form.length == 0 && c == 1) {
+				form[form.length] = c;
+				continue;
+			}
+			
+			if(form[form.length - 1] == -1) {
+				continue;
+			}
+			
+			form[form.length] = form[form.length - 1]+1==c ? c : -1;
+		}		
+	}	
+	
+	var count = 0;
+	for(var i=0; i<N; i++) {
+		var form = forms[i];
+		if(form.length == K && form[form.length - 1]==K) {
+			count++;
+		}
+	}
+		
+	return count;
+}
+
+
+Silver Award 
+
+	
+======================================================================================================================================================
+
+
+
+function solution(N, K, A, B, C) {
+    // write your code in JavaScript (Node.js 8.9.4)
+	var forms = [];
+	for(var i=0; i<N; i++) {
+		forms[i] =  0;
+	}
+		
+	var M = C.length;
+	for(var i=0; i<M; i++) {
+		var a = A[i]-1;
+		var b = B[i]-1;
+		var c = C[i];
+		
+		for(var j=a; j<=b; j++) {
+			var form = forms[j];
+			
+			if(form == 0 && c == 1) {
+				forms[j] = c;
+				continue;
+			}
+			
+			if(form == -1) {
+				continue;
+			}
+			
+			forms[j] = form+1==c ? c : -1;
+		}		
+	}	
+	
+	var count = 0;
+	for(var i=0; i<N; i++) {
+		if(forms[i] == K) {
+			count++;
+		}
+	}
+		
+	return count;
+}
+
+	
+======================================================================================================================================================
+
+function solution(N, K, A, B, C) {
+	var layers = [];
+	for(var i=0; i<K; i++) {
+		layers[i] = [];
+	}
+		
+	var M = C.length;
+	for(var i=0; i<M; i++) {		
+		var a = A[i]-1;
+		var b = B[i]-1;
+		var c = C[i] - 1;
+		layers[c].push({
+			start: a,
+			end: b
+		});
+	}   
+	
+	for(var i=0; i<K; i++) {
+		layers[i].sort(function(a, b){return a.start - b.start});
+	}
+	
+	// console.log(layers);	
+	
+	// make valid ranges for layers
+	var rs = [];
+	for(var k=0; k<K; k++) {
+		var validRanges = [];
+		var layer = layers[k];
+		if(layer.length == 0) {
+			return 0;
+		}
+		
+		var cRange = layer[0];
+		for(var i=1; i<layer.length; i++) {
+			var se = layer[i];
+			if(se.start < cRange.start) {
+				if(se.end < cRange.start) {
+					continue;
+				}
+				
+				if(se.end < cRange.end) {
+					cRange = { start: se.end+1, end: cRange.end};
+					continue;
+				}
+				
+				if(cRange.end == se.end) {
+					cRange = layer[i+1];
+					i++;
+				}
+				
+				if(cRange.end < se.end) {
+					cRange = { start: cRange.end+1, end: se.end};
+					continue;
+				}
+			}
+					
+			if(se.start == cRange.start) {
+				if(se.end < cRange.end) {
+					cRange = { start: se.end+1, end: cRange.end};
+					continue;
+				}
+				
+				if(se.end == cRange.end) {
+					cRange = layer[i+1];
+					i++;
+					continue;
+				}
+							
+				if(cRange.end < se.end) {
+					cRange = { start: cRange.end+1, end: se.end};
+					continue;
+				}
+			}
+			
+			if(se.start < cRange.end) {
+				if(se.end < cRange.end) {
+					validRanges.push({start: cRange.start, end: se.start-1});
+					cRange = {start: se.end+1, end: cRange.end};
+					continue;
+				}
+				
+				if(se.end == cRange.end) {
+					validRanges.push({start: cRange.start, end: se.start-1});
+					cRange = layer[i+1];
+					i++;
+					continue;
+				}
+				
+				if(cRange.end < se.end) {
+					validRanges.push({start: cRange.start, end: se.start-1});
+					cRange = {start: cRange.end+1, end: se.end};
+					continue;
+				}
+			}
+			
+			if(se.start == cRange.end) {	
+				if(se.end == cRange.end) {
+					validRanges.push({start: cRange.start, end: se.start-1});
+					cRange = layer[i+1];
+					i++;
+					continue;
+				}
+				
+				if(cRange.end < se.end) {
+					validRanges.push({start: cRange.start, end: se.start-1});
+					cRange = {start: cRange.end+1, end: se.end};
+					continue;
+				}
+			}
+			
+			if(cRange.end < se.start) {	
+				validRanges.push(cRange);
+				cRange = se;
+				continue;
+			}		
+		}
+		
+		if(cRange) {
+			validRanges.push(cRange);
+		}
+		
+		rs[k] = validRanges;
+	}
+	
+	// console.log(rs);	
+	
+	// make valid ranges with remain layers	
+	debugger;
+	var ranges = rs[0];
+	for(var i=1; i<K; i++) {
+		var layer = layers[i];
+		var k = 0;
+		var temp = [];
+		
+		for(var j=0; j< layer.length; j++) {
+			var se = layer[j];
+				
+			for(; k<ranges.length; k++) {
+				var r = ranges[k];
+				if(se.start <= r.end) {
+					break;
+				}
+			}
+			
+			if(k == ranges.length) { break; }		
+				
+			temp.push({
+                start: Math.max(se.start, ranges[k].start), 
+                end: Math.min(se.end, ranges[k].end)
+            });
+		}
+		
+		ranges = temp;
+		if(ranges.length == 0) {
+			break;
+		}
+		
+	}
+	
+	console.log(rs);	
+	// count result
+	var result = 0;
+	for(var i=0; i<ranges.length; i++) {
+		var range = ranges[i];
+		result += range.end - range.start + 1;
+	}
+	
+	return result;
+}
+
+
+
+solution(5, 3, [1, 1, 4, 1, 4], [5, 2, 5, 5, 4], [1, 2, 2, 3, 3]);
+
+
+
+
+
+	
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
