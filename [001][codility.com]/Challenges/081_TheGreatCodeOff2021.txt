@@ -136,11 +136,6 @@ function solution(N, K, A, B, C) {
 		for(var j=a; j<=b; j++) {
 			var form = forms[j];
 			
-			if(form == 0 && c == 1) {
-				forms[j] = c;
-				continue;
-			}
-			
 			if(form == -1) {
 				continue;
 			}
@@ -346,6 +341,7 @@ solution(5, 3, [1, 1, 4, 1, 4], [5, 2, 5, 5, 4], [1, 2, 2, 3, 3]);
 
 
 function solution(N, K, A, B, C) {
+	
 }
 
 
