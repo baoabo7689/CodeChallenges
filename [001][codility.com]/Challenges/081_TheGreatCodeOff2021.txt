@@ -118,42 +118,6 @@ Silver Award
 	
 ======================================================================================================================================================
 
-
-
-function solution(N, K, A, B, C) {
-    // write your code in JavaScript (Node.js 8.9.4)
-	var forms = [];
-	for(var i=0; i<N; i++) {
-		forms[i] =  0;
-	}
-		
-	var M = C.length;
-	for(var i=0; i<M; i++) {
-		var a = A[i]-1;
-		var b = B[i]-1;
-		var c = C[i];
-		
-		for(var j=a; j<=b; j++) {
-			var form = forms[j];
-			
-			if(form == -1) {
-				continue;
-			}
-			
-			forms[j] = form+1==c ? c : -1;
-		}		
-	}	
-	
-	var count = 0;
-	for(var i=0; i<N; i++) {
-		if(forms[i] == K) {
-			count++;
-		}
-	}
-		
-	return count;
-}
-
 	
 ======================================================================================================================================================
 
@@ -333,16 +297,170 @@ solution(5, 3, [1, 1, 4, 1, 4], [5, 2, 5, 5, 4], [1, 2, 2, 3, 3]);
 
 
 
-
-
 	
+======================================================================================================================================================
+
+
+function solution(N, K, A, B, C) {
+    // write your code in JavaScript (Node.js 8.9.4)
+	var starts = [];
+	var ends = [];
+	var M = C.length;
+	for(var i=0; i<=N+1; i++) {
+		starts[i] = [];
+		ends[i] = [];		
+	}
+	
+	for(var i=0; i<M; i++) {
+		var a = A[i];
+		var b = B[i];
+		var c = C[i];
+		starts[a].push(c);
+		ends[b+1].push(c);
+	}
+	
+	debugger;	
+	var currentLayers = [0];
+	var correctIndex = 1;
+	var countLayers = 0;	
+	var count = 0;
+	
+	for(var i=1; i<=N; i++) {
+		var es = ends[i];
+		var ss = starts[i];
+		
+		var k = countLayers;
+		
+		for(var j=0; j< es.length; j++) {
+			var e = es[j];
+			for(; k>0 && currentLayers[k] != e; k--);
+			
+			countLayers--;
+			for(; k<countLayers; k++) {
+				currentLayers[k] = currentLayers[k + 1];
+			}
+
+			if(countLayers < correctIndex) {
+				correctIndex = countLayers;
+			}
+		}	
+		
+		for(var j=0; j<ss.length; j++) {
+			var s = ss[j];
+			currentLayers.push(s);
+			countLayers++;				
+		}	
+		
+		for(var j=correctIndex; j<countLayers && currentLayers[j] + 1 == currentLayers[j+1]; j++, correctIndex++);
+
+		if(correctIndex == K) {
+			count++;
+		}
+	}	
+	
+	
+	return count;
+}
+
+
+
+solution(5, 3, [1, 1, 4, 1, 4], [5, 2, 5, 5, 4], [1, 2, 2, 3, 3]);
+
+
+
+solution(5, 3, [1, 1, 4, 1, 4], [5, 2, 5, 5, 4], [1, 2, 2, 3, 3]);
+
+
 ======================================================================================================================================================
 
 
 
 function solution(N, K, A, B, C) {
+	var starts = [];
+	var ends = [];	
+	for(var i=0; i<=N+1; i++) {
+		starts[i] = [];
+		ends[i] = [];
+	}
 	
+	var M = C.length;
+	for(var i=0; i<M; i++) {
+		var a = A[i];
+		var b = B[i];
+		var c = C[i];	
+		starts[a].push(c);	
+		ends[b+1].push(c);		
+	}
+	
+	var countLayers = [1];	
+	for(var i=1; i<=K; i++) {
+		countLayers[i] = 0;
+	}
+	
+	debugger;
+	var count = 0;
+	var isValid = false;
+	var correctIndex = 1;
+	
+	for(var i=1; i<=N; i++) {
+		var ss = starts[i];
+		var es = ends[i];
+		if(ss.length == 0 && es.length ==0) {
+			count += isValid ? 1 : 0;
+			continue;
+		}
+		
+		for(var j=0; j<es.length; j++) {
+			var e = es[j];
+			var c = countLayers[e];
+			if(c == 1) {
+				correctIndex = Math.min(correctIndex, e);
+			}
+			
+			countLayers[e] = c - 1;
+		}		
+		
+		for(;correctIndex<=K && countLayers[correctIndex] == 1; correctIndex++);
+		for(var j=0;j<ss.length && correctIndex<=K && ss[j]==correctIndex && countLayers[correctIndex] == 0; j++,correctIndex++);
+		isValid = j==ss.length && correctIndex==K+1;
+		count += isValid ? 1 : 0;		
+	
+		for(var j=0; j<ss.length; j++) {
+			var s = ss[j];	
+			var c = countLayers[s];
+			countLayers[s] = c + 1;
+		}			
+	}	
+	
+	return count;
 }
+
+
+
+
+solution (5, 3, [1, 1, 4, 1, 4], [5, 2, 5, 5, 4], [1, 2, 2, 3, 3]);
+
+
+i
+starts[i].join(",")
+ends[i].join(",")
+countLayers.join(",")
+count 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
