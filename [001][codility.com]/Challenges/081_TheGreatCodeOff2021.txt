@@ -452,6 +452,251 @@ Output:
 
 
 
+======================================================================================================================================================
+
+
+
+function solution(N, K, A, B, C) {
+    // write your code in JavaScript (Node.js 8.9.4)
+	var M = C.length;
+	
+	// Make start-end-position list
+	var ses = [];
+	for(var i=0; i<M; i++) {
+		var layer = C[i];
+		var se = {
+			start: A[i],
+			end: B[i],
+			layer: C[i],
+			position: i
+		};
+		
+		ses.push(se);		
+	}
+	
+	ses.sort(function(a,b) {
+		if(a.start == b.start) {
+			return a.position - b.position;
+		}
+		
+		return a.start - b.start;
+	});
+		
+	// console.log(ses);
+	// Split by Layer
+	var layers = [];
+	for(var i=1; i<=K; i++) {
+		layers[i] = [];
+	}
+	
+	for(var i=0; i<M; i++) {
+		var se = ses[i];
+		layers[se.layer].push(se);		
+	}
+	
+	// console.log(layers);
+	
+	// Make Separated Ranges for each Layer
+	for(var i=1; i<=K; i++) {
+		var layer = layers[i];
+		if(layer.length == 0) {
+			return 0;
+		}
+		
+		layers[i] = layer.length == 1 ? layer : simplifyLayer(layer);
+	}
+	
+	// console.log(layers);
+	
+	// Combine Layers 
+	var validRanges = layers[1];
+	for(var i=2; i<=K; i++) {
+		validRanges = combineRanges(validRanges, layers[i]);
+	}
+	
+	// Count Valids
+	var count = 0;
+	for(var i=0; i<validRanges.length; i++) {
+		var v = validRanges[i];
+		count += v.end - v.start + 1;
+	}
+	
+	return count;
+}
+
+function simplifyLayer(layer) {
+	var currentSE = layer[0];
+	var validRanges = [];
+	for(var i=1; i<layer.length; i++) {		
+		var ranges = [currentSE];
+		
+		for(var j=i; j<layer.length; j++) {
+			var seJ = layer[j];
+			if(seJ.start > currentSE.start) {
+				break;
+			}
+			
+			if(seJ.end < currentSE.start) {
+				continue;
+			}
+			
+			ranges.push(seJ);
+		}
+		
+		if(j == layer.length && ranges.length == 1) {
+			validRanges.push(currentSE);
+			currentSE = null;
+			break;
+		}
+		
+		var rJ = layer[j];		
+		if(ranges.length == 1 && rJ.start > currentSE.end) {			
+			validRanges.push(currentSE);
+			currentSE = rJ;
+			i = j;
+			continue;
+		}
+		
+		if(ranges.length == 1) {
+			var validRange = {
+				start: currentSE.start,
+				end: rJ.start-1,
+				layer: currentSE.layer,
+				position: currentSE.position
+			};
+			
+			validRanges.push(validRange);
+			
+			currentSE.start = rJ.start;
+			if(currentSE.end < currentSE.start) {
+				currentSE = rJ;
+				i = j;
+			} else {
+				i--;
+			}
+			
+			continue;
+		}
+				
+		ranges.sort(function(a,b) {
+			return b.end - a.end;
+		});
+		
+		var r0 = ranges[0];
+		var r1 = ranges[1];
+		if(r0.end == r1.end) {
+			currentSE = layer[j];
+			i=j;
+			continue;
+		}
+		
+		currentSE = {
+			start: r1.end+1,
+			end: r0.end,
+			layer: r0.layer,
+			position: r0.position
+		};
+	}
+	
+	if(currentSE) {
+		validRanges.push(currentSE);
+	}
+	
+	return validRanges;
+}
+
+function combineRanges(ranges1, ranges2) {
+	debugger;
+	var validRanges = [];
+	var j = 0;
+	for(var i=0; i<ranges1.length; i++) {
+		var r1 = ranges1[i];
+				
+		var r2 = null;
+		for(; j<ranges2.length; j++) {
+			r2 = ranges2[j];
+			if(r2.end < r1.start || r2.position < r1.position) {
+				continue;
+			}
+			
+			if(r1.start <= r2.start && r2.end <= r1.end) {
+				validRanges.push({
+					start: r2.start,
+					end: r2.end,
+					position: r2.position
+				});	
+				
+				continue;
+			}
+			
+			if(r1.start >= r2.start && r1.end >= r2.end) {
+				validRanges.push({
+					start: r1.start,
+					end: r2.end,
+					position: r2.position
+				});	
+				
+				continue;
+			}	
+		
+			if(r1.start <= r2.start && r1.end <= r2.end) {
+				validRanges.push({
+					start: r2.start,
+					end: r1.end,
+					position: r2.position
+				});
+				
+				break;
+			}
+			
+			
+			if(r1.start >= r2.start && r1.end <= r2.end) {
+				validRanges.push({
+					start: r1.start,
+					end: r1.end,
+					position: r2.position
+				});	
+				
+				break;
+			}			
+		}		
+		
+		if(j == ranges2.length) { break; }	
+	}
+	
+	// validRanges = ranges2;
+	return validRanges;
+}
+
+
+solution (5, 3, [1, 1, 4, 1, 4], [5, 2, 5, 5, 4], [1, 2, 2, 3, 3])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
