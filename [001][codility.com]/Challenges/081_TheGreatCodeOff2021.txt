@@ -220,21 +220,23 @@ function solution(N, K, A, B, C) {
 		if(cs.length == K && cs[0].layer == 1) {			
 			for(var j=1; j<K && cs[j-1].layer+1 == cs[j].layer; j++);			
 			isValid = j==K;	
-			
-			count++;
-			if(isValid) {
-				for(; nextI<=minEnd;) {
-					var ci = connections[nextI];
-					if(ci.length == 0) {
-						count++;
-						nextI++;
-					} else {
-						nextI = Math.min(minEnd, Math.max(...ci.map(c => c.end)) + 1);
-					}
-				}
-			}		
+			count++;	
 		}
 			
+		if(isValid) {
+			for(; nextI<=minEnd;) {
+				var ci = connections[nextI];
+				if(ci.length == 0) {
+					count++;
+					nextI++;
+				} else {
+					nextI = Math.min(minEnd, Math.max(...ci.map(c => c.end)) + 1);
+				}
+			}
+		} else {
+			nextI = minEnd + 1;
+		}
+		
 		curConns = moveNext(cs, nextI);
 	}
 	
