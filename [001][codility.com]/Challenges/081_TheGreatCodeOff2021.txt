@@ -354,6 +354,9 @@ function solution(N, K, A, B, C) {
 Correct: Silver
 O(M*sqrt(N)) 
 
+layerByPos.join(", ")
+correctLayers
+
 
 
 ======================================================================================================================================================
@@ -464,13 +467,22 @@ function combineLayers(N, K, M, layers) {
 	return forms;	
 }
 
+function isValid(layer, layerByPos) {
+	var pos2 = layerByPos[layer];
+	if(pos2 == -1) {
+		return true;
+	}
+	
+	var pos1 = layerByPos[layer-1];
+	var pos3 = layerByPos[layer+1];
+	return (pos1 == -1 || pos1 <= pos2) && (pos3 == -1 || pos3 >= pos2);
+}
 
 function solution(N, K, A, B, C) {
-	console.log(N + ":" + K);
-	console.log(A);
-	console.log(B);
-	console.log(C);
-	
+	//console.log(N + ":" + K);
+	//console.log(A);
+	//console.log(B);
+	//console.log(C);
 	
 	
     // write your code in JavaScript (Node.js 8.9.4)
@@ -521,36 +533,56 @@ function solution(N, K, A, B, C) {
 	}
 	
 	// Combine Layers 
-	var forms = combineLayers(N, K, M, layers);
+	var forms = combineLayers(N, K, M, layers);	
 	var layerByPos = [];
 	for(var i=0; i<=K+1; i++) {
 		layerByPos[i] = -1;
 	}
 	
-	debugger;
 	// Count Valids
 	var count = 0;
 	var correctLayers = 0;
 	var filledLayers = 0;
+	// debugger;	
 	for(var i=1; i<=N+1; i++) {
 		var form = forms[i];
 		
 		for(var j=0; j< form.ends.length; j++) {
 			var e = form.ends[j];
+			var v2 = isValid(s.layer, layerByPos);
+			var v1 = s.layer > 1 && !isValid(s.layer-1, layerByPos);
+			var v3 = s.layer < N && !isValid(s.layer+1, layerByPos);
+			layerByPos[e] = -1;	
 			
-			if(isValid(e, layerByPos)){
+			if(v1 && s.layer > 1 && isValid(s.layer-1, layerByPos)){
+				correctLayers++;
+			}	
+			
+			if(v2){
 				correctLayers--;
-			}
+			}	
 			
-			layerByPos[e] = -1;
+			if(v3 && s.layer < N && isValid(s.layer+1, layerByPos)){
+				correctLayers++;
+			}				
 		}
 		
 		for(var j=0; j< form.starts.length; j++) {
 			var s = form.starts[j];
+			var v1 = s.layer > 1 && isValid(s.layer-1, layerByPos);
+			var v3 = s.layer < N && isValid(s.layer+1, layerByPos);
 			layerByPos[s.layer] = s.position;
+			
+			if(v1 && s.layer > 1 && !isValid(s.layer-1, layerByPos)){
+				correctLayers--;
+			}	
 			
 			if(isValid(s.layer, layerByPos)){
 				correctLayers++;
+			}	
+			
+			if(v3 && s.layer < N && !isValid(s.layer+1, layerByPos)){
+				correctLayers--;
 			}			
 		}	
 		
@@ -562,21 +594,42 @@ function solution(N, K, A, B, C) {
 	return count;
 }
 
-function isValid(layer, layerByPos) {
-	var pos1 = layerByPos[layer-1];
-	var pos2 = layerByPos[layer];
-	var pos3 = layerByPos[layer+1];
-	return (pos1 == -1 || pos1 < pos2) && (pos3 == -1 || pos3 > pos2);
-}
+
+
+solution (100, 20,
+[ 51, 45, 77, 1, 74, 1, 74, 42, 87, 26, 1, 1, 74, 1, 1, 1, 64, 1, 1, 1, 26, 86, 1, 1, 1, 65, 1, 17, 1, 71, 65, 1, 1, 1, 53, 1, 12, 1, 64, 88 ],
+[ 100, 100, 100, 44, 100, 63, 100, 100, 100, 100, 50, 11, 100, 70, 86, 25, 100, 64, 16, 64, 100, 100, 73, 87, 52, 100, 25, 100, 73, 100, 100, 73, 76, 85, 100, 41, 100, 63, 100, 100 ],
+[ 1, 2, 3, 2, 4, 10, 5, 6, 7, 8, 1, 18, 9, 15, 7, 11, 10, 16, 14, 13, 11, 12, 5, 20, 17, 13, 8, 14, 4, 15, 16, 9, 3, 12, 17, 6, 18, 19, 19, 20 ])
 
 
 
-solution (5, 3, [1, 1, 4, 1, 4], [5, 2, 5, 5, 4], [1, 2, 2, 3, 3])
+
+
+
+
+solution  (5, 3, [1, 1, 4, 1, 4], [5, 2, 5, 5, 4], [1, 2, 2, 3, 3])
 
 shuffled_colors
 ✘
 WRONG ANSWER
 got 0 expected 13 
+https://app.codility.com/cert/view/cert3GWM2V-E7QF3MVW4QQKNBWS/details/
+100, 20, 
+[51, 45, 77, 1, 74, 1, 74, 42, 87, 26, 1, 1, 74, 1, 1, 1, 64, 1, 1, 1, 26, 86, 1, 1, 1, 65, 1, 17, 1, 71, 65, 1, 1, 1, 53, 1, 12, 1, 64, 88],
+[100, 100, 100, 44, 100, 63, 100, 100, 100, 100, 50, 11, 100, 70, 86, 25, 100, 64, 16, 64, 100, 100, 73, 87, 52, 100, 25, 100, 73, 100, 100, 73, 76, 85, 100, 41, 100, 63, 100, 100],
+[1, 2, 3, 2, 4, 10, 5, 6, 7, 8, 1, 18, 9, 15, 7, 11, 10, 16, 14, 13, 11, 12, 5, 20, 17, 13, 8, 14, 4, 15, 16, 9, 3, 12, 17, 6, 18, 19, 19, 20]
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ======================================================================================================================================================
