@@ -468,12 +468,8 @@ function combineLayers(N, K, M, layers) {
 }
 
 function isValid(layer, layerByPos) {
-	var pos2 = layerByPos[layer];
-	if(pos2 == -1) {
-		return true;
-	}
-	
 	var pos1 = layerByPos[layer-1];
+	var pos2 = layerByPos[layer];
 	var pos3 = layerByPos[layer+1];
 	return (pos1 == -1 || pos1 <= pos2) && (pos3 == -1 || pos3 >= pos2);
 }
@@ -545,44 +541,26 @@ function solution(N, K, A, B, C) {
 	var filledLayers = 0;
 	// debugger;	
 	for(var i=1; i<=N+1; i++) {
+		debugger;	
 		var form = forms[i];
 		
 		for(var j=0; j< form.ends.length; j++) {
 			var e = form.ends[j];
-			var v2 = isValid(s.layer, layerByPos);
-			var v1 = s.layer > 1 && !isValid(s.layer-1, layerByPos);
-			var v3 = s.layer < N && !isValid(s.layer+1, layerByPos);
+			var v2 = isValid(s.layer, layerByPos);			
 			layerByPos[e] = -1;	
-			
-			if(v1 && s.layer > 1 && isValid(s.layer-1, layerByPos)){
-				correctLayers++;
-			}	
 			
 			if(v2){
 				correctLayers--;
-			}	
-			
-			if(v3 && s.layer < N && isValid(s.layer+1, layerByPos)){
-				correctLayers++;
 			}				
 		}
 		
 		for(var j=0; j< form.starts.length; j++) {
 			var s = form.starts[j];
-			var v1 = s.layer > 1 && isValid(s.layer-1, layerByPos);
-			var v3 = s.layer < N && isValid(s.layer+1, layerByPos);
 			layerByPos[s.layer] = s.position;
 			
-			if(v1 && s.layer > 1 && !isValid(s.layer-1, layerByPos)){
-				correctLayers--;
-			}	
 			
 			if(isValid(s.layer, layerByPos)){
 				correctLayers++;
-			}	
-			
-			if(v3 && s.layer < N && !isValid(s.layer+1, layerByPos)){
-				correctLayers--;
 			}			
 		}	
 		
