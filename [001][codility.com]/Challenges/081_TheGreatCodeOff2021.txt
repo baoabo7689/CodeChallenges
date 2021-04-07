@@ -618,12 +618,12 @@ function countSegments(K, layer, layers) {
 	return result;	
 }
 
-function correctLayerPosition(e, layer) {
-	for(var i=layer.count; i>=0 && layer.positions[i] != e.position; i--);
-	for(var j=i; j<layer.count; layer.positions[j] = layer.positions[j+1], j++);
+function correctLayerPosition(e, layers) {
+	var layer = layers[e.layer];
 	
-	var lastPos = layer.positions.pop();
-	layer.position = layer.positions[layer.count-1];
+	for(var i=layer.count; i>=0 && layer.positions[i] != e.position; i--);
+	for(var j=i; j<layer.count; layer.positions[j] = layer.positions[j+1], j++);	
+	for(var j=0; j<layer.count; layer.position = Math.max(layer.positions[j]), j++);
 }
 
 
@@ -648,8 +648,7 @@ function solution(N, K, A, B, C) {
 		var s = A[i];
 		var e = B[i];
 		var layer = C[i];
-		
-		
+				
 		forms[s].starts.push({ layer: layer, position: i });
 		forms[e+1].ends.push({ layer: layer, position: i });				
 	}	
@@ -670,40 +669,42 @@ function solution(N, K, A, B, C) {
 		for(var j=0; j< form.ends.length; j++) {
 			var e = form.ends[j];	
 			var layer = layers[e.layer];
-			
-			layer.count--;
+						
+			layer.count--;	
 			switch(layer.count) {
 				case 0:
 					correctLayers -= countSegments(K, e.layer, layers);		
 					layer.position = -1;
+					layer.positions = [];
 					break;
 				case 1:
-					correctLayerPosition(e, layer);
+					correctLayerPosition(e, layers);
 					correctLayers += countSegments(K, e.layer, layers);	
 					break;
 				default:	
-					correctLayerPosition(e, layer);				
+					correctLayerPosition(e, layers);				
 					break;
-			}			
+			}	
 		}
 		
 		for(var j=0; j< form.starts.length; j++) {
 			var s = form.starts[j];
 			var layer = layers[s.layer];
 			
+			layer.positions[layer.count] = s.position;
 			layer.count++;
 			
 			switch(layer.count) {
 				case 1:
-					layer.position = s.position;	
+					layer.position = Math.max(layer.position, s.position);	
 					correctLayers += countSegments(K, s.layer, layers);		
 					break;
 				case 2:
 					correctLayers -= countSegments(K, s.layer, layers);	
-					layer.position = s.position;	
+					layer.position = Math.max(layer.position, s.position);	
 					break;
 				default:	
-					layer.position = s.position;				
+					layer.position = Math.max(layer.position, s.position);			
 					break;
 			}							
 		}	
@@ -718,15 +719,14 @@ function solution(N, K, A, B, C) {
 
 
 
-solution (5, 2, [1, 1, 2], [5, 5, 3], [1, 2, 1])
-
 solution(25, 4, 
 [12, 15, 2, 15, 1, 7, 7, 1, 23, 3, 15, 1, 11, 1, 1], 
 [12, 15, 2, 15, 25, 25, 7, 6, 23, 3, 15, 25, 11, 25, 1], 
 [4, 2, 4, 4, 1, 2, 3, 2, 1, 1, 2, 3, 4, 4, 3])
 
 
-solution (5, 3, [1, 1, 4, 1, 4], [5, 2, 5, 5, 4], [1, 2, 2, 3, 3])
+
+
 
 layers.map(l=>l.position).join(", ")
 
