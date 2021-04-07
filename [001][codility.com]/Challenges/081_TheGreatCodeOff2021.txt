@@ -595,6 +595,190 @@ Gold Reward
 https://app.codility.com/cert/view/cert6NZWQX-4Z6NSMYKHGU8V33D/
 
 ======================================================================================================================================================
+Optimize 
+
+
+function countSegments(K, layer, layers) {
+	var pos1 = layers[layer-1].position;
+	var pos2 = layers[layer].position;
+	var pos3 = layers[layer+1].position;
+	
+	if(layer == 1) {
+		return pos3 == -1 || pos3 < pos2 ? 1 : 2;
+	}
+	
+	
+	if(layer == K) {
+		return pos1 == -1 || pos1 > pos2 ? 0 : 1;
+	}
+	
+	var result = 0;
+	result += pos1 == -1 || pos1 > pos2 ? 0 : 1;
+	result += pos3 == -1 || pos3 < pos2 ? 0 : 1;	
+	return result;	
+}
+
+function correctLayerPosition(e, layer) {
+	for(var i=layer.count; i>=0 && layer.positions[i] != e.position; i--);
+	for(var j=i; j<layer.count; layer.positions[j] = layer.positions[j+1], j++);
+	
+	var lastPos = layer.positions.pop();
+	layer.position = layer.positions[layer.count-1];
+}
+
+
+function solution(N, K, A, B, C) {
+	// console.log("solution(" + N + ", " + K + ", ");
+	// console.log("[" + A.join(", ") + "], ");
+	// console.log("[" + B.join(", ") + "], ");
+	// console.log("[" + C.join(", ") + "])");
+	
+	
+	// Prepare forms 
+	var forms = [];
+	for(var i=1; i<=N+1; i++) {
+		forms[i] = {
+			starts: [],
+			ends: []
+		};
+	}
+			
+	var M = C.length;
+	for(var i=0; i<M; i++) {
+		var s = A[i];
+		var e = B[i];
+		var layer = C[i];
+		
+		
+		forms[s].starts.push({ layer: layer, position: i });
+		forms[e+1].ends.push({ layer: layer, position: i });				
+	}	
+	
+	// Filled Layers 
+	var layers = [];
+	for(var i=0; i<=K+1; i++) {
+		layers[i] = { position: -1, count: 0, positions: [] };
+	}	
+	
+	// Count Valids
+	var count = 0;
+	var correctLayers = 0;
+	debugger;	
+	for(var i=1; i<=N; i++) {
+		var form = forms[i];
+		
+		for(var j=0; j< form.ends.length; j++) {
+			var e = form.ends[j];	
+			var layer = layers[e.layer];
+			
+			layer.count--;
+			switch(layer.count) {
+				case 0:
+					correctLayers -= countSegments(K, e.layer, layers);		
+					layer.position = -1;
+					break;
+				case 1:
+					correctLayerPosition(e, layer);
+					correctLayers += countSegments(K, e.layer, layers);	
+					break;
+				default:	
+					correctLayerPosition(e, layer);				
+					break;
+			}			
+		}
+		
+		for(var j=0; j< form.starts.length; j++) {
+			var s = form.starts[j];
+			var layer = layers[s.layer];
+			
+			layer.count++;
+			
+			switch(layer.count) {
+				case 1:
+					layer.position = s.position;	
+					correctLayers += countSegments(K, s.layer, layers);		
+					break;
+				case 2:
+					correctLayers -= countSegments(K, s.layer, layers);	
+					layer.position = s.position;	
+					break;
+				default:	
+					layer.position = s.position;				
+					break;
+			}							
+		}	
+		
+		if(correctLayers == K) {
+			count++;
+		}				
+	}
+		
+	return count;	
+}
+
+
+
+solution (5, 2, [1, 1, 2], [5, 5, 3], [1, 2, 1])
+
+solution(25, 4, 
+[12, 15, 2, 15, 1, 7, 7, 1, 23, 3, 15, 1, 11, 1, 1], 
+[12, 15, 2, 15, 25, 25, 7, 6, 23, 3, 15, 25, 11, 25, 1], 
+[4, 2, 4, 4, 1, 2, 3, 2, 1, 1, 2, 3, 4, 4, 3])
+
+
+solution (5, 3, [1, 1, 4, 1, 4], [5, 2, 5, 5, 4], [1, 2, 2, 3, 3])
+
+layers.map(l=>l.position).join(", ")
+
+
+s.layer 
+correctLayers
+
+
+Gold Reward
+https://app.codility.com/cert/view/cert6NZWQX-4Z6NSMYKHGU8V33D/
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
