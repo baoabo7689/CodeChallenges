@@ -591,7 +591,8 @@ solution  (10, 15,
  WRONG ANSWER, got 9 expected 10 
 
 
-
+Gold Reward
+https://app.codility.com/cert/view/cert6NZWQX-4Z6NSMYKHGU8V33D/
 
 ======================================================================================================================================================
 
