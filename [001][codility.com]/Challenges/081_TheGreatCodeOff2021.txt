@@ -599,15 +599,18 @@ Optimize
 
 
 function countSegments(K, layer, layers) {
-	var pos1 = layers[layer-1].positions[0];
-	var pos2 = layers[layer].positions[0];
-	var pos3 = layers[layer+1].positions[0];
+	var l1 = layers[layer-1];
+	var l2 = layers[layer];
+	var l3 = layers[layer+1];
+		
+	var pos1 = l1.count > 1 ? -1 : l1.positions[0];
+	var pos2 = l2.count > 1 ? -1 : l2.positions[0];
+	var pos3 = l3.count > 1 ? -1 : l3.positions[0];
 	
 	if(layer == 1) {
 		return pos3 == -1 || pos3 < pos2 ? 1 : 2;
 	}
-	
-	
+		
 	if(layer == K) {
 		return pos1 == -1 || pos1 > pos2 ? 0 : 1;
 	}
