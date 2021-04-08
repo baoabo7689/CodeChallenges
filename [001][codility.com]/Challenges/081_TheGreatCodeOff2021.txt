@@ -599,9 +599,9 @@ Optimize
 
 
 function countSegments(K, layer, layers) {
-	var pos1 = layers[layer-1].position;
-	var pos2 = layers[layer].position;
-	var pos3 = layers[layer+1].position;
+	var pos1 = layers[layer-1].positions[0];
+	var pos2 = layers[layer].positions[0];
+	var pos3 = layers[layer+1].positions[0];
 	
 	if(layer == 1) {
 		return pos3 == -1 || pos3 < pos2 ? 1 : 2;
@@ -618,12 +618,18 @@ function countSegments(K, layer, layers) {
 	return result;	
 }
 
-function correctLayerPosition(e, layers) {
-	var layer = layers[e.layer];
+function correctLayerPosition(e, layer) {	
+	for(var i=layer.count-1; i>=0; i--) {
+		if(layer.positions[i] == e.position) {
+			break;
+		}
+	}
 	
-	for(var i=layer.count; i>=0 && layer.positions[i] != e.position; i--);
-	for(var j=i; j<layer.count; layer.positions[j] = layer.positions[j+1], j++);	
-	for(var j=0; j<layer.count; layer.position = Math.max(layer.positions[j]), j++);
+	for(var j=i; j<layer.count; j++) {
+		layer.positions[j] = layer.positions[j+1];
+	}
+	
+	layer.count--;	
 }
 
 
@@ -656,7 +662,7 @@ function solution(N, K, A, B, C) {
 	// Filled Layers 
 	var layers = [];
 	for(var i=0; i<=K+1; i++) {
-		layers[i] = { position: -1, count: 0, positions: [] };
+		layers[i] = { count: 0, positions: [-1] };
 	}	
 	
 	// Count Valids
@@ -670,19 +676,18 @@ function solution(N, K, A, B, C) {
 			var e = form.ends[j];	
 			var layer = layers[e.layer];
 						
-			layer.count--;	
 			switch(layer.count) {
-				case 0:
-					correctLayers -= countSegments(K, e.layer, layers);		
-					layer.position = -1;
-					layer.positions = [];
-					break;
 				case 1:
-					correctLayerPosition(e, layers);
+					correctLayers -= countSegments(K, e.layer, layers);				
+					layer.count--;		
+					layer.positions = [-1];
+					break;
+				case 2:
+					correctLayerPosition(e, layer);
 					correctLayers += countSegments(K, e.layer, layers);	
 					break;
 				default:	
-					correctLayerPosition(e, layers);				
+					correctLayerPosition(e, layer);				
 					break;
 			}	
 		}
@@ -690,21 +695,21 @@ function solution(N, K, A, B, C) {
 		for(var j=0; j< form.starts.length; j++) {
 			var s = form.starts[j];
 			var layer = layers[s.layer];
-			
-			layer.positions[layer.count] = s.position;
-			layer.count++;
-			
+						
 			switch(layer.count) {
-				case 1:
-					layer.position = Math.max(layer.position, s.position);	
+				case 0:
+					layer.positions[0] = s.position;
+					layer.count++;
 					correctLayers += countSegments(K, s.layer, layers);		
 					break;
-				case 2:
+				case 1:
 					correctLayers -= countSegments(K, s.layer, layers);	
-					layer.position = Math.max(layer.position, s.position);	
+					layer.positions[layer.count] = s.position;
+					layer.count++;
 					break;
 				default:	
-					layer.position = Math.max(layer.position, s.position);			
+					layer.positions[layer.count] = s.position;
+					layer.count++;		
 					break;
 			}							
 		}	
@@ -716,6 +721,9 @@ function solution(N, K, A, B, C) {
 		
 	return count;	
 }
+
+solution  (5, 3, [1, 1, 4, 1, 4], [5, 2, 5, 5, 4], [1, 2, 2, 3, 3])
+
 
 
 
