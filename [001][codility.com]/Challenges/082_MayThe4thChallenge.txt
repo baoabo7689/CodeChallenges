@@ -44,6 +44,10 @@ Copyright 2009–2021 by Codility Limited. All Rights Reserved. Unauthorized cop
 
 ======================================================================================================================================================
 
+	https://app.codility.com/cert/view/certE9W5E5-EA3EU5KPB3S974PA/details/
+	https://app.codility.com/cert/view/certE9W5E5-EA3EU5KPB3S974PA/
+	
+	
 	
 	
 ======================================================================================================================================================
@@ -55,6 +59,39 @@ Copyright 2009–2021 by Codility Limited. All Rights Reserved. Unauthorized cop
 
 function solution(A, L, R) {
     // write your code in JavaScript (Node.js 8.9.4)
+	var N = A.length;
+	var counts = [];
+	var elems = [];
+	for(var i=0; i<N; i++) {
+		var a = A[i];
+		if(counts[a]) {
+			counts[a]++;
+		} else {
+			counts[a] = 1;
+			elems.push(a);
+		}
+	}
+	
+	var result = 0;	
+	for(var i=0; i<elems.length; i++) {
+		var a = elems[i];
+		if(counts[a] && a < L) {
+			result++;
+			counts[a]--;
+		}		
+	}
+	
+	
+	for(var i=0; i<elems.length; i++) {
+		var a = elems[i];
+		if(counts[a] && a > R) {
+			result++;
+			counts[a]--;
+		}		
+	}
+		
+	
+	return result;
 }
 
 
