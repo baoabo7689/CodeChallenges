@@ -62,10 +62,111 @@ Test Output
 
 ======================================================================================================================================================
 
+Min Char dời max vị trí lên đầu
+Nếu còn dư => dời tiếp 
+Vị trí kí tự mới -Lượng kí tự thay đổi 
+	
+console.log(a.charK.charCodeAt(0) + " " + b.charK.charCodeAt(0));
+newS.push(String.fromCharCode(c.key + 'a'.charCodeAt(0)));
 
+https://app.codility.com/cert/view/certMGV43A-HA49N59AEB4AH65Q/
 	
 	
 	
+Gold Reward
+https://app.codility.com/cert/view/certKNMYYJ-VQE53NV5KG5P3G2C/	
+	
+	
+	
+	
+======================================================================================================================================================
+
+
+solution ('zxzttyx', 2)
+
+Example test:   ('decade', 4)
+Output:
+[ { key: 'a', charK: 97, pos: 3 },
+  { key: 'c', charK: 99, pos: 2 },
+  { key: 'd', charK: 100, pos: 0 },
+  { key: 'd', charK: 100, pos: 4 },
+  { key: 'e', charK: 101, pos: 1 },
+  { key: 'e', charK: 101, pos: 5 } ]
+WRONG ANSWER (got  expected adcede)
+
+
+
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+
+function solution(S, K) {
+    // write your code in JavaScript (Node.js 8.9.4)
+    var N = S.length;
+    var cPosts = [];
+    for(var i=0; i<N; i++) {
+        var c = S[i].charCodeAt(0) - 'a'.charCodeAt(0);
+        if(cPosts[c]) {
+            cPosts[c].posts.push(i);
+        } else {
+            cPosts[c] = {
+                key: c,
+                posts: [i],
+                currentI: 0
+            }
+        }
+    }
+
+    cPosts = cPosts.filter(c => c !== undefined);
+    // console.log(cPosts);
+
+    var newS = [];
+    var remainK = K;
+    var currentI = 0;
+
+    while(newS.length < N) {
+        for(var i=0; i< cPosts.length; i++) {
+            var c = cPosts[i];
+            if(c.currentI >=  c.posts.length) {
+                continue;
+            }
+
+            var moveRange = c.posts[c.currentI] - currentI;
+            if(moveRange > remainK) {
+				continue;
+			}
+		
+			addIndex(cPosts, c.key, c.posts[c.currentI]);
+			newS.push(String.fromCharCode(c.key + 'a'.charCodeAt(0)));
+			remainK -= moveRange;
+			c.currentI++;
+			currentI++;
+			break;
+        }
+    }
+
+    return newS.join("");
+}
+
+function addIndex(cPosts, key, pos) {
+    for(var i=0; i< cPosts.length; i++) {
+        var c = cPosts[i];
+        if(c.key == key || c.currentI >= c.posts.length) {
+            continue;
+        }
+
+        for(var j=c.currentI; j<c.posts.length; j++) {
+            var p = c.posts[j];
+            if(p > pos) {
+				break;
+            }
+			
+			c.posts[j]++;
+        }
+    }
+}
+
+
+
 ======================================================================================================================================================
 
 
@@ -74,34 +175,417 @@ Test Output
 
 function solution(S, K) {
     // write your code in JavaScript (Node.js 8.9.4)
+    var N = S.length;
+    var cPosts = [];
+	var sPosts = [];
+	
+    for(var i=0; i<N; i++) {
+        var c = S[i].charCodeAt(0) - 'a'.charCodeAt(0);
+		var sPost = { key: c, value: i };
+		sPosts.push(sPost);
+		
+        if(cPosts[c]) {
+            cPosts[c].posts.push(sPost);
+        } else {
+            cPosts[c] = {
+                key: c,
+                posts: [sPost],
+                currentI: 0
+            }
+        }
+    }
+
+    cPosts = cPosts.filter(c => c !== undefined);
+    // console.log(cPosts);
+
+    var newS = [];
+    var remainK = K;
+	debugger;
+    for(iNew=0; iNew<N; iNew++) {
+		var addC = null;
+		var minC = null;
+		
+        for(var i=0; i< cPosts.length; i++) {
+            var c = cPosts[i];
+            if(c.currentI >=  c.posts.length) {
+                continue;
+            }
+
+			var pos = c.posts[c.currentI].value;
+			if(pos === iNew) {
+				minC = c;
+			}
+			
+            var moveRange = pos - iNew;
+            if(moveRange > remainK) {
+				continue;
+			}
+		
+			addC = c;
+			addIndex(sPosts, iNew, pos);
+			break;
+        }
+		
+		if(addC) {
+			newS.push(String.fromCharCode(addC.key + 'a'.charCodeAt(0)));
+			remainK -= moveRange;
+			addC.currentI++;
+		} else {
+			newS.push(String.fromCharCode(minC.key + 'a'.charCodeAt(0)));
+			minC.currentI++;	
+		}		
+    }
+
+    return newS.join("");
+}
+
+function addIndex(sPosts, iNew, pos) {
+    for(var i=pos; i>iNew; i--) {
+        var sPost = sPosts[i-1];
+		sPost.value++;
+		
+		sPosts[i] =  sPosts[i-1];		
+    }
+}
+
+
+
+======================================================================================================================================================
+
+
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+
+function solution(S, K) {
+    // write your code in JavaScript (Node.js 8.9.4)
+    var N = S.length;
+    var cPosts = [];
+	var sPosts = [];
+	
+    for(var i=0; i<N; i++) {
+        var c = S[i].charCodeAt(0) - 'a'.charCodeAt(0);
+		var sPost = { key: c, value: i };
+		sPosts.push(sPost);
+		
+        if(cPosts[c]) {
+            cPosts[c].posts.push(sPost);
+        } else {
+            cPosts[c] = {
+                key: c,
+                posts: [sPost],
+                currentI: 0
+            }
+        }
+    }
+
+    cPosts = cPosts.filter(c => c !== undefined);
+    // console.log(cPosts);
+
+    var newS = [];
+    var remainK = K;
+	debugger;
+    for(iNew=0; iNew<N; iNew++) {
+		var { addC, pos, moveRange } = getAddC(cPosts, remainK);		
+		addIndex(sPosts, iNew, pos);
+		remainK -= moveRange;
+		newS.push(String.fromCharCode(addC.key + 'a'.charCodeAt(0)));
+		addC.currentI++;	
+    }
+
+    return newS.join("");
+}
+
+function getAddC(cPosts, remainK) {
+	 for(var i=0; i< cPosts.length; i++) {
+		var c = cPosts[i];
+		if(c.currentI >=  c.posts.length) {
+			continue;
+		}
+
+		var pos = c.posts[c.currentI].value;
+		var moveRange = pos - iNew;
+		if(moveRange > remainK) {
+			continue;
+		}
+	
+		return { addC: c, moveRange, pos};
+	}	
+	
+	return { };	
+}
+
+function addIndex(sPosts, iNew, pos) {
+    for(var i=pos; i>iNew; i--) {
+        var sPost = sPosts[i-1];
+		sPost.value++;
+		
+		sPosts[i] =  sPosts[i-1];		
+    }
+}
+
+solution ('decade', 4)
+console.log(sPosts.map(s => s.value))
+
+
+
+======================================================================================================================================================
+
+
+console.log(sPosts.map(s => s.value))
+
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+
+function solution(S, K) {
+    // write your code in JavaScript (Node.js 8.9.4)
+    var N = S.length;
+    var cPosts = [];
+	var sPosts = [];
+	
+    for(var i=0; i<N; i++) {
+        var c = S[i].charCodeAt(0) - 'a'.charCodeAt(0);
+		var sPost = { key: c, value: i };
+		sPosts.push(sPost);
+		
+        if(cPosts[c]) {
+            cPosts[c].posts.push(sPost);
+        } else {
+            cPosts[c] = {
+                key: c,
+                posts: [sPost],
+                currentI: 0
+            }
+        }
+    }
+
+    cPosts = cPosts.filter(c => c !== undefined);
+    // console.log(cPosts);
+
+    var newS = [];
+    var remainK = K;
+	debugger;
+    for(iNew=0; iNew<N; iNew++) {
+		var { addC, pos, moveRange } = { };		
+		
+		for(var i=0; i< cPosts.length; i++) {
+			var c = cPosts[i];
+			if(c.currentI >=  c.posts.length) {
+				continue;
+			}
+
+			var pos = c.posts[c.currentI].value;
+			var moveRange = pos - iNew;
+			if(moveRange > remainK) {
+				continue;
+			}
+		
+			addC = c;
+			break;
+		}	
+	
+		for(var i=pos; i>iNew; i--) {
+			var sPost = sPosts[i-1];
+			sPost.value++;			
+			sPosts[i] = sPost;		
+		}
+	
+		remainK -= moveRange;		
+		newS.push(String.fromCharCode(addC.key + 'a'.charCodeAt(0)));
+		addC.currentI++;
+		
+		if(remainK === 0) {
+			break;
+		}	
+    }
+
+	for(iNew++; iNew<N; iNew++) {
+		var sPost = sPosts[iNew];
+		newS.push(String.fromCharCode(sPost.key + 'a'.charCodeAt(0)));
+	}	
+	
+    return newS.join("");
 }
 
 
 
 
+solution  ('decade', 4)
+console.log(sPosts.map(s => s.value))
+
+
+
+function addIndex(cPosts, key, pos) {
+    for(var i=0; i< cPosts.length; i++) {
+        var c = cPosts[i];
+        if(c.key == key || c.currentI >= c.posts.length) {
+            continue;
+        }
+
+        for(var j=c.currentI; j<c.posts.length; j++) {
+            var p = c.posts[j];
+            if(p > pos) {
+				break;
+            }
+			
+			c.posts[j]++;
+        }
+    }
+}
+
+
+
+======================================================================================================================================================
+
+
+
+// you can write to stdout for debugging purposes, e.g.
+// console.log('this is a debug message');
+
+function addPresum(cPosts, key, origPos) {
+    for(var i=0; i< cPosts.length; i++) {
+        var c = cPosts[i];
+		var origPosts = c.origPosts;
+		
+        if(c.currentI >= origPosts.length) {
+            continue;
+        }
+
+		var left = 0;
+		var right = origPosts.length;
+		var mid = 0;
+		
+		while(left <= right) {
+			var mid = Math.floor((left+right)/2);
+			if(origPosts[mid] < origPos) {
+				left = mid+1;
+			} else {
+				right = mid -1;
+			}			
+		}	   		
+		
+		left = Math.max(left, c.currentI);
+		c.presum[left]++;
+    }
+}
+
+function solution(S, K) {
+    // write your code in JavaScript (Node.js 8.9.4)
+    var N = S.length;
+	
+    var cPosts = [];	
+    for(var i=0; i<N; i++) {
+        var c = S[i].charCodeAt(0) - 'a'.charCodeAt(0);
+		var objC = cPosts[c];
+        if(objC) {
+            objC.posts.push(i);
+            objC.origPosts.push(i);
+            objC.presum.push(0);
+        } else {
+            cPosts[c] = {
+                key: c,
+                posts: [i],
+                origPosts: [i],
+				presum: [0],
+                currentI: 0
+            }
+        }
+    }
+
+    cPosts = cPosts.filter(c => c !== undefined);
+
+    var newS = [];
+    var remainK = K;
+	var usedIndex = [];
+	// debugger;
+	var wPosts = cPosts.filter(c => c.key === 'w'.charCodeAt(0) - 'a'.charCodeAt(0))[0];
+	//console.log(wPosts.origPosts);
+			
+    for(iNew=0; iNew<N; iNew++) {		
+		for(var i=0; i< cPosts.length; i++) {
+			var c = cPosts[i];
+			if(c.currentI >=  c.posts.length) {
+				continue;
+			}
+
+			var pos = c.origPosts[c.currentI] - c.presum[c.currentI];					
+			var moveRange = pos;		
+			//console.log(String.fromCharCode(c.key + 'a'.charCodeAt(0)) + ":" + moveRange + ":" + remainK + ":" + pos);	
+			//console.log("Presum: " + c.presum[c.currentI]);			
+			
+			if(moveRange > remainK) {
+				continue;
+			}
+		
+			var origPos = c.origPosts[c.currentI];			
+			usedIndex[origPos] = true;
+			
+			addPresum(cPosts, c.key, origPos);
+			remainK -= moveRange;		
+			newS.push(String.fromCharCode(c.key + 'a'.charCodeAt(0)));
+			
+			//console.log("moveRange: " + moveRange);	
+			//console.log("Post: " + String.fromCharCode(c.key + 'a'.charCodeAt(0)) + ":" + moveRange + ":" + remainK + ":" + pos);		
+			//console.log("OrigPos: " +  c.origPosts[c.currentI]);	
+			
+			c.presum[c.currentI+1] += c.presum[c.currentI];
+			c.currentI++;
+					
+			// console.log("W Presum: " + wPosts.presum.join(","));				
+			break;
+		}	
+				
+		if(remainK === 0) {
+			break;
+		}	
+    }
+
+	for(var i=0; i<N; i++) {
+		if(!usedIndex[i]) {
+			newS.push(S[i]);
+		}		
+	}	
+	
+	var result =  newS.join("");
+	
+	//console.log(S);
+	//console.log(K);
+	//console.log(result);
+	
+    return result;
+}
+
+
+solution ('txvmxcktouwcolcmnveoobogiubvwfoofmrkzlbdqzqtsswvgk', 582)
+
+
+
+solution ('abracadabra', 15)
+
+solution ('zxzttyx', 2) 
+
+(got xzttzyx expected xztztyx). 
 
 
 
 
+stdout:
+txvmxcktouwcolcmnveoobogiubvwfoofmrkzlbdqzqtsswvgk
+582
+bbbcccdeffggikkkllmmmnoooooooqqrsstttuuvvvvwwxxzwz
+expected
+bbbcccdeffggikkkllmmmnoooooooqqrsstttuuvvvvwwxwxzz
+
+
+// Test find first larger than
+5
+[1,3,4,6,7]
+[0, 4] => 2
+[3, 4] => 3
+[3, 2]
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+======================================================================================================================================================
 
 
 
